@@ -6,7 +6,7 @@
 @mainLight: @mainColor + #222222;
 @mainDark: @mainColor - #222222;
 
-@charcoal: #1a1a1a;
+@Charcoal: #1a1a1a;
 
 /*--------------------------------------------*/
 /*---> FONTS <--------------------------------*/
@@ -36,6 +36,7 @@ p, h1, h2, h3, ul, li{
 
 h1, h2, h3{
 	.HeadFont();
+	font-weight: bold;
 	text-align: center;
 }
 
@@ -72,6 +73,20 @@ li{
 	margin: (0.15 * @textSize) auto;
 }
 
+a{
+
+	text-decoration: none;
+	font-weight: bold;
+	color: @mainColor;
+
+	&:hover{
+		color: lighten(@mainColor, 25%)
+	}
+
+	.AnimateAll();
+
+}
+
 /*--------------------------------------------*/
 /*---> BODY <---------------------------------*/
 /*--------------------------------------------*/
@@ -81,7 +96,7 @@ html{
 	//Default Text Styles
 	.BodyFont();
 	font-size: @textSize;
-	color: @charcoal;
+	color: @Charcoal;
 }
 
 body{
@@ -113,21 +128,53 @@ body{
 
 @formItemHeight: 6 * @vh;
 
-input, button, select{
+input, button, select, textarea{
 	outline: none;
 	border: none;
+	box-sizing: border-box;
+	display: block;
+	//SIZE
+	margin: (3 * @vh) auto;
+	width: 90%;
+	padding: 2.5%;
 	height: @formItemHeight;
+	//STYLE
+	background: darken(white, 25%);
+	//TEXT
 	line-height: @formItemHeight;
 	.BodyFont();
 	font-size: 1.0 * @textSize;
-	line-height: 1.25 * @textSize;
 }
 
 button{
-	display: block;
-	margin: 0 auto;
+
 	background: @mainColor;
 	color: white;
+	padding: 0;
+	height: 1.5 * @formItemHeight;
+	line-height: 1.5 * @formItemHeight;
+
+	&:hover{
+		background: @Charcoal;
+		border-radius: 10px;
+	}
+
+	.AnimateAll();
+
+}
+
+input, textarea{
+	
+	&:hover{
+		background: darken(white, 5%);
+	}
+
+	.AnimateAll();
+
+}
+
+textarea{
+	height: 4 * @formItemHeight;
 }
 
 /*--------------------------------------------*/

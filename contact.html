@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Prometheus</title>
+		<link rel="stylesheet" type="text/css" href="style/reset.css">
+		<link rel="stylesheet" type="text/css" href="style/main.css">
+		<!--<link rel="icon" type="img/png" href="style/favicon.png" style="width:30px;">-->
+		<!-- IMPORTED SCRIPTS -->
+		<!-- NEED GOOGLE FONTS LATER -->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<style>
+
+
+
+		</style>
+	</head>
+
+	<body>
+
+		<h1>Prometheus.js</h1>
+		<p>Bringing Firebase-powered CRM and analytics to all of humanity.</p>
+		<button id="home">Home</button>
+		<h2>Contact Us</h2>
+		<p>Prometheus.js and PandorasBox.js were created by the development team at <a href="https://www.omnipointment.com/" target="_blank">Omnipointment</a>: the omnipotent appointment scheduling tool.</p>
+		<input  id="email"type="text" placeholder="you@email.com">
+		<textarea id="message">Your message here.</textarea>
+		<button id="contact-button">Submit</button>
+
+		<script type="text/javascript">
+
+			function submitMessage(email, message){
+				console.log(Date.now());
+				console.log("From: " + email);
+				console.log(">>> " + message);
+				console.log("---");
+			}
+
+			$('#contact-button').click(function(){
+				var email = document.getElementById('email').value;
+				var message = document.getElementById('message').value;
+				submitMessage(email, message);
+			});
+
+			$('#home').click(function(){
+				location.href = 'index.html';
+			})
+
+		</script>
+		
+	</body>
+</html>

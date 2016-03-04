@@ -8,7 +8,7 @@
 		<!-- IMPORTED SCRIPTS -->
 		<!-- NEED GOOGLE FONTS LATER -->
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<!-- NEED FIREBASE LATER -->
+		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 		<style>
 
 
@@ -19,18 +19,22 @@
 	<body>
 
 		<h1>Prometheus.js</h1>
-		<h2>Bringing Firebase-powered CRM and analytics to all of humanity.</h2>
+		<p>Bringing Firebase-powered CRM and analytics to all of humanity.</p>
 		<ul>
 			<li>Track user retention and engagement metrics.</li>
 			<li>Separate business logic from app logic.</li>
 			<li>Manage analytics from a customizable dashboard.</li>
 		</ul>
 		<p>Prometheus.js ships with PandorasBox.js, a lean, user-specific split-testing tool for containing experimental features.</p>
-		<button>Login with Google</button>
+		<button id="login-google">Login with Google</button>
+
+		<script src="script/googleAuth.js"></script>
 
 		<script type="text/javascript">
 
-			
+			$('#login-google').click(function(){
+				googleLogin();
+			});
 
 			console.log("LOADED MAIN");
 
