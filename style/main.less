@@ -1,0 +1,157 @@
+/*--------------------------------------------*/
+/*---> COLORS <-------------------------------*/
+/*--------------------------------------------*/
+
+@mainColor: #2d0a58;
+@mainLight: @mainColor + #222222;
+@mainDark: @mainColor - #222222;
+
+@charcoal: #1a1a1a;
+
+/*--------------------------------------------*/
+/*---> FONTS <--------------------------------*/
+/*--------------------------------------------*/
+
+@textSize: 3vh;
+
+.HeadFont(){
+	font-family: sans-serif;
+}
+
+.BodyFont(){
+	font-family: sans-serif;
+}
+
+/*--------------------------------------------*/
+/*---> TEXT <---------------------------------*/
+/*--------------------------------------------*/
+
+p, h1, h2, h3, ul, li{
+	.BodyFont();
+	margin: (0.5 * @textSize) auto;
+}
+
+h1, h2, h3{
+	.HeadFont();
+	text-align: center;
+}
+
+h1{
+	font-size: 1.5 * @textSize;
+	line-height: 1.75 * @textSize;
+}
+
+h2{
+	font-size: 1.25 * @textSize;
+	line-height: 1.5 * @textSize;
+}
+
+h2{
+	font-size: 1.1 * @textSize;
+	line-height: 1.35 * @textSize;
+}
+
+p{
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	text-align: center;
+}
+
+ul{
+	width: 80%;
+	margin: auto 10%;
+}
+
+li{
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	list-style: disc;
+	margin: (0.15 * @textSize) auto;
+}
+
+/*--------------------------------------------*/
+/*---> BODY <---------------------------------*/
+/*--------------------------------------------*/
+
+html{
+	background: white;
+	//Default Text Styles
+	.BodyFont();
+	font-size: @textSize;
+	color: @charcoal;
+}
+
+body{
+	margin: 0;
+	width: 98vw;
+	margin: 0 auto;
+}
+
+.AnimateAll(@time: 0.5s){
+	transition: all @time ease;
+	-webkit-transition: all @time ease;
+}
+
+/*--------------------------------------------*/
+/*---> STRUCTURE <----------------------------*/
+/*--------------------------------------------*/
+
+
+
+/*--------------------------------------------*/
+/*---> HEADER & FOOTER <----------------------*/
+/*--------------------------------------------*/
+
+
+
+/*--------------------------------------------*/
+/*---> FORM <----------------------------------*/
+/*--------------------------------------------*/
+
+input, button, select{
+	outline: none;
+	border: none;
+}
+
+/*--------------------------------------------*/
+/*---> SCROLLBAR <----------------------------*/
+/*--------------------------------------------*/
+
+@scrollBar: white;
+@scrollBarBack: @mainColor;
+
+::-webkit-scrollbar{
+	width: 10px;
+	height: 10px;
+	background: @scrollBarBack;
+	z-index: 50;
+}
+
+::-webkit-scrollbar-button{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-track{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-track-piece{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-thumb{
+	background: @scrollBar;
+	//border-radius: 5px;
+	position: absolute;
+	margin-left: -10px;
+}
+
+::-webkit-scrollbar-corner{
+	width: 10px;
+	height: 10px;
+	background: @scrollBarBack;
+}
+
+::-webkit-resizer{
+	background: @scrollBarBack;
+}
