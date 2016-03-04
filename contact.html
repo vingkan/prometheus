@@ -9,6 +9,7 @@
 		<!-- NEED GOOGLE FONTS LATER -->
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<script src="prometheus.js"></script>
 		<style>
 
 
@@ -28,6 +29,11 @@
 		<button id="contact-button">Submit</button>
 
 		<script type="text/javascript">
+
+			var prometheus = Prometheus({
+				url: 'https://prometheusjs.firebaseio.com/prometheus',
+				locator: true
+			});
 
 			function submitMessage(email, message){
 				console.log("Time: " + Date.now());
