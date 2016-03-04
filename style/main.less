@@ -2,7 +2,7 @@
 /*---> COLORS <-------------------------------*/
 /*--------------------------------------------*/
 
-@mainColor: #2d0a58;
+@mainColor: #FF3B2A;
 @mainLight: @mainColor + #222222;
 @mainDark: @mainColor - #222222;
 
@@ -12,7 +12,10 @@
 /*---> FONTS <--------------------------------*/
 /*--------------------------------------------*/
 
-@textSize: 3vh;
+@vh: 5.5px;
+
+@textSize: 3 * @vh;
+@tx: @textSize;
 
 .HeadFont(){
 	font-family: sans-serif;
@@ -83,7 +86,7 @@ html{
 
 body{
 	margin: 0;
-	width: 98vw;
+	width: 100vw;
 	margin: 0 auto;
 }
 
@@ -108,9 +111,23 @@ body{
 /*---> FORM <----------------------------------*/
 /*--------------------------------------------*/
 
+@formItemHeight: 6 * @vh;
+
 input, button, select{
 	outline: none;
 	border: none;
+	height: @formItemHeight;
+	line-height: @formItemHeight;
+	.BodyFont();
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+}
+
+button{
+	display: block;
+	margin: 0 auto;
+	background: @mainColor;
+	color: white;
 }
 
 /*--------------------------------------------*/
