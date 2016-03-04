@@ -30,10 +30,11 @@
 		<script type="text/javascript">
 
 			function submitMessage(email, message){
-				console.log(Date.now());
+				console.log("Time: " + Date.now());
 				console.log("From: " + email);
 				console.log(">>> " + message);
 				console.log("---");
+				prometheus.save({type: "CONTACT_SUBMISSION"});
 			}
 
 			$('#contact-button').click(function(){

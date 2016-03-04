@@ -4,22 +4,23 @@ var authObject;
 
 function checkUserInDatabase(authData){
 	userID = authData.google.id;
+	var userData = {
+		uid: userID,
+		name: authData.google.displayName,
+		email: authData.google.email,
+		img: authData.google.profileImageURL
+	}
 	var path = BASE_URL + "/users/" + userID;
 	var userRef = new Firebase(path);
 	userRef.once('value', function(snapshot){
 		if(!snapshot.exists()){
-			var userData = {
-				uid: userID,
-				name: authData.google.displayName,
-				email: authData.google.email,
-				img: authData.google.profileImageURL
-			}
 			var userDataRoute = new Firebase(path + "/auth");
 			userDataRoute.set(userData);
 		}
 		else{
 			console.log('Successfully Logged In!');
 		}
+		prometheus.logon(userID, userData);
 		location.href = 'contact.html';
 	});
 }
