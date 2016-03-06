@@ -1,3 +1,5 @@
+![Prometheus Long Logo](http://vingkan.github.io/prometheus/img/long-logo.png)
+
 # Prometheus.js
 Bringing Firebase-powered CRM and analytics to all of humanity.
 
