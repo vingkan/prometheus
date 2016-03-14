@@ -73,4 +73,4 @@ PandorasBox.js works with Prometheus.js to help you contain experimental feature
 PandorasBox.js is coming soon...
 
 ## About Us
-Prometheus.js and PandorasBox.js were created by the development team at [Omnipointment](https://www.omnipointment.com/"): the omnipotent appointment scheduling tool.
+Prometheus.js and PandorasBox.js were created by the development team at [Omnipointment](https://www.omnipointment.com/): the omnipotent appointment scheduling tool.
