@@ -2,6 +2,8 @@
 ![Prometheus Long Logo](http://vingkan.github.io/prometheus/img/long-logo.png)
 
 # Prometheus.js
+
+[![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Bringing Firebase-powered CRM and analytics to all of humanity.
 
 + Track user retention and engagement metrics.
