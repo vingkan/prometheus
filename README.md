@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus)
 ![Prometheus Long Logo](http://vingkan.github.io/prometheus/img/long-logo.png)
 
 # Prometheus.js
