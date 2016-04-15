@@ -1,9 +1,6 @@
-[![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus)
 ![Prometheus Long Logo](http://vingkan.github.io/prometheus/img/long-logo.png)
 
 # Prometheus.js
-
-[![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Bringing Firebase-powered CRM and analytics to all of humanity.
 
 + Track user retention and engagement metrics.
@@ -11,6 +8,8 @@ Bringing Firebase-powered CRM and analytics to all of humanity.
 + Manage analytics from a customizable dashboard.
 
 Prometheus.js ships with PandorasBox.js, a lean, user-specific split-testing tool for containing experimental features.
+
+[![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus) [![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Demo
 This visitor filled out a contact form with an invalid email address. Normally, the website owner would not be able to get in touch with them. But, Prometheus lights the way by associating the form submission with the visiting user. Now the owner can find them!
