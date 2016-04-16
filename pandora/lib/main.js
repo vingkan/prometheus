@@ -1,16 +1,24 @@
 var LIVE = true;
 
 if(LIVE){
+	loadFromFirebase('prometheusjs');
+}
+else{
+	main(FB_DATA.prometheus);
+}
+
+$('#dashboard-key').blur(function(){
+	loadFromFirebase(this.innerText.toLowerCase());
+});
+
+function loadFromFirebase(key){
 	toggleLoading();
-	var fb = new Firebase('http://prometheusjs.firebaseio.com/prometheus');
+	var fb = new Firebase('http://' + key + '.firebaseio.com/prometheus');
 	fb.once('value', function(snapshot){
 		var data = snapshot.val();
 		main(data);
 		toggleLoading();
 	});
-}
-else{
-	main(FB_DATA.prometheus);
 }
 
 function toggleLoading(){
@@ -35,6 +43,7 @@ function UserListDiv(user){
 
 function main(data){
 	var userList = document.getElementById('user-list');
+		userList.innerHTML = '';
 	var max = 10;
 	var n = 0;
 	for(var i in data.users){
