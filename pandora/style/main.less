@@ -214,8 +214,10 @@ div#user-list{
 	div.user-list-div{
 
 		display: inline-block;
+		width: 100%;
 		margin: 0.5 * @vh 0;
 		.StandardText();
+		color: @Charcoal;
 		@ListDivHeight: 5 * @vh;
 		height: @ListDivHeight;
 		line-height: @ListDivHeight;
@@ -229,32 +231,25 @@ div#user-list{
 		}
 
 		div.user-list-img{
-			width: 0.8 * @ListDivHeight;
-			height: 0.8 * @ListDivHeight;
+			width: 0.7 * @ListDivHeight;
+			height: 0.7 * @ListDivHeight;
+			vertical-align: middle;
 			border-radius: 50%;
 			background-size: 100%;
 		}
 
-		div.user-list-info{
-			vertical-align: middle;
-			width: 0.6 * @ListDivHeight;
-			height: 0.6 * @ListDivHeight;
-			line-height: 0.6 * @ListDivHeight;
-			text-align: center;
-			border-radius: 50%;
-			color: white;
-			&.info-total{
-				color: @MischiefBlue;
-			}
-			&.info-login{
-				color: @FireOrange
-			}
-			&.info-error{
-				color: red;
-			}
+		div.user-list-name{
+			width: 45%;
 		}
 
-		color: @Charcoal;
+		div.user-list-info{
+			.StandardText(0.6);
+			line-height: @ListDivHeight;
+			vertical-align: middle;
+			text-align: left;
+			color: @Charcoal;
+		}
+
 	}
 }
 
