@@ -32,6 +32,8 @@
 
 			var prometheus = Prometheus('https://prometheusjs.firebaseio.com/prometheus');
 
+			prometheus.save({type: "CONTACT_PAGE"});
+
 			function submitMessage(email, message){
 				console.log("Time: " + Date.now());
 				console.log("From: " + email);
@@ -48,7 +50,7 @@
 
 			$('#home').click(function(){
 				location.href = 'index.html';
-			})
+			});
 
 		</script>
 		

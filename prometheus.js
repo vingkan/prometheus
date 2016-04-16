@@ -41,6 +41,16 @@ var Prometheus = function(config){
 			});
 		},
 
+		error: function(errorInfo){
+			var dataObj = {
+				type: "ERROR",
+				message: errorInfo.message,
+				url: errorInfo.url,
+				line: errorInfo.line
+			};
+			this.save(dataObj);
+		},
+
 		logon: function(uid, userData, metaProps){
 			if(uid){
 				this.trackUser(uid);
@@ -90,6 +100,15 @@ var Prometheus = function(config){
 			return 'Bringing Firebase to humanity!';
 		}
 
+	}
+
+		//Track Errors
+	window.onerror = function(msg, url, line){
+		prometheus.error({
+			message: msg,
+			url: url,
+			line: line
+		});
 	}
 
 	return prometheus;
