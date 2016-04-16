@@ -9,8 +9,18 @@
 		<link href='https://fonts.googleapis.com/css?family=Graduate|Gafata' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<!-- REACT -->
+		<script src="https://fb.me/react-15.0.1.js"></script>
+		<script src="https://fb.me/react-dom-15.0.1.js"></script>
+		<!-- FIREBASE -->
+		<script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
+		<!-- REACTFIRE -->
+		<script src="https://cdn.firebase.com/libs/reactfire/0.6.0/reactfire.min.js"></script>
+		<!-- THROW IN THE TOWEL -->
+		<script src="https://npmcdn.com/throw-in-the-towel@2"></script>
+		<!-- MOMENT -->
 		<script type="text/javascript" src="moment.min.js"></script>
+		<!-- LESS -->
 		<script type="text/javascript" src="less.min.js"></script>
 		<!--/*<script src="prometheus.js"></script>-->
 		<style>
@@ -18,6 +28,7 @@
 
 
 		</style>
+		<script type="text/babel" src="lib/main.js"></script>
 	</head>
 
 	<body spellcheck="false">
@@ -52,16 +63,15 @@
 
 			<div class="column half">
 				<div class="module">
-					<h2>Users</h2>
+					<div class="module" id="sample"></div>
 				</div>
-				<div class="module">
-					<h2>Milestones</h2>
+				<div class="module" id="content">
 				</div>
 			</div>
 		</div>
 
 		<script src="lib/fake-data.js"></script>
-		<script src="lib/main.js"></script>
+		
 
 		<script type="text/javascript">
 

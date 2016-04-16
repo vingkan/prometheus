@@ -212,62 +212,63 @@ div.module{
 	padding: 1%;
 	margin: 2% 1% 1% 1%;
 	background: white;
+	font-size: @tx;
 }
 
 div#user-list{
 
 	width: 96%;
 	margin: 2%;
+}
 
-	div.user-list-div{
+div.user-list-div{
 
+	display: inline-block;
+	width: 100%;
+	margin: 0.5 * @vh 0;
+	.StandardText();
+	color: @Charcoal;
+	@ListDivHeight: 5 * @vh;
+	height: @ListDivHeight;
+	line-height: @ListDivHeight;
+	overflow: hidden;
+
+	div{
+		width: 40%;
+		overflow: hidden;
 		display: inline-block;
-		width: 100%;
-		margin: 0.5 * @vh 0;
-		.StandardText();
-		color: @Charcoal;
-		@ListDivHeight: 5 * @vh;
+		margin: 0.5 * @vh;
 		height: @ListDivHeight;
 		line-height: @ListDivHeight;
-		overflow: hidden;
-
-		div{
-			width: 40%;
-			overflow: hidden;
-			display: inline-block;
-			margin: 0.5 * @vh;
-			height: @ListDivHeight;
-			line-height: @ListDivHeight;
-			vertical-align: top;
-		}
-
-		div.user-list-img{
-			width: 0.7 * @ListDivHeight;
-			height: 0.7 * @ListDivHeight;
-			vertical-align: middle;
-			border-radius: 50%;
-			background-size: 100%;
-		}
-
-		div.user-list-name{
-			//
-		}
-
-		div.user-list-info{
-			
-			.StandardText(0.6);
-			line-height: @ListDivHeight;
-			vertical-align: middle;
-			text-align: left;
-			color: @Charcoal;
-
-			span{
-				margin: auto (0.75 * @vh);
-			}
-		
-		}
-
+		vertical-align: top;
 	}
+
+	div.user-list-img{
+		width: 0.7 * @ListDivHeight;
+		height: 0.7 * @ListDivHeight;
+		vertical-align: middle;
+		border-radius: 50%;
+		background-size: 100%;
+	}
+
+	div.user-list-name{
+		//
+	}
+
+	div.user-list-info{
+		
+		.StandardText(0.6);
+		line-height: @ListDivHeight;
+		vertical-align: middle;
+		text-align: left;
+		color: @Charcoal;
+
+		span{
+			margin: auto (0.75 * @vh);
+		}
+	
+	}
+
 }
 
 /*--------------------------------------------*/
