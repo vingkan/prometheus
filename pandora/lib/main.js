@@ -30,17 +30,6 @@ function toggleLoading(){
 	}
 }
 
-function UserListDiv(user){
-	var img = user.profile.img || user.profile.picture;
-	var last = user.visits[user.visits.length-1];
-	var html = '<div class="user-list-div" id="user-list-div-' + user.id + '">';
-		html += '<div class="user-list-img" style="background-image: url(&quot;' + img + '&quot;);"></div>';
-		html += '<div class="user-list-name">' + user.profile.name + '</div>';
-		html += '<div class="user-list-info"><i class="fa fa-icon fa-eye"></i><span>' + user.visits.length + '</span><i class="fa fa-icon fa-clock-o"></i><span>' + moment(last.meta.datetime.timestamp).fromNow() + '</span></div>';
-		html += '</div>';
-	return html;
-}
-
 function main(data){
 	var userList = document.getElementById('user-list');
 		userList.innerHTML = '';
@@ -55,7 +44,6 @@ function main(data){
 			}
 			user.visits = visitList;
 			user.id = i;
-			userList.innerHTML += UserListDiv(user);
 			n++;
 		}
 		else{
@@ -114,13 +102,16 @@ var UserModule = React.createClass({
 	getInitialState: function(){
 		console.log('INIT STATE')
 		return {
-			users: []
+			users: [],
+			fb_key: 'prometheusjs'
 		}
 	},
 	componentWillMount: function(){
-		this.firebaseRef =  new Firebase('http://prometheusjs.firebaseio.com/prometheus/users');
+		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users';
+		console.log(fb_url)
+		this.firebaseRef =  new Firebase(fb_url);
 		var _this = this;
-		this.firebaseRef.limitToLast(5).on('value', function(snapshot){
+		this.firebaseRef.on('value', function(snapshot){
 			console.log(this)
 			var users = [];
 			snapshot.forEach(function(childSnap){
@@ -131,6 +122,7 @@ var UserModule = React.createClass({
 					visitList.push(user.visits[i]);
 				}
 				user.visits = visitList;
+				if(user.key !== 'ANONYMOUS_USER'){
 				users.push({
 					key: user.key,
 					img: user.profile.img || user.profile.picture,
@@ -138,6 +130,7 @@ var UserModule = React.createClass({
 					visits: user.visits.length,
 					lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp
 				});
+				}
 			})
 			_this.setState({
 				users: users
@@ -145,14 +138,13 @@ var UserModule = React.createClass({
 		}).bind(this);
 	},
 	componentDidMount: function(){
-		alert("MOUNTED!");
+		
 	},
 	componentWillUnmount: function(){
 		this.firebaseRef.off();
 	},
 	render: function(){
-		var _this = this;
-		var createUser = function(user, index){
+		var userNodes = this.state.users.map(function(user){
 			return (
 				<UserListBox 
 					name={user.name} 
@@ -162,44 +154,19 @@ var UserModule = React.createClass({
 					key={user.key}>
 				</UserListBox>
 			);
-		}
-		return <div>{this.state.users.map(createUser)}</div>;
-		/*var userNodes = this.props.data.map(function(user){
-			console.log(user)
 
 		});
 		return (
 			<div className="UserModule">
 				{userNodes}
 			</div>
-		);*/
+		);
 	}
 });
 
-/*  render: function() {
-    var _this = this;
-    var createItem = function(item, index) {
-      return (
-        <li key={ index }>
-          { item.text }
-          <span onClick={ _this.props.removeItem.bind(null, item['.key']) }
-                style={{ color: 'red', marginLeft: '10px', cursor: 'pointer' }}>
-            X
-          </span>
-        </li>
-      );
-    };
-    return <ul>{ this.props.items.map(createItem) }</ul>;
-  }
-});*/
-
-/*var USER_LIST = [
-	{key: 0, img: 'https://lh6.googleusercontent.com/-WGzKVkRdUDw/AAAAAAAAAAI/AAAAAAAAAAw/elbqQfjFAws/photo.jpg', name: 'Vinesh', visits: 7, lastTime: Date.now()}
-]*/
-
 ReactDOM.render(
 	<UserModule />,
-	document.getElementById('sample')
+	document.getElementById('user-list')
 );
 
 
