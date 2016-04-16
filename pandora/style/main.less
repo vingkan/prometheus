@@ -126,7 +126,7 @@ body{
 /*--------------------------------------------*/
 
 html{
-	background: @MainColor;
+	background: @Charcoal;
 	font-size: 0;
 }
 
@@ -221,8 +221,11 @@ div#user-list{
 		@ListDivHeight: 5 * @vh;
 		height: @ListDivHeight;
 		line-height: @ListDivHeight;
+		overflow: hidden;
 
 		div{
+			width: 40%;
+			overflow: hidden;
 			display: inline-block;
 			margin: 0.5 * @vh;
 			height: @ListDivHeight;
@@ -239,15 +242,21 @@ div#user-list{
 		}
 
 		div.user-list-name{
-			width: 45%;
+			//
 		}
 
 		div.user-list-info{
+			
 			.StandardText(0.6);
 			line-height: @ListDivHeight;
 			vertical-align: middle;
 			text-align: left;
 			color: @Charcoal;
+
+			span{
+				margin: auto (0.75 * @vh);
+			}
+		
 		}
 
 	}
@@ -322,6 +331,81 @@ input, textarea{
 
 textarea{
 	height: 4 * @formItemHeight;
+}
+
+/*--------------------------------------------*/
+/*---> LOADING <------------------------------*/
+/*--------------------------------------------*/
+
+.CircularRotation(@time: 2s, @degrees: 360deg){
+	@-webkit-keyframes circularRotation{
+		from{
+			transform: rotate(0deg);
+			-webkit-transform: rotate(0deg);
+		}
+		to{
+			transform: rotate(@degrees);
+			-webkit-transform: rotate(@degrees);
+		}
+	}
+	animation: circularRotation @time linear infinite;
+}
+
+body.loading{
+
+	div.sidebar, div.space{
+		opacity: 0.25;
+	}
+	
+	div.cover{
+		z-index: 30;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5)
+	}
+
+	div.loading{
+		
+		z-index: 40;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		width: 30 * @vh;
+		height: 30 * @vh;
+		transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+
+		div.wheel{
+			opacity: 0.75;
+			position: absolute;
+			border-radius: 50%;
+			background: transparent;
+			&:nth-child(1){
+				margin: 0;
+				width: 28 * @vh;
+				height: 28 * @vh;
+				border: @vh dashed @MischiefBlue;
+				.CircularRotation(6s, 360deg);
+			}
+			&:nth-child(2){
+				margin: 5 * @vh;
+				width: 18 * @vh;
+				height: 18 * @vh;
+				border: @vh dashed white;
+				.CircularRotation(3s, -360deg);
+			}
+			&:nth-child(3){
+				margin: 10 * @vh;
+				width: 8 * @vh;
+				height: 8 * @vh;
+				border: @vh dashed @MischiefBlue;
+				.CircularRotation();
+			}
+		}
+
+	}
+
 }
 
 /*--------------------------------------------*/
