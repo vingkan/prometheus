@@ -1,0 +1,265 @@
+/*--------------------------------------------*/
+/*---> COLORS <-------------------------------*/
+/*--------------------------------------------*/
+@FireOrange: #FF3B2A;
+@MischiefBlue: #0D47A1;
+
+@Charcoal: #1a1a1a;
+@LightGray: #DDDDDD;
+
+@MainColor: @FireOrange;
+@MainLight: @MainColor + #222222;
+@MainDark: @MainColor - #222222;
+
+/*--------------------------------------------*/
+/*---> FONTS <--------------------------------*/
+/*--------------------------------------------*/
+
+@vh: 5.5px;
+
+@textSize: 3.5 * @vh;
+@tx: @textSize;
+
+.HeadFont(){
+	font-family: 'Graduate', sans-serif;
+}
+
+.BodyFont(){
+	font-family: 'Gafata', sans-serif;
+}
+
+/*--------------------------------------------*/
+/*---> TEXT <---------------------------------*/
+/*--------------------------------------------*/
+
+p, h1, h2, h3, ul, li{
+	.BodyFont();
+	margin: (0.5 * @textSize) auto;
+}
+
+h1, h2, h3{
+	.HeadFont();
+	font-weight: bold;
+	text-align: center;
+}
+
+h1{
+	font-size: 1.5 * @textSize;
+	line-height: 1.75 * @textSize;
+}
+
+h2{
+	font-size: 1.25 * @textSize;
+	line-height: 1.5 * @textSize;
+}
+
+h2{
+	font-size: 1.1 * @textSize;
+	line-height: 1.35 * @textSize;
+}
+
+p{
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	text-align: center;
+}
+
+ul{
+	width: 80%;
+	margin: auto 10%;
+}
+
+li{
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	list-style: disc;
+	margin: (0.15 * @textSize) auto;
+}
+
+a{
+
+	text-decoration: none;
+	font-weight: bold;
+	color: @MainColor;
+
+	&:hover{
+		color: lighten(@MainColor, 25%)
+	}
+
+	.AnimateAll();
+
+}
+
+/*--------------------------------------------*/
+/*---> BODY <---------------------------------*/
+/*--------------------------------------------*/
+
+html{
+	background: white;
+	//Default Text Styles
+	.BodyFont();
+	font-size: @textSize;
+	color: @Charcoal;
+	overflow-x: hidden;
+}
+
+body{
+	margin: 0;
+	width: 100vw;
+	margin: 0 auto;
+}
+
+.AnimateAll(@time: 0.5s){
+	transition: all @time ease;
+	-webkit-transition: all @time ease;
+}
+
+/*--------------------------------------------*/
+/*---> STRUCTURE <----------------------------*/
+/*--------------------------------------------*/
+
+@Margin: 1 * @vh;
+
+img.showcase{
+	width: 90%;
+	display: block;
+	margin: (3 * @vh) auto;
+}
+
+html{
+	background: @MainColor;
+	font-size: 0;
+}
+
+div.column{
+	
+	display: inline-block;
+	background: @LightGray;
+
+	&.half{
+		width: 49.25%;
+		padding: 0.5%;
+		padding-bottom: 1%;
+		&:nth-child(1){
+			padding-right: 0.25%;
+		}
+		&:nth-child(2){
+			padding-left: 0.25%;
+		}
+	}
+
+}
+
+div.module{
+	display: inline-block;
+	width: 96%;
+	padding: 1%;
+	margin: 2% 1% 1% 1%;
+	background: white;
+}
+
+/*--------------------------------------------*/
+/*---> HEADER & FOOTER <----------------------*/
+/*--------------------------------------------*/
+
+
+
+/*--------------------------------------------*/
+/*---> FORM <----------------------------------*/
+/*--------------------------------------------*/
+
+@formItemHeight: 6 * @vh;
+
+input, button, select, textarea{
+	outline: none;
+	border: none;
+	box-sizing: border-box;
+	display: block;
+	//SIZE
+	margin: (3 * @vh) auto;
+	width: 90%;
+	padding: 2.5%;
+	height: @formItemHeight;
+	//STYLE
+	background: darken(white, 25%);
+	//TEXT
+	line-height: @formItemHeight;
+	.BodyFont();
+	font-size: 1.0 * @textSize;
+}
+
+button{
+
+	background: @MainColor;
+	color: white;
+	padding: 0;
+	height: 1.5 * @formItemHeight;
+	line-height: 1.5 * @formItemHeight;
+
+	&:hover{
+		background: @Charcoal;
+		border-radius: 10px;
+		cursor: pointer;
+	}
+
+	.HeadFont();
+	.AnimateAll();
+
+}
+
+input, textarea{
+	
+	&:hover{
+		background: darken(white, 5%);
+	}
+
+	.AnimateAll();
+
+}
+
+textarea{
+	height: 4 * @formItemHeight;
+}
+
+/*--------------------------------------------*/
+/*---> SCROLLBAR <----------------------------*/
+/*--------------------------------------------*/
+
+@scrollBar: white;
+@scrollBarBack: @MainColor;
+
+::-webkit-scrollbar{
+	width: 10px;
+	height: 10px;
+	background: @scrollBarBack;
+	z-index: 50;
+}
+
+::-webkit-scrollbar-button{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-track{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-track-piece{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-thumb{
+	background: @scrollBar;
+	//border-radius: 5px;
+	position: absolute;
+	margin-left: -10px;
+}
+
+::-webkit-scrollbar-corner{
+	width: 10px;
+	height: 10px;
+	background: @scrollBarBack;
+}
+
+::-webkit-resizer{
+	background: @scrollBarBack;
+}
