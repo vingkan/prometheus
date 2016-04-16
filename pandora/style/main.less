@@ -90,6 +90,13 @@ a{
 
 }
 
+.StandardText(){
+	.BodyFont();
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	text-align: left;
+}
+
 /*--------------------------------------------*/
 /*---> BODY <---------------------------------*/
 /*--------------------------------------------*/
@@ -118,23 +125,62 @@ body{
 /*---> STRUCTURE <----------------------------*/
 /*--------------------------------------------*/
 
-@Margin: 1 * @vh;
-
-img.showcase{
-	width: 90%;
-	display: block;
-	margin: (3 * @vh) auto;
-}
-
 html{
 	background: @MainColor;
 	font-size: 0;
 }
 
+div.sidebar, div.space{
+	display: inline-block;
+	height: 100vh;
+	vertical-align: top;
+}
+
+div.sidebar{
+	width: 20%;
+	background: @Charcoal;
+}
+div.space{
+	width: 80%;
+	background: @LightGray;
+}
+
+@SidebarButtonHeight: 6 * @vh;
+
+.LeftBorderStripe(@StripeColor: white){
+	border-left: @vh solid @StripeColor;
+}
+
+div.sidebar-button{
+
+	.StandardText();
+	
+	width: 94%;
+	padding: 2%;
+	padding-left: 4%;
+	height: @SidebarButtonHeight;
+	line-height: @SidebarButtonHeight;
+	color: white;
+
+	.LeftBorderStripe();
+	&.blue-stripe{
+		.LeftBorderStripe(@MischiefBlue);
+	}
+	&.orange-stripe{
+		.LeftBorderStripe(@FireOrange);
+	}
+
+	&:hover{
+		background: lighten(@Charcoal, 10%);
+	}
+
+	.AnimateAll();
+
+}
+
 div.column{
 	
 	display: inline-block;
-	background: @LightGray;
 
 	&.half{
 		width: 49.25%;
@@ -162,7 +208,15 @@ div.module{
 /*---> HEADER & FOOTER <----------------------*/
 /*--------------------------------------------*/
 
+/*--------------------------------------------*/
+/*---> IMAGES <-------------------------------*/
+/*--------------------------------------------*/
 
+img.showcase{
+	width: 90%;
+	display: block;
+	margin: (3 * @vh) auto;
+}
 
 /*--------------------------------------------*/
 /*---> FORM <----------------------------------*/
@@ -225,12 +279,12 @@ textarea{
 /*---> SCROLLBAR <----------------------------*/
 /*--------------------------------------------*/
 
-@scrollBar: white;
-@scrollBarBack: @MainColor;
+@scrollBar: @Charcoal;
+@scrollBarBack: @LightGray;
 
 ::-webkit-scrollbar{
-	width: 10px;
-	height: 10px;
+	width: 5px;
+	height: 5px;
 	background: @scrollBarBack;
 	z-index: 50;
 }
