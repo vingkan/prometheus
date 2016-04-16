@@ -7,7 +7,7 @@ var ANONS; //TO-DO: add boolean to config to toggle tracking anonymous users
 var Prometheus = function(config){
 
 	//TO-DO: write check to see if '/prometheus' is at the end of url
-	URL = config.url || "NO_URL_EXCEPTION";
+	URL = config.url || config || "NO_URL_EXCEPTION";
 	LOCATOR = config.locator || true;
 
 	if(LOCATOR){
@@ -136,6 +136,9 @@ function getGeoIP(callback){
 function updateCoords(position){
 	GEOLOCATION.latitude = position.location.latitude;
 	GEOLOCATION.longitude = position.location.longitude;
+	GEOLOCATION.city = position.city;
+	GEOLOCATION.country = position.country.name;
+	GEOLOCATION.ip = position.ip
 	GEOLOCATION.isValid = true;
 }
 
@@ -144,7 +147,10 @@ function getLocationData(){
 	if(GEOLOCATION.isValid){
 		response = {
 			latitude: GEOLOCATION.latitude,
-			longitude: GEOLOCATION.longitude
+			longitude: GEOLOCATION.longitude,
+			city: GEOLOCATION.city,
+			country: GEOLOCATION.country,
+			ip: GEOLOCATION.ip
 		}
 	}
 	return response;
