@@ -8,10 +8,10 @@ var Prometheus = function(config){
 
 	//TO-DO: write check to see if '/prometheus' is at the end of url
 	URL = config.url || "NO_URL_EXCEPTION";
-	LOCATOR = config.locator || false;
+	LOCATOR = config.locator || true;
 
 	if(LOCATOR){
-		navigator.geolocation.getCurrentPosition(updateCoords);
+		getGeoIP(updateCoords);
 	}
 
 	var prometheus = {
@@ -122,9 +122,20 @@ var GEOLOCATION = {
 	isValid: false
 };
 
+function getGeoIP(callback){
+	var x = new XMLHttpRequest();
+	x.open('GET', 'https://geoip.nekudo.com/api/', false);
+	x.send();
+	var res = x.responseText;
+	var geoip = JSON.parse(res);
+	if(callback){
+		callback(geoip);
+	}
+}
+
 function updateCoords(position){
-	GEOLOCATION.latitude = position.coords.latitude;
-	GEOLOCATION.longitude = position.coords.longitude;
+	GEOLOCATION.latitude = position.location.latitude;
+	GEOLOCATION.longitude = position.location.longitude;
 	GEOLOCATION.isValid = true;
 }
 
