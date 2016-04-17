@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Prometheus</title>
+		<link rel="stylesheet" type="text/css" href="style/reset.css">
+		<link rel="stylesheet" type="text/css" href="style/main.css">
+		<!--<link rel="icon" type="img/png" href="style/favicon.png" style="width:30px;">-->
+		<!-- IMPORTED SCRIPTS -->
+		<link href='https://fonts.googleapis.com/css?family=Graduate|Gafata' rel='stylesheet' type='text/css'>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<script src="prometheus.js"></script>
+		<style>
+
+
+
+		</style>
+	</head>
+
+	<body>
+
+		<h1>Features</h1>
+		<ul id="feature-list">
+			<li>Nothing to see here!</li>
+		</ul>
+
+		<script type="text/javascript">
+
+			var prometheus = Prometheus('https://prometheusjs.firebaseio.com/prometheus');
+
+			prometheus.save({type: "FEATURES_LIST"});
+
+			prometheus.deliver('show-features', function(){
+				var features = [
+					"Track user retention and engagement metrics.",
+					"Separate business logic from app logic.",
+					"Manage analytics from a customizable dashboard."
+				];
+				var list = document.getElementById('feature-list');
+				list.innerHTML = '';
+				for(var i = 0; i < features.length; i++){
+					list.innerHTML += '<li>' + features[i] + '</li>';
+				}
+			}, function(){
+				var list = document.getElementById('feature-list');
+				list.innerHTML += '<li>The feature list is not available to you yet.</li>';
+			});
+
+		</script>
+		
+	</body>
+</html>

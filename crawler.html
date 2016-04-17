@@ -23,7 +23,19 @@
 
 		<div id="crawl-options"></div>
 
+		<button id="login-google">Or as Yourself!</button>
+
 		<a href="contact.html"><button id="go">Now Crawling as <span id="name"></span>! Click here to go!</button></a>
+
+		<script src="script/googleAuth.js"></script>
+
+		<script type="text/javascript">
+
+			$('#login-google').click(function(){
+				googleLogin();
+			});
+
+		</script>
 
 		<script type="text/javascript">
 		

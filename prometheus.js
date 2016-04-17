@@ -95,6 +95,25 @@ var Prometheus = function(config){
 			return response;
 		},
 
+		deliver: function(featureID, callback, fallback){
+			var uid = this.getUID();
+			var featureRoute = createRoute('/features/' + featureID + '/');
+			featureRoute.once('value', function(snapshot){
+				var allowed = snapshot.val();
+				var executed = false;
+				for(var i in allowed){
+					if(uid === allowed[i]){
+						callback();
+						executed = true;
+						break;
+					}
+				}
+				if(!executed && fallback){
+					fallback();
+				}
+			});
+		},
+
 		toString: function(){
 			console.log(config);
 			return 'Bringing Firebase to humanity!';
