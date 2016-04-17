@@ -163,15 +163,22 @@ var UserModule = React.createClass({
 		window.toggleLoading(true);
 		return {
 			users: [],
-			fb_key: window.CONFIG.FIREBASE_KEY
+			fb_key: window.CONFIG.FIREBASE_KEY,
+			bank: null,
+			map: null
 		}
 	},
 	componentWillMount: function(){
 		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users';
 		this.firebaseRef =  new Firebase(fb_url);
 		var _this = this;
+		var bank = lunr(function(){
+			this.field('name', {boost: 10});
+			this.ref('id');
+		});
 		this.firebaseRef.on('value', function(snapshot){
 			var users = [];
+			var userMap = snapshot.val();
 			snapshot.forEach(function(childSnap){
 				var user = childSnap.val();
 				user.key = childSnap.key();
@@ -181,13 +188,18 @@ var UserModule = React.createClass({
 				}
 				user.visits = visitList;
 				if(user.key !== 'ANONYMOUS_USER'){
-					users.push({
+					var userData = {
 						key: user.key,
 						img: user.profile.img || user.profile.picture,
 						name: user.profile.name,
 						visits: user.visits.length,
 						lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
 						visitList: visitList
+					}
+					users.push(userData)
+					bank.add({
+						id: user.key,
+						name: user.profile.name
 					});
 				}
 			});
@@ -199,7 +211,9 @@ var UserModule = React.createClass({
 				return 0;
 			});
 			_this.setState({
-				users: users
+				users: users,
+				bank: bank,
+				map: userMap
 			});
 			window.toggleLoading(false);
 		}).bind(this);
@@ -209,6 +223,45 @@ var UserModule = React.createClass({
 	},
 	componentWillUnmount: function(){
 		this.firebaseRef.off();
+	},
+	searchUser: function(e){
+		var query = e.target.value;
+		console.log(query)
+		console.log(this.state.bank)
+		var results = this.state.bank.search(query);
+		if(results.length > 0){
+			/*var output = [];
+			var toRemove = [];
+			for(var i = 0; i < results.length; i++){
+				var uid = results[i].ref;
+				toRemove.push(uid);
+				var target = this.state.map[uid];
+				target.key = 'result-' + uid;
+				output.push(target);
+			}
+			for(var i = 0; i < this.state.users; i++){
+				var existingUser = this.state.user[i];
+				if(toRemove.contains(existingUser.key)){
+					for(var j = 0; j < toRemove.length; j++){
+						if(existingUser.key === toRemove[j]){
+							toRemove.splice(j, 1);
+							break;
+						}
+					}
+				}
+				else{
+					output.push(existingUser);
+				}
+			}
+			console.log(results)
+			this.setState({
+				users: output
+			});*/
+			renderUserViewModule(results[0].ref);
+		}
+		/*else{
+			console.log('no results')
+		}*/
 	},
 	render: function(){
 		var userNodes = this.state.users.map(function(user){
@@ -226,6 +279,7 @@ var UserModule = React.createClass({
 		});
 		return (
 			<div className="UserModule">
+				<input className="search-box" onChange={this.searchUser}></input>
 				{userNodes}
 			</div>
 		);
