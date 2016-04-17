@@ -1,68 +1,97 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Prometheus Crawler</title>
-		<!-- <link rel="stylesheet" type="text/css" href="style/reset.css"> -->
-		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+		<title>Prometheus</title>
+		<link rel="stylesheet" type="text/css" href="style/reset.css">
+		<link rel="stylesheet" type="text/css" href="style/main.css">
+		<!--<link rel="icon" type="img/png" href="style/favicon.png" style="width:30px;">-->
+		<!-- IMPORTED SCRIPTS -->
+		<link href='https://fonts.googleapis.com/css?family=Graduate|Gafata' rel='stylesheet' type='text/css'>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
 		<script src="prometheus.js"></script>
 		<style>
 
-			div#map{
-				width: 95vw;
-				height: 95vh;
-			}
+
 
 		</style>
 	</head>
 
 	<body>
 
-		<div id="map"></div>
+		<h1>Choose who to crawl as!</h1>
+
+		<div id="crawl-options"></div>
+
+		<a href="contact.html"><button id="go">Now Crawling as <span id="name"></span>! Click here to go!</button></a>
 
 		<script type="text/javascript">
 		
 		var prometheus = Prometheus('https://prometheusjs.firebaseio.com/prometheus');
-		var userID = 'crawler-001';
-		prometheus.logon(userID, {
-			uid: userID,
-			name: "Tessa Guilot",
-			email: "tessa-guilot@gmail.com",
-			img: "https://randomuser.me/api/portraits/women/86.jpg"
-		});
 
-		function getGeoIP(callback){
-			var x = new XMLHttpRequest();
-			x.open('GET', 'https://geoip.nekudo.com/api/', false);
-			x.send();
-			var res = x.responseText;
-			var geoip = JSON.parse(res);
-			if(callback){
-				callback(geoip);
+		function PersonDivFactory(person){
+			var html = '';
+				html += '<div class="person" onclick="crawlAs(&quot;' + person.uid + '&quot;);">';
+				html += '<div class="person-img" style="background-image: url(&quot;' + person.img + '&quot;);"></div>';
+				html += '<h3>' + person.name + '</h3>';
+				html += '</div>';
+			return html;
+		}
+
+		var people = {
+			tessa: {
+				uid: 'tessa',
+				name: "Tessa Guilot",
+				email: "tessa-guilot@gmail.com",
+				img: "https://randomuser.me/api/portraits/women/86.jpg"
+			},
+			roy: {
+				uid: 'roy',
+				name: "Roy Chiu",
+				email: "rchiu7@gmail.com",
+				img: "https://randomuser.me/api/portraits/men/26.jpg"
+			},
+			catherine: {
+				uid: 'catherine',
+				name: "Catherine Boyle",
+				email: "boyle_cathy@gmail.com",
+				img: "https://randomuser.me/api/portraits/women/81.jpg"
+			},
+			jordan: {
+				uid: 'jordan',
+				name: "Jordan Ramirez",
+				email: "jordan_ramirez@gmail.com",
+				img: "https://randomuser.me/api/portraits/men/11.jpg"
+			},
+			jenny: {
+				uid: 'jenny',
+				name: "Jenny Du",
+				email: "jduwhatudu@gmail.com",
+				img: "https://randomuser.me/api/portraits/women/17.jpg"
+			},
+			casper: {
+				uid: 'casper',
+				name: "Casper Johannes",
+				email: "casper_pls@gmail.com",
+				img: "https://randomuser.me/api/portraits/men/7.jpg"
 			}
 		}
 
-		function main(geoip){
-			var coords = geoip.location;
-			var zoom = 13;
-			var map = L.map('map').setView([coords.latitude, coords.longitude], zoom);
-			var tile = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-				attribution: 'OpenStreetMap'
-			});
-			var marker = L.marker([coords.latitude, coords.longitude]);
-			tile.addTo(map);
-			marker.addTo(map);
-			marker.bindPopup('<h4>Your Location</h4>').openPopup();
-			map.on('click', function(e){
-				var coords = e.latlng;
-				marker.setLatLng([coords.lat, coords.lng]).update();
-			});
+		var options = document.getElementById('crawl-options');
+		options.innerHTML = '';
+		for(var p in people){
+			options.innerHTML += PersonDivFactory(people[p]);
 		}
 
-		getGeoIP(main);
+		var button = document.getElementById('go');
+			button.style.display = 'none';
 
-		/* Quick Start: http://leafletjs.com/examples/quick-start.html */
+		function crawlAs(key){
+			var person = people[key];
+			prometheus.logon(person.uid, person);
+			document.getElementById('name').innerText = person.name;
+			button.style.display = 'block';
+		}
 
 		</script>
 		

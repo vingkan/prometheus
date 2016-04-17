@@ -125,7 +125,41 @@ body{
 /*---> HEADER & FOOTER <----------------------*/
 /*--------------------------------------------*/
 
+/*--------------------------------------------*/
+/*---> PEOPLE <-------------------------------*/
+/*--------------------------------------------*/
 
+@PersonSize: 40 * @vh;
+
+div#crawl-options{
+	display: block;
+	width: 3 * (40 + 4) * @vh;
+	margin: 0 auto;
+}
+
+div.person{
+	
+	display: inline-block;
+	margin: 0 auto;
+	width: @PersonSize;
+	padding: 2 * @vh;
+
+	div.person-img{
+		margin: 0 auto;
+		height: 0.5 * @PersonSize;
+		width: 0.5 * @PersonSize;
+		border-radius: 50%;
+		background-size: 100%;
+	}
+
+	&:hover{
+		opacity: 0.5;
+		cursor: pointer;
+	}
+
+	.AnimateAll();
+
+}
 
 /*--------------------------------------------*/
 /*---> FORM <----------------------------------*/
