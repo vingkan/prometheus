@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Prometheus Crawler</title>
+		<!-- <link rel="stylesheet" type="text/css" href="style/reset.css"> -->
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+		<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<script src="prometheus.js"></script>
+		<style>
+
+			div#map{
+				width: 95vw;
+				height: 95vh;
+			}
+
+		</style>
+	</head>
+
+	<body>
+
+		<div id="map"></div>
+
+		<script type="text/javascript">
+		
+		var prometheus = Prometheus('https://prometheusjs.firebaseio.com/prometheus');
+		var userID = 'crawler-001';
+		prometheus.logon(userID, {
+			uid: userID,
+			name: "Tessa Guilot",
+			email: "tessa-guilot@gmail.com",
+			img: "https://randomuser.me/api/portraits/women/86.jpg"
+		});
+
+		function getGeoIP(callback){
+			var x = new XMLHttpRequest();
+			x.open('GET', 'https://geoip.nekudo.com/api/', false);
+			x.send();
+			var res = x.responseText;
+			var geoip = JSON.parse(res);
+			if(callback){
+				callback(geoip);
+			}
+		}
+
+		function main(geoip){
+			var coords = geoip.location;
+			var zoom = 13;
+			var map = L.map('map').setView([coords.latitude, coords.longitude], zoom);
+			var tile = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+				attribution: 'OpenStreetMap'
+			});
+			var marker = L.marker([coords.latitude, coords.longitude]);
+			tile.addTo(map);
+			marker.addTo(map);
+			marker.bindPopup('<h4>Your Location</h4>').openPopup();
+			map.on('click', function(e){
+				var coords = e.latlng;
+				marker.setLatLng([coords.lat, coords.lng]).update();
+			});
+		}
+
+		getGeoIP(main);
+
+		/* Quick Start: http://leafletjs.com/examples/quick-start.html */
+
+		</script>
+		
+	</body>
+</html>
