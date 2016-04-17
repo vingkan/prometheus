@@ -228,8 +228,7 @@ window.UserModule = React.createClass({
 				function getLastVisit(d){
 					return d.visitList[d.visitList.length-1];
 				}
-				return getLastVisit(a).meta.datetime.timestamp < getLastVisit(b).meta.datetime.timestamp;
-				return 0;
+				return getLastVisit(b).meta.datetime.timestamp - getLastVisit(a).meta.datetime.timestamp;
 			});
 			_this.setState({
 				users: users,
