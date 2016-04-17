@@ -38,6 +38,7 @@
 		<script type="text/babel" src="lib/main.js"></script>
 		<script type="text/babel" src="lib/user-module.js"></script>
 		<script type="text/babel" src="lib/feature-module.js"></script>
+		<script type="text/babel" src="lib/screenshot-module.js"></script>
 		
 	</head>
 
@@ -63,6 +64,9 @@
 			</div>
 			<div class="sidebar-button green-stripe" onclick="renderMapModule();">
 				<i class="fa fa-icon fa-globe"></i> Map
+			</div>
+			<div class="sidebar-button purple-stripe" onclick="renderScreenshotModule();">
+				<i class="fa fa-icon fa-camera"></i> Screenshots
 			</div>
 			<div class="sidebar-button" onclick="renderMilestoneModule();">
 				<i class="fa fa-icon fa-line-chart"></i> Milestones
@@ -97,6 +101,15 @@
 
 		<div class="space" id="map">
 			<div id="map-page"></div>
+		</div>
+
+		<div class="space" id="screenshots">
+			<div class="column full scrollable">
+				<h2>Screenshots Gallery</h2>
+				<div id="screenshot-list">
+					<p>Coming Soon.</p>
+				</div>
+			</div>
 		</div>
 
 		<div class="space" id="milestones">

@@ -213,6 +213,9 @@ div.sidebar-button{
 	&.green-stripe{
 		.LeftBorderStripe(@AcceleratorGreen);
 	}
+	&.purple-stripe{
+		.LeftBorderStripe(@AnalyticalPurple);
+	}
 
 	&:hover{
 		background: lighten(@Charcoal, 10%);
@@ -481,6 +484,19 @@ div.feature-module{
 div#map-page{
 	width: 100%;
 	height: 100%;
+}
+
+div.screenshot-module{
+	div.user-list-div{
+		width: 96%;
+		display: block;
+		margin: 0 auto;
+	}
+	div.module{
+		img{
+			width: 100%;
+		}
+	}
 }
 
 /*--------------------------------------------*/

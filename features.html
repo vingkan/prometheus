@@ -41,9 +41,17 @@
 				for(var i = 0; i < features.length; i++){
 					list.innerHTML += '<li>' + features[i] + '</li>';
 				}
+				prometheus.capture({
+					type: 'SCREEN_CAPTURE',
+					caption: 'Feature: show-features is released to this user.'
+				});
 			}, function(){
 				var list = document.getElementById('feature-list');
 				list.innerHTML += '<li>The feature list is not available to you yet.</li>';
+				prometheus.capture({
+					type: 'SCREEN_CAPTURE',
+					caption: 'Feature: show-features is not released to this user.'
+				});
 			});
 
 		</script>

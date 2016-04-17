@@ -4,7 +4,14 @@ window.PersonBox = React.createClass({
 		return {
 			fb_key: window.CONFIG.FIREBASE_KEY,
 			uid: this.props.uid,
-			data: null
+			data: {
+				key: null,
+				img: null,
+				name: null,
+				visits: 0,
+				lastTime: null,
+				visitList: []
+			}
 		}
 	},
 	componentWillMount: function(){
@@ -28,10 +35,10 @@ window.PersonBox = React.createClass({
 					lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
 					visitList: visitList
 				}
+				_this.setState({
+					data: userData
+				});
 			}
-			_this.setState({
-				data: userData
-			});
 		}).bind(this);
 	},
 	render: function(){
