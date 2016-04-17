@@ -96,7 +96,7 @@ var UserViewModule = React.createClass({
 					key={index}>
 				</VisitView>
 			);
-		});
+		}).reverse();
 		return (
 			<div className="UserViewModule user-view">
 				<h1>{this.state.name}</h1>
@@ -183,14 +183,22 @@ var UserModule = React.createClass({
 				}
 				user.visits = visitList;
 				if(user.key !== 'ANONYMOUS_USER'){
-				users.push({
-					key: user.key,
-					img: user.profile.img || user.profile.picture,
-					name: user.profile.name,
-					visits: user.visits.length,
-					lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp
-				});
+					users.push({
+						key: user.key,
+						img: user.profile.img || user.profile.picture,
+						name: user.profile.name,
+						visits: user.visits.length,
+						lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
+						visitList: visitList
+					});
 				}
+			});
+			users.sort(function(a, b){
+				function getLastVisit(d){
+					return d.visitList[d.visitList.length-1];
+				}
+				return getLastVisit(a).meta.datetime.timestamp < getLastVisit(b).meta.datetime.timestamp;
+				return 0;
 			});
 			_this.setState({
 				users: users

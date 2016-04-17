@@ -171,6 +171,8 @@ div.sidebar{
 div.space{
 	width: 80%;
 	background: @LightGray;
+	background-image: url('img/white-trans-hex.png');
+	background-size: 37.5%;
 }
 
 @SidebarButtonHeight: 6 * @vh;
@@ -200,6 +202,12 @@ div.sidebar-button{
 
 	&:hover{
 		background: lighten(@Charcoal, 10%);
+	}
+
+	i{
+		display: inline-block;
+		width: 20%;
+		text-align: center;
 	}
 
 	.AnimateAll();
