@@ -46,11 +46,17 @@
 
 		<div class="sidebar">
 			<h3 id="dashboard-key">Dashboard</h3>
-			<div class="sidebar-button blue-stripe">
+			<div class="sidebar-button blue-stripe" onclick="renderUserModule();">
 				<i class="fa fa-icon fa-home"></i> Home
 			</div>
 			<div class="sidebar-button orange-stripe" onclick="renderUserModule();">
 				<i class="fa fa-icon fa-users"></i> Users
+			</div>
+			<div class="sidebar-button gold-stripe" onclick="renderFeatureModule();">
+				<i class="fa fa-icon fa-gear"></i> Features
+			</div>
+			<div class="sidebar-button green-stripe" onclick="renderMapModule();">
+				<i class="fa fa-icon fa-globe"></i> Map
 			</div>
 			<div class="sidebar-button" onclick="renderMilestoneModule();">
 				<i class="fa fa-icon fa-line-chart"></i> Milestones
@@ -69,6 +75,28 @@
 				<div class="module">
 					<div id="user-info">
 						<p>Click on a user to see more specific information.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="space" id="features">
+			<div class="column full">
+				<div class="module">
+					<h2>Features</h2>
+					<div id="milestone-list">
+						<p>Coming Soon.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="space" id="map">
+			<div class="column full">
+				<div class="module">
+					<h2>Map</h2>
+					<div id="milestone-list">
+						<p>Coming Soon.</p>
 					</div>
 				</div>
 			</div>

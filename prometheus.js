@@ -97,7 +97,7 @@ var Prometheus = function(config){
 
 		deliver: function(featureID, callback, fallback){
 			var uid = this.getUID();
-			var featureRoute = createRoute('/features/' + featureID + '/');
+			var featureRoute = createRoute('/features/' + featureID + '/access/');
 			featureRoute.once('value', function(snapshot){
 				var allowed = snapshot.val();
 				var executed = false;

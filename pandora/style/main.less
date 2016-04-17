@@ -4,6 +4,8 @@
 @FireOrange: #FF3B2A;
 @MischiefBlue: #0D47A1;
 @AnalyticalPurple: #4A148C;
+@RetentionGold: #FFCA28;
+@AcceleratorGreen: #CDDC39;
 
 @Charcoal: #1a1a1a;
 @LightGray: #DDDDDD;
@@ -192,6 +194,11 @@ div.sidebar-button{
 	height: @SidebarButtonHeight;
 	line-height: @SidebarButtonHeight;
 	color: white;
+	border-bottom: 1px solid lighten(@Charcoal, 10%);
+
+	&:nth-child(2){
+		border-top: 1px solid lighten(@Charcoal, 10%);
+	}
 
 	.LeftBorderStripe();
 	&.blue-stripe{
@@ -199,6 +206,12 @@ div.sidebar-button{
 	}
 	&.orange-stripe{
 		.LeftBorderStripe(@FireOrange);
+	}
+	&.gold-stripe{
+		.LeftBorderStripe(@RetentionGold);
+	}
+	&.green-stripe{
+		.LeftBorderStripe(@AcceleratorGreen);
 	}
 
 	&:hover{
