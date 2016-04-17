@@ -245,16 +245,7 @@ window.renderUserModule = function(){
 
 renderUserModule();
 
-window.renderFeatureModule = function(){
 
-	toggleSpace('features');
-
-	/*ReactDOM.render(
-		<UserModule />,
-		document.getElementById('user-list')
-	);*/
-
-}
 
 window.renderMapModule = function(){
 

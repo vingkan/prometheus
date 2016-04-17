@@ -265,10 +265,13 @@ div.module{
 	overflow-x: hidden;
 }
 
-div#user-list{
-
+.InnerModule(){
 	width: 96%;
 	margin: 2%;
+}
+
+div#user-list{
+	.InnerModule();
 }
 
 div.user-list-div{
@@ -326,7 +329,6 @@ div.user-list-div{
 	}
 
 }
-
 
 div.user-view{
 
@@ -401,6 +403,22 @@ div.user-visit-view{
 				.WrapWords();
 			}
 
+		}
+
+	}
+
+}
+
+div.feature-module{
+
+	.InnerModule();
+
+	div.feature-view{
+
+		.StandardText();
+
+		h3{
+			text-align: left;
 		}
 
 	}
