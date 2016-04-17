@@ -1,17 +1,31 @@
 window.VisitView = React.createClass({
 	mixins: [ReactFireMixin],
+	handleImageData: function(name, data){
+		if(name === 'img'){
+			return (
+				<img className="panel-view-screenshot" src={data}></img>
+			);
+		}
+		else{
+			return (
+				<span>{data}</span>
+			);
+		}
+	},
 	displayProperty: function(name, data, icon, key){
+		var imgData = this.handleImageData(name, data);
 		return (
 			<div className="prop-info" key={key}>
 				<i className={'fa fa-icon fa-' + icon}></i>
 				<span className="meta-prop-label">{name}: </span>
-				<span>{data || 'N/A'}</span>
+				{imgData || data}
 			</div>
 		);
 	},
 	render: function(){
 		var _this = this;
 		var propertyList = [];
+		var endNode = null;
 		for(var i in this.props.data){
 			var prop = {
 				name: i,
@@ -19,12 +33,15 @@ window.VisitView = React.createClass({
 				icon: 'gear'
 			};
 			if(i === 'type'){
+				prop.icon = 'database';
 				propertyList.unshift(prop);
+			}
+			if(i === 'img'){
+				endNode = prop;
 			}
 			else{
 				propertyList.push(prop);
 			}
-
 		}
 		var meta = this.props.meta;
 		propertyList.push.apply(propertyList, [
@@ -34,14 +51,18 @@ window.VisitView = React.createClass({
 			{name: 'Time', data: moment(meta.datetime.timestamp).format('h:mm A'), icon: 'clock-o'},
 			{name: 'City', data: meta.location.city + ', ' + meta.location.country, icon: 'globe'}
 		]);
+		if(endNode){
+			propertyList.push(endNode);
+			endNode.icon = 'camera';
+		}
 		var propertyNodes = propertyList.map(function(prop, index){
 			return _this.displayProperty(prop.name, prop.data, prop.icon, index);
 		});
 		return (
 			<div className={'user-visit-view ' + this.props.data.type.toLowerCase()}>
-				<div className="visit-summary">
+				<h4 className="visit-summary">
 					{this.props.data.type + ': ' + moment(this.props.meta.datetime.timestamp).format('M/D/YY h:mm A')}
-				</div>
+				</h4>
 				<div className="visit-meta-fields">
 					{propertyNodes}
 				</div>

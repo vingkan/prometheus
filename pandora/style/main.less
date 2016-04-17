@@ -377,15 +377,19 @@ div.user-visit-view{
 	width: 94%;
 	margin: 4% 2%;
 	padding: 2%;
-	border-left: 0.5 * @vh solid @AnalyticalPurple;
+	border-left: 0.75 * @vh solid @AnalyticalPurple;
 	.StandardText();
 
 	&.error{
-		border-left: 0.5 * @vh solid @FireOrange;
+		border-left: 0.75 * @vh solid @FireOrange;
 	}
 
 	&.user_logon{
-		border-left: 0.5 * @vh solid @MischiefBlue;
+		border-left: 0.75 * @vh solid @MischiefBlue;
+	}
+
+	h4{
+		margin-bottom: @vh;
 	}
 
 	div.visit-meta-fields{
@@ -407,6 +411,10 @@ div.user-visit-view{
 
 			span{
 				.WrapWords();
+			}
+
+			img.panel-view-screenshot{
+				width: 100%;
 			}
 
 		}
