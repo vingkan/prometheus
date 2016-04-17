@@ -1,0 +1,47 @@
+<html>
+<body>
+
+<!-- FIREBASE -->
+<script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
+<p>Screen Shot Widget</p>
+<input type="button" value="Capture Screenshot" onclick="takeScreenShot();">
+<input type="button" value="Post Screenshot" onclick="postImage();">
+<script src="html2canvas.js"></script>
+<script type="text/javascript">
+ function takeScreenShot(){
+ html2canvas(window.parent.document.body, {
+ onrendered: function(canvas) {
+ var cand = document.getElementsByTagName('canvas');
+ if(cand[0] === undefined || cand[0] === null){
+ 
+ }else{
+ //cand[0].remove();
+ document.body.removeChild(cand[0]);
+ }
+ document.body.appendChild(canvas);
+ }
+ });
+ }
+ 
+ function postImage(){
+ var cand = document.getElementsByTagName('canvas');
+ var canvasData = cand[0].toDataURL("image/png");
+ var fb = new Firebase('https://firedates.firebaseio.com/img/');
+ fb.set(canvasData);
+ }
+
+ function loadImage(){
+ 	var fb = new Firebase('https://firedates.firebaseio.com/img/');
+ 	fb.once('value', function(s){
+ 		var d = s.val();
+ 		document.body.innerHTML += '<img src="' + d + '">';
+ 	})
+ }
+ 
+ takeScreenShot();
+ 
+</script>
+ 
+</body>
+ 
+</html>
