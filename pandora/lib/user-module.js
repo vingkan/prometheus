@@ -87,7 +87,6 @@ var UserViewModule = React.createClass({
 	},
 	render: function(){
 		var visits = this.state.visits;
-		console.log(visits[visits.length-1])
 		var visitNodes = this.state.visits.map(function(visit, index){
 			return (
 				<VisitView
@@ -132,7 +131,6 @@ window.renderUserViewModule = function(uid){
 var UserListBox = React.createClass({
 	mixins: [ReactFireMixin],
 	loadUserView: function(){
-		console.log(this.props)
 		renderUserViewModule(this.props.uid);
 	},
 	render: function(){
