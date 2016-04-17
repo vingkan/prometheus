@@ -67,7 +67,7 @@ Prometheus.js can retrieve four types of metadata about the user's visit to your
 Using the `'all'` tag will return save all four types of metadata. If no `metaProps` argument is given, this is the default functionality.
 
 ## Dashboard
-Explore the data saved by Prometheus.js with a customizable, local dashboard! An analytics dashboard for Prometheus.js is coming soon...
+Explore the data saved by Prometheus.js with a customizable, local dashboard! Instructions to use the analytics dashboard with your Prometheus-tracked data are [here](https://github.com/vingkan/prometheus/blob/master/pandora/README.md).
 
 ## PandorasBox.js
 Prometheus.js gives you the gift of better tracking the interactions of specific users with your website or app. These analytics can be a massive help when running A/B tests on your site. Of course, as in Greek myth, the great power brought by Prometheus can also cause great chaos.
