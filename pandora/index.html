@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>Dashboard</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" type="text/css" href="style/reset.css">
 		<link rel="stylesheet/less" type="text/css" href="style/main.less">
 		<!--<link rel="icon" type="img/png" href="style/favicon.png" style="width:30px;">-->
@@ -46,11 +47,11 @@
 		<div class="sidebar">
 			<h3 id="dashboard-key">Dashboard</h3>
 			<div class="sidebar-button blue-stripe">Home</div>
-			<div class="sidebar-button orange-stripe">Users</div>
-			<div class="sidebar-button">Milestones</div>
+			<div class="sidebar-button orange-stripe" onclick="renderUserModule();">Users</div>
+			<div class="sidebar-button" onclick="renderMilestoneModule();">Milestones</div>
 		</div>
 
-		<div class="space">
+		<div class="space" id="users">
 			<div class="column half">
 				<div class="module">
 					<h2>Users</h2>
@@ -60,7 +61,20 @@
 
 			<div class="column half">
 				<div class="module">
+					<div id="user-info">
+						<p>Click on a user to see more specific information.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="space" id="milestones">
+			<div class="column full">
+				<div class="module">
 					<h2>Milestones</h2>
+					<div id="milestone-list">
+						<p>Coming Soon.</p>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -69,6 +83,7 @@
 		
 
 		<script type="text/javascript">
+
 
 
 		</script>

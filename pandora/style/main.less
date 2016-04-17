@@ -3,6 +3,7 @@
 /*--------------------------------------------*/
 @FireOrange: #FF3B2A;
 @MischiefBlue: #0D47A1;
+@AnalyticalPurple: #4A148C;
 
 @Charcoal: #1a1a1a;
 @LightGray: #DDDDDD;
@@ -37,7 +38,7 @@ p, h1, h2, h3, ul, li{
 	margin: (0.5 * @textSize) auto;
 }
 
-h1, h2, h3{
+h1, h2, h3, h4{
 	.HeadFont();
 	font-weight: bold;
 	text-align: center;
@@ -53,9 +54,15 @@ h2{
 	line-height: 1.5 * @textSize;
 }
 
-h2{
+h3{
 	font-size: 1.1 * @textSize;
 	line-height: 1.35 * @textSize;
+}
+
+h4{
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	text-align: left;
 }
 
 p{
@@ -97,6 +104,17 @@ a{
 	text-align: left;
 }
 
+.WrapWords(){
+	white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+	white-space: -webkit-pre-wrap; /*Chrome & Safari */ 
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	white-space: pre-wrap;       /* css-3 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	word-break: break-all;
+	white-space: normal;
+}
+
 /*--------------------------------------------*/
 /*---> BODY <---------------------------------*/
 /*--------------------------------------------*/
@@ -134,8 +152,7 @@ div.sidebar, div.space{
 	display: inline-block;
 	height: 100vh;
 	vertical-align: top;
-	overflow-y: scroll;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 div.sidebar{
@@ -206,6 +223,12 @@ div.column{
 		}
 	}
 
+	&.full{
+		width: 99%;
+		padding: 0.5%;
+		padding-bottom: 1%;
+	}
+
 }
 
 div.module{
@@ -215,6 +238,9 @@ div.module{
 	margin: 2% 1% 1% 1%;
 	background: white;
 	font-size: @tx;
+	max-height: 95vh;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 div#user-list{
@@ -234,6 +260,12 @@ div.user-list-div{
 	height: @ListDivHeight;
 	line-height: @ListDivHeight;
 	overflow: hidden;
+
+	&:hover{
+		opacity: 0.75;
+		cursor: pointer;
+		.AnimateAll();
+	}
 
 	div{
 		width: 40%;
@@ -269,6 +301,86 @@ div.user-list-div{
 			margin: auto (0.75 * @vh);
 		}
 	
+	}
+
+}
+
+
+div.user-view{
+
+	display: inline-block;
+	width: 102%;
+	padding-top: 4 * @vh;
+	height: 31 * @vh;
+	margin: -1.25%;
+	background-color: @AnalyticalPurple;
+	background-image: url('img/charcoal-trans-hex.png');
+	background-size: 75%;
+
+	h1, p{
+		color: white;
+	}
+
+	div.user-view-img{
+		display: block;
+		margin: 0 auto;
+		width: 20 * @vh;
+		height: 20 * @vh;
+		background-size: 100%;
+		border-radius: 50%;
+	}
+
+	i{
+		margin-right: @vh;
+	}
+
+	div.visits-field{
+		margin-top: 2 * @vh;
+		background: white;
+		width: 100%;
+	}
+
+}
+
+div.user-visit-view{
+	
+	width: 94%;
+	margin: 4% 2%;
+	padding: 2%;
+	border-left: 0.5 * @vh solid @AnalyticalPurple;
+	.StandardText();
+
+	&.error{
+		border-left: 0.5 * @vh solid @FireOrange;
+	}
+
+	&.user_logon{
+		border-left: 0.5 * @vh solid @MischiefBlue;
+	}
+
+	div.visit-meta-fields{
+
+		.StandardText();
+		
+		div.prop-info{
+
+			i{
+				display: inline-block;
+				width: 7.5%;
+				text-align: center;
+			}
+
+			span.meta-prop-label{
+				display: inline-block;
+				width: 22.5%;
+			}
+
+			span{
+				.WrapWords();
+			}
+
+		}
+
 	}
 
 }
