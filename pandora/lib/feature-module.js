@@ -1,4 +1,219 @@
-var FeatureModule = React.createClass({
+window.PersonBox = React.createClass({
+	mixins: [ReactFireMixin],
+	getInitialState: function(){
+		return {
+			fb_key: window.CONFIG.FIREBASE_KEY,
+			uid: this.props.uid,
+			data: null
+		}
+	},
+	componentWillMount: function(){
+		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users/' + this.state.uid + '/';
+		this.firebaseRef =  new Firebase(fb_url);
+		var _this = this;
+		this.firebaseRef.on('value', function(snapshot){
+			var user = snapshot.val();
+			user.key = snapshot.key();
+			var visitList = [];
+			for(var i in user.visits){
+				visitList.push(user.visits[i]);
+			}
+			user.visits = visitList;
+			if(user.key !== 'ANONYMOUS_USER'){
+				var userData = {
+					key: user.key,
+					img: user.profile.img || user.profile.picture,
+					name: user.profile.name,
+					visits: user.visits.length,
+					lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
+					visitList: visitList
+				}
+			}
+			_this.setState({
+				data: userData
+			});
+		}).bind(this);
+	},
+	render: function(){
+		return (
+			<div className="user-list-div" onClick={this.giveFeatureAccess}>
+				<div className="user-list-img" style={{
+					backgroundImage: 'url(' + this.state.data.img + ')'
+				}}></div>
+				<div className="user-list-name">
+					{this.state.data.name}
+				</div>
+				<div className="user-list-info">
+					<i className="fa fa-icon fa-eye"></i>
+					<span>
+						{this.state.data.visits}
+					</span>
+					<i className="fa fa-icon fa-clock-o"></i>
+					<span>
+						{moment(this.state.data.lastTime).fromNow()}
+					</span>
+				</div>
+			</div>
+		);
+	}
+});
+
+window.deliverFeatureAccess = function(fid, uid){
+	var fb_url = 'http://' + window.CONFIG.FIREBASE_KEY + '.firebaseio.com/prometheus/features/' + fid + '/access/';
+	var ref = new Firebase(fb_url);
+	ref.push(uid);
+}
+
+window.UserFeatureAddBox = React.createClass({
+	mixins: [ReactFireMixin],
+	giveFeatureAccess: function(){
+		deliverFeatureAccess(this.props.feature_key, this.props.uid);
+	},
+	render: function(){
+		return (
+			<div className="user-list-div" onClick={this.giveFeatureAccess}>
+				<div className="user-list-img" style={{
+					backgroundImage: 'url(' + this.props.img + ')'
+				}}></div>
+				<div className="user-list-name">
+					{this.props.name}
+				</div>
+				<div className="user-list-info">
+					<i className="fa fa-icon fa-eye"></i>
+					<span>
+						{this.props.visits}
+					</span>
+					<i className="fa fa-icon fa-clock-o"></i>
+					<span>
+						{moment(this.props.lastTime).fromNow()}
+					</span>
+				</div>
+			</div>
+		);
+	}
+});
+
+window.StaticUserSearch = React.createClass({
+	mixins: [ReactFireMixin],
+	getInitialState: function(){
+		window.toggleLoading(true);
+		return {
+			users: [],
+			fb_key: window.CONFIG.FIREBASE_KEY,
+			bank: null,
+			map: null
+		}
+	},
+	componentWillMount: function(){
+		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users';
+		this.firebaseRef =  new Firebase(fb_url);
+		var _this = this;
+		var bank = lunr(function(){
+			this.field('name', {boost: 10});
+			this.ref('id');
+		});
+		this.firebaseRef.on('value', function(snapshot){
+			var users = [];
+			var userMap = snapshot.val();
+			snapshot.forEach(function(childSnap){
+				var user = childSnap.val();
+				user.key = childSnap.key();
+				var visitList = [];
+				for(var i in user.visits){
+					visitList.push(user.visits[i]);
+				}
+				user.visits = visitList;
+				if(user.key !== 'ANONYMOUS_USER'){
+					var userData = {
+						key: user.key,
+						uid: user.key,
+						img: user.profile.img || user.profile.picture,
+						name: user.profile.name,
+						visits: user.visits.length,
+						lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
+						visitList: visitList
+					}
+					users.push(userData)
+					bank.add({
+						id: user.key,
+						name: user.profile.name
+					});
+				}
+			});
+			users.sort(function(a, b){
+				function getLastVisit(d){
+					return d.visitList[d.visitList.length-1];
+				}
+				return getLastVisit(a).meta.datetime.timestamp < getLastVisit(b).meta.datetime.timestamp;
+				return 0;
+			});
+			_this.setState({
+				users: users,
+				bank: bank,
+				map: userMap
+			});
+			window.toggleLoading(false);
+		}).bind(this);
+	},
+	componentDidMount: function(){
+		
+	},
+	componentWillUnmount: function(){
+		this.firebaseRef.off();
+	},
+	searchUser: function(e){
+		var _this = this;
+		var query = e.target.value;
+		var results = this.state.bank.search(query);
+		var resultList = []
+		for(var i = 0; i < results.length; i++){
+			var rk = results[i].ref
+			var user = this.state.map[rk]
+			var visitList = [];
+			for(var i in user.visits){
+				visitList.push(user.visits[i]);
+			}
+			user.visits = visitList;
+			resultList.push({
+				key: rk,
+				uid: rk,
+				img: user.profile.img || user.profile.picture,
+				name: user.profile.name,
+				visits: user.visits.length,
+				lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
+				visitList: visitList
+			})
+		}
+		_this.setState({
+			users: resultList
+		});
+	},
+	render: function(){
+		var _this = this;
+		var resultNodes = this.state.users.map(function(user, index){
+			var cisco = _this.props.feature_key;
+			return (
+				<UserFeatureAddBox 
+					name={user.name} 
+					img={user.img}
+					visits={user.visits}
+					lastTime={user.lastTime}
+					feature_key={cisco}
+					uid={user.uid}
+					key={user.key}>
+				</UserFeatureAddBox>
+			);
+		})
+		return (
+			<div className="static-search-box">
+				<input className="search-box" onChange={this.searchUser}></input>
+				{resultNodes}
+			</div>
+		);
+	}
+});
+
+window.FeatureModule = React.createClass({
 	mixins: [ReactFireMixin],
 	getInitialState: function(){
 		window.toggleLoading(true);
@@ -17,6 +232,7 @@ var FeatureModule = React.createClass({
 			var featureList = [];
 			for(var i in data){
 				var accessList = [];
+				data[i].fid = i;
 				for(var j in data[i].access){
 					var accessKey = data[i].access[j];
 					accessList.push(accessKey);
@@ -38,16 +254,21 @@ var FeatureModule = React.createClass({
 	},
 	render: function(){
 		var featureNodes = this.state.features.map(function(feature, index){
+			var sample = '23123'
 			return (
 				<div className="feature-view" key={index}>
 					<h3>{feature.info.name}</h3>
-					<ul>{feature.access.map(function(allowed, aidx){
+					{feature.access.map(function(allowed, aidx){
 						return (
-							<li key={aidx}>
-								{allowed}
-							</li>
+							<PersonBox
+								uid={allowed}
+								key={aidx}>
+							</PersonBox>
 						);
-					})}</ul>
+					})}
+					<StaticUserSearch 
+						feature_key={feature.fid}>
+					</StaticUserSearch>
 				</div>
 			);
 		});

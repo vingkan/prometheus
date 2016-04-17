@@ -1,4 +1,4 @@
-var VisitView = React.createClass({
+window.VisitView = React.createClass({
 	mixins: [ReactFireMixin],
 	displayProperty: function(name, data, icon, key){
 		return (
@@ -50,7 +50,7 @@ var VisitView = React.createClass({
 	}
 });
 
-var UserViewModule = React.createClass({
+window.UserViewModule = React.createClass({
 	mixins: [ReactFireMixin],
 	getInitialState: function(){
 		window.toggleLoading(true);
@@ -128,7 +128,7 @@ window.renderUserViewModule = function(uid){
 
 }
 
-var UserListBox = React.createClass({
+window.UserListBox = React.createClass({
 	mixins: [ReactFireMixin],
 	loadUserView: function(){
 		renderUserViewModule(this.props.uid);
@@ -157,7 +157,7 @@ var UserListBox = React.createClass({
 	}
 });
 
-var UserModule = React.createClass({
+window.UserModule = React.createClass({
 	mixins: [ReactFireMixin],
 	getInitialState: function(){
 		window.toggleLoading(true);
@@ -226,8 +226,6 @@ var UserModule = React.createClass({
 	},
 	searchUser: function(e){
 		var query = e.target.value;
-		console.log(query)
-		console.log(this.state.bank)
 		var results = this.state.bank.search(query);
 		if(results.length > 0){
 			/*var output = [];
