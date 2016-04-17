@@ -303,6 +303,52 @@ window.renderMapModule = function(){
 
 	toggleSpace('map');
 
+	var fb_url = 'http://' + window.CONFIG.FIREBASE_KEY + '.firebaseio.com/prometheus/users';
+	var fb = new Firebase(fb_url);
+	toggleLoading(true);
+	fb.once('value', function(snapshot){
+		var pointsList = [];
+		var users = snapshot.val();
+		for(var i in users){
+			var u = users[i];
+			var list = [];
+			for(var n in u.visits){
+				list.push(u.visits[n])
+			}
+			var last = list[list.length-1];
+			pointsList.push(last.meta.location);
+		}
+		main(pointsList)
+	});
+
+
+	function main(pointsList){
+		try{
+			var map = L.map('map-page');
+		}
+		catch(e){
+			toggleLoading(false);
+		}
+		var coords = pointsList[0];
+		var zoom = 13;
+		if(coords !== 'NO_GEOLOCATION_EXCEPTION'){
+			map.setView([coords.latitude, coords.longitude], zoom);
+		}
+		var tile = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+			attribution: 'OpenStreetMap'
+		});
+		tile.addTo(map);
+		for(var c = 0; c < pointsList.length; c++){
+			coords = pointsList[c];
+			if(coords !== 'NO_GEOLOCATION_EXCEPTION'){
+				var marker = L.marker([coords.latitude, coords.longitude]);
+				marker.addTo(map);
+				marker.bindPopup('<h4>User</h4>').openPopup();
+			}
+		}
+		toggleLoading(false);
+	}
+
 	/*ReactDOM.render(
 		<UserModule />,
 		document.getElementById('user-list')
