@@ -39,7 +39,10 @@
 				console.log("From: " + email);
 				console.log(">>> " + message);
 				console.log("---");
-				prometheus.save({type: "CONTACT_SUBMISSION"});
+				prometheus.capture({
+					type: 'SCREEN_CAPTURE',
+					caption: 'Filling out a contact form.'
+				});
 			}
 
 			$('#contact-button').click(function(){
