@@ -251,6 +251,12 @@ div.column{
 		padding-bottom: 1%;
 	}
 
+	&.scrollable{
+		max-height: 100vh;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+
 }
 
 div.module{
@@ -411,14 +417,53 @@ div.user-visit-view{
 
 div.feature-module{
 
-	.InnerModule();
-
 	div.feature-view{
 
+		.InnerModule();
 		.StandardText();
+		overflow: hidden;
 
 		h3{
 			text-align: left;
+		}
+
+		p{
+			.StandardText();
+		}
+
+		label.search-wrapper{
+			
+			display: block;
+			width: 100%;
+			height: 25 * @vh;
+			overflow: hidden;
+			padding: 0;
+			padding-bottom: 4 * @vh;
+			margin-bottom: 2 * @vh;
+			border-bottom: 0.5 * @vh dashed @Charcoal;
+
+			input[type=checkbox]{
+				display: none;
+			}
+
+			div.static-search-box{
+
+				width: 100%;
+				//display: none;
+				display: inline-block;
+
+				input{
+					margin: 0 auto;
+					margin-top: 2 * @vh;
+				}
+
+			}
+
+			input[type=checkbox]:checked + div.static-search-box{
+				display: inline-block;
+
+			}
+
 		}
 
 	}

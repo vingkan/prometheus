@@ -166,23 +166,28 @@ window.StaticUserSearch = React.createClass({
 		var query = e.target.value;
 		var results = this.state.bank.search(query);
 		var resultList = []
-		for(var i = 0; i < results.length; i++){
-			var rk = results[i].ref
-			var user = this.state.map[rk]
-			var visitList = [];
-			for(var i in user.visits){
-				visitList.push(user.visits[i]);
+		if(results.length > 0){
+			for(var i = 0; i < results.length; i++){
+				var rk = results[i].ref
+				var user = this.state.map[rk]
+				var visitList = [];
+				for(var i in user.visits){
+					visitList.push(user.visits[i]);
+				}
+				user.visits = visitList;
+				resultList.push({
+					key: rk,
+					uid: rk,
+					img: user.profile.img || user.profile.picture,
+					name: user.profile.name,
+					visits: user.visits.length,
+					lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
+					visitList: visitList
+				})
 			}
-			user.visits = visitList;
-			resultList.push({
-				key: rk,
-				uid: rk,
-				img: user.profile.img || user.profile.picture,
-				name: user.profile.name,
-				visits: user.visits.length,
-				lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
-				visitList: visitList
-			})
+		}
+		else{
+			resultList = this.state.users;
 		}
 		_this.setState({
 			users: resultList
@@ -205,10 +210,13 @@ window.StaticUserSearch = React.createClass({
 			);
 		})
 		return (
-			<div className="static-search-box">
-				<input className="search-box" onChange={this.searchUser}></input>
-				{resultNodes}
-			</div>
+			<label className="search-wrapper">
+				<input type="checkbox"></input>
+				<div className="static-search-box">
+					<input className="search-box" onChange={this.searchUser}></input>
+					{resultNodes}
+				</div>
+			</label>
 		);
 	}
 });
@@ -252,28 +260,58 @@ window.FeatureModule = React.createClass({
 	componentWillUnmount: function(){
 		this.firebaseRef.off();
 	},
+	updateName: function(e){
+		this.state.name = e.target.value;
+	},
+	updateFID: function(e){
+		this.state.fid = e.target.value;
+	},
+	addFeature: function(e){
+		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/features/' + this.state.fid;
+		var ref =  new Firebase(fb_url);
+		ref.set({
+			info: {
+				name: this.state.name
+			}
+		});
+		/*var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/features/' + this.state.fid + '/access/';
+		var ref =  new Firebase(fb_url);
+		ref.push('NONE');*/
+		this.state.name = null;
+		this.state.fid = null;
+	},
 	render: function(){
 		var featureNodes = this.state.features.map(function(feature, index){
-			var sample = '23123'
 			return (
-				<div className="feature-view" key={index}>
-					<h3>{feature.info.name}</h3>
-					{feature.access.map(function(allowed, aidx){
-						return (
-							<PersonBox
-								uid={allowed}
-								key={aidx}>
-							</PersonBox>
-						);
-					})}
-					<StaticUserSearch 
-						feature_key={feature.fid}>
-					</StaticUserSearch>
+				<div className="module" key={index}>
+					<div className="feature-view">
+						<h1>{feature.info.name}</h1>
+						<p>Feature ID: {feature.fid}</p>
+						<h4>Enable Feature for More Users:</h4>
+						<StaticUserSearch 
+							feature_key={feature.fid}>
+						</StaticUserSearch>
+						<h4>Users with Feature Enabled:</h4>
+						{feature.access.map(function(allowed, aidx){
+							return (
+								<PersonBox
+									uid={allowed}
+									key={aidx}>
+								</PersonBox>
+							);
+						})}
+					</div>
 				</div>
 			);
 		});
 		return (
 			<div className="featureModule feature-module">
+				<div className="module">
+					<p>Create a new feature to track and deliver with Prometheus by setting a name and ID.</p>
+					<input type="text" onChange={this.updateName} placeholder="Feature Name"></input>
+					<input type="text" onChange={this.updateFID} placeholder="feature-id"></input>
+					<button onClick={this.addFeature}>Add New Feature</button>
+				</div>
 				{featureNodes}
 			</div>
 		);
