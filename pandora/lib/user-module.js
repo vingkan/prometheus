@@ -336,35 +336,32 @@ window.renderMapModule = function(){
 				list.push(u.visits[n])
 			}
 			var last = list[list.length-1];
-			pointsList.push(last.meta.location);
+			if(last.meta.location !== 'NO_GEOLOCATION_EXCEPTION'){
+				pointsList.push(last.meta.location);
+			}
 		}
 		main(pointsList)
 	});
 
 
 	function main(pointsList){
-		try{
-			var map = L.map('map-page');
-		}
-		catch(e){
-			toggleLoading(false);
-		}
+		var map = L.map('map-page');
 		var coords = pointsList[0];
 		var zoom = 13;
-		if(coords !== 'NO_GEOLOCATION_EXCEPTION'){
+		/*if(coords !== 'NO_GEOLOCATION_EXCEPTION'){*/
 			map.setView([coords.latitude, coords.longitude], zoom);
-		}
+		/*}*/
 		var tile = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 			attribution: 'OpenStreetMap'
 		});
 		tile.addTo(map);
 		for(var c = 0; c < pointsList.length; c++){
 			coords = pointsList[c];
-			if(coords !== 'NO_GEOLOCATION_EXCEPTION'){
+			/*if(coords !== 'NO_GEOLOCATION_EXCEPTION'){*/
 				var marker = L.marker([coords.latitude, coords.longitude]);
 				marker.addTo(map);
 				marker.bindPopup('<h4>User</h4>').openPopup();
-			}
+			/*}*/
 		}
 		toggleLoading(false);
 	}
