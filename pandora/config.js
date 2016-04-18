@@ -1,3 +1,3 @@
 window.CONFIG =  {
-	FIREBASE_KEY: 'omnipointment'
+	FIREBASE_KEY: 'prometheusjs'
 };
