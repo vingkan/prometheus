@@ -152,6 +152,15 @@ html{
 	font-size: 0;
 }
 
+@SidebarButtonHeight: 6 * @vh;
+
+.LeftBorderStripe(@StripeColor: white){
+	border-left: @vh solid @StripeColor;
+	&:hover{
+		border-left: @vh solid @MischiefBlue;
+	}
+}
+
 div.sidebar, div.space{
 	display: inline-block;
 	height: 100vh;
@@ -177,12 +186,6 @@ div.space{
 	background: @LightGray;
 	background-image: url('img/white-trans-hex.png');
 	background-size: 37.5%;
-}
-
-@SidebarButtonHeight: 6 * @vh;
-
-.LeftBorderStripe(@StripeColor: white){
-	border-left: @vh solid @StripeColor;
 }
 
 div.sidebar-button{
@@ -223,12 +226,17 @@ div.sidebar-button{
 
 	&:hover{
 		background: lighten(@Charcoal, 10%);
+		cursor: pointer;
+		i{
+			color: @MischiefBlue
+		}
 	}
 
 	i{
 		display: inline-block;
 		width: 20%;
 		text-align: center;
+		.AnimateAll();
 	}
 
 	.AnimateAll();
@@ -271,7 +279,7 @@ div.module{
 	width: 96%;
 	padding: 1%;
 	margin: 2% 1% 1% 1%;
-	background: white;
+	background: rgba(255, 255, 255, 0.25);
 	font-size: @tx;
 	max-height: 95vh;
 	overflow-y: scroll;
@@ -697,8 +705,8 @@ body.loading{
 @scrollBarBack: @LightGray;
 
 ::-webkit-scrollbar{
-	width: 5px;
-	height: 5px;
+	width: 10px;
+	height: 10px;
 	background: @scrollBarBack;
 	z-index: 50;
 }

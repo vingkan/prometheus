@@ -50,7 +50,6 @@ window.renderMapModule = function(){
 		tile.addTo(map);
 		for(var c = 0; c < pointsList.length; c++){
 			var user = pointsList[c];
-			console.log(user)
 			coords = user.location;
 			/*if(coords !== 'NO_GEOLOCATION_EXCEPTION'){*/
 				var marker = L.marker([coords.latitude, coords.longitude]);
