@@ -52,7 +52,7 @@ var Prometheus = function(config){
 				url: errorInfo.url,
 				line: errorInfo.line
 			};
-			this.save(dataObj);
+			this.capture(dataObj);
 		},
 
 		logon: function(uid, userData, metaProps){
@@ -181,11 +181,20 @@ var GEOLOCATION = {
 };
 
 function getGeoIP(callback){
+    // to prevent the callback from erroring...
+    var geoip = {
+        location: {},
+        country: {}
+    };
 	var x = new XMLHttpRequest();
 	x.open('GET', 'https://geoip.nekudo.com/api/', false);
-	x.send();
-	var res = x.responseText;
-	var geoip = JSON.parse(res);
+    try {
+	    x.send();
+        var res = x.responseText;
+        geoip = JSON.parse(res);
+    } catch (e) {
+    }
+	
 	if(callback){
 		callback(geoip);
 	}
@@ -196,8 +205,8 @@ function updateCoords(position){
 	GEOLOCATION.longitude = position.location.longitude;
 	GEOLOCATION.city = position.city;
 	GEOLOCATION.country = position.country.name;
-	GEOLOCATION.ip = position.ip
-	GEOLOCATION.isValid = true;
+	GEOLOCATION.ip = position.ip;
+	GEOLOCATION.isValid = GEOLOCATION.latitude != null;
 }
 
 function getLocationData(){
