@@ -24,6 +24,10 @@
 			<li>Nothing to see here!</li>
 		</ul>
 
+		<a href="contact.html"><button>Contact Us</button></a>
+
+		<button class="page-button" id="error-button">Click for an Error!</button>
+
 		<script type="text/javascript">
 
 			var prometheus = Prometheus('https://prometheusjs.firebaseio.com/prometheus');
@@ -52,6 +56,10 @@
 					type: 'SCREEN_CAPTURE',
 					caption: 'Feature: show-features is not released to this user.'
 				});
+			});
+
+			$('#error-button').click(function(e){
+				declaration.feed(e);
 			});
 
 		</script>

@@ -314,5 +314,3 @@ window.renderUserModule = function(){
 	);
 
 }
-
-renderUserModule();

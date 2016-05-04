@@ -1,3 +1,5 @@
+window.lastError = Date.now();
+
 window.ErrorModule = React.createClass({
 	mixins: [ReactFireMixin],
 	getInitialState: function(){
@@ -22,6 +24,17 @@ window.ErrorModule = React.createClass({
 							var visit = visits[v];
 							visit.user = user.profile;
 							errorList.push(visit);
+							if(visit.meta.datetime.timestamp > window.lastError){
+								notify({
+									message: user.profile.name + " experienced an error!",
+									body: visit.visit.message,
+									icon: user.profile.img,
+									clickFn: function(){
+										renderErrorModule();
+									}
+								});
+								window.lastError = visit.meta.datetime.timestamp;
+							}
 						}
 					}
 				}
@@ -38,20 +51,20 @@ window.ErrorModule = React.createClass({
 		this.firebaseRef.off();
 	},
 	render: function(){
-		var errorNodes = this.state.errors.map(function(errorItem, index){
+		var sortedErrors = this.state.errors.sort(function(a, b){
+			var diff = b.meta.datetime.timestamp - a.meta.datetime.timestamp;
+			return diff;
+		});
+		var errorNodes = sortedErrors.map(function(errorItem, index){
 			user = errorItem.user;
+			errorItem.visit.user = user.name;
 			return (
-				<div className="module" key={index}>
-					<UserListBox 
-						name={user.name} 
-						img={user.img}
-						uid={user.uid}>
-					</UserListBox>
-					<p>
-						{errorItem.visit.message}
-					</p>
-				</div>
-			);
+				<VisitView
+					meta={errorItem.meta} 
+					data={errorItem.visit}
+					key={index}>
+				</VisitView>
+			);		
 		});
 		return (
 			<div>
@@ -67,7 +80,9 @@ window.renderErrorModule = function(){
 
 	ReactDOM.render(
 		<ErrorModule />,
-		document.getElementById('errors')
+		document.getElementById('error-list')
 	);
 
 }
+
+renderErrorModule();
