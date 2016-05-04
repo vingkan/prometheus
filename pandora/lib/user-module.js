@@ -373,9 +373,9 @@ window.renderMapModule = function(){
 
 }
 
-window.renderMilestoneModule = function(){
+window.renderErrorModule = function(){
 
-	toggleSpace('milestones');
+	toggleSpace('errors');
 
 	/*ReactDOM.render(
 		<UserModule />,
