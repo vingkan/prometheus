@@ -42,6 +42,7 @@ window.ErrorModule = React.createClass({
 			_this.setState({
 				errors: errorList
 			});
+			window.toggleLoading(false);
 		}).bind(this);
 	},
 	componentDidMount: function(){
@@ -57,7 +58,12 @@ window.ErrorModule = React.createClass({
 		});
 		var errorNodes = sortedErrors.map(function(errorItem, index){
 			user = errorItem.user;
-			errorItem.visit.user = user.name;
+			try{
+				errorItem.visit.user = user.name;
+			}
+			catch(e){
+				console.warn(user);
+			}
 			return (
 				<VisitView
 					meta={errorItem.meta} 
@@ -77,6 +83,7 @@ window.ErrorModule = React.createClass({
 window.renderErrorModule = function(){
 
 	toggleSpace('errors');
+	window.toggleLoading(true);
 
 	ReactDOM.render(
 		<ErrorModule />,
