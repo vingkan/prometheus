@@ -317,7 +317,7 @@ window.renderUserModule = function(){
 
 renderUserModule();
 
-
+window.map = null;
 
 window.renderMapModule = function(){
 
@@ -345,7 +345,13 @@ window.renderMapModule = function(){
 
 
 	function main(pointsList){
-		var map = L.map('map-page');
+		try{
+			window.map = L.map('map-page');
+			var map = window.map;
+		}
+		catch(e){
+			var map = window.map;
+		}
 		var coords = pointsList[0];
 		var zoom = 13;
 		/*if(coords !== 'NO_GEOLOCATION_EXCEPTION'){*/
@@ -365,21 +371,5 @@ window.renderMapModule = function(){
 		}
 		toggleLoading(false);
 	}
-
-	/*ReactDOM.render(
-		<UserModule />,
-		document.getElementById('user-list')
-	);*/
-
-}
-
-window.renderErrorModule = function(){
-
-	toggleSpace('errors');
-
-	/*ReactDOM.render(
-		<UserModule />,
-		document.getElementById('user-list')
-	);*/
 
 }
