@@ -41,7 +41,7 @@ window.ErrorModule = React.createClass({
 		var errorNodes = this.state.errors.map(function(errorItem, index){
 			user = errorItem.user;
 			return (
-				<div key={index}>
+				<div className="module" key={index}>
 					<UserListBox 
 						name={user.name} 
 						img={user.img}
