@@ -327,11 +327,11 @@ window.FeatureModule = React.createClass({
 
 window.renderFeatureModule = function(){
 
-	toggleSpace('features');
-
 	ReactDOM.render(
 		<FeatureModule />,
 		document.getElementById('feature-list')
 	);
 
 }
+
+renderFeatureModule();

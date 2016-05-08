@@ -82,7 +82,6 @@ window.ErrorModule = React.createClass({
 
 window.renderErrorModule = function(){
 
-	toggleSpace('errors');
 	window.toggleLoading(true);
 
 	ReactDOM.render(

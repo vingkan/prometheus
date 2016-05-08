@@ -108,7 +108,6 @@ window.MilestoneModule = React.createClass({
 							})}
 							<h3>{month.retention.length} haven&#39;t visited since.</h3>
 							{month.retention.map(function(rt, idx){
-								console.log(rt)
 								return (
 									<img className="milestone-head" src={rt.profile.img || rt.profile.picture} key={idx}></img>
 								);
@@ -149,11 +148,11 @@ window.MilestoneModule = React.createClass({
 
 window.renderMilestoneModule = function(){
 
-	toggleSpace('milestones');
-
 	ReactDOM.render(
 		<MilestoneModule />,
 		document.getElementById('milestone-list')
 	);
 
 }
+
+renderMilestoneModule();

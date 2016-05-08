@@ -62,11 +62,11 @@ window.ScreenshotModule = React.createClass({
 
 window.renderScreenshotModule = function(){
 
-	toggleSpace('screenshots');
-
 	ReactDOM.render(
 		<ScreenshotModule />,
 		document.getElementById('screenshot-list')
 	);
 
 }
+
+renderScreenshotModule();

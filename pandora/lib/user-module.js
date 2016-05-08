@@ -306,11 +306,11 @@ window.UserModule = React.createClass({
 
 window.renderUserModule = function(){
 
-	toggleSpace('users');
-
 	ReactDOM.render(
 		<UserModule />,
 		document.getElementById('user-list')
 	);
 
 }
+
+renderUserModule();

@@ -2,8 +2,6 @@ window.map = null;
 
 window.renderMapModule = function(){
 
-	toggleSpace('map');
-
 	var fb_url = 'http://' + window.CONFIG.FIREBASE_KEY + '.firebaseio.com/prometheus/users';
 	var fb = new Firebase(fb_url);
 	toggleLoading(true);
@@ -65,3 +63,5 @@ window.renderMapModule = function(){
 	}
 
 }
+
+renderMapModule();
