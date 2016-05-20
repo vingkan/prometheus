@@ -77,7 +77,6 @@ window.UserViewModule = React.createClass({
 		window.toggleLoading(true);
 		return {
 			name: '',
-			fb_key: window.CONFIG.FIREBASE_KEY,
 			uid: this.props.uid
 		}
 	},
@@ -184,7 +183,6 @@ window.UserModule = React.createClass({
 		window.toggleLoading(true);
 		return {
 			users: [],
-			fb_key: window.CONFIG.FIREBASE_KEY,
 			bank: null,
 			map: null
 		}

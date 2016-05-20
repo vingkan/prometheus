@@ -3,7 +3,6 @@ window.ScreenshotModule = React.createClass({
 	getInitialState: function(){
 		window.toggleLoading(true);
 		return {
-			fb_key: window.CONFIG.FIREBASE_KEY,
 			pics: []
 		}
 	},

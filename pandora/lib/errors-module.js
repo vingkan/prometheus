@@ -4,7 +4,6 @@ window.ErrorModule = React.createClass({
 	mixins: [ReactFireMixin],
 	getInitialState: function(){
 		return {
-			fb_key: window.CONFIG.FIREBASE_KEY,
 			errors: []
 		}
 	},

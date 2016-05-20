@@ -2,7 +2,6 @@ window.PersonBox = React.createClass({
 	mixins: [ReactFireMixin],
 	getInitialState: function(){
 		return {
-			fb_key: window.CONFIG.FIREBASE_KEY,
 			uid: this.props.uid,
 			data: {
 				key: null,
