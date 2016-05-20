@@ -20,19 +20,19 @@ This visitor filled out a contact form with an invalid email address. Normally, 
 Download [the latest version](http://vingkan.github.io/prometheus/prometheus.js) of Prometheus.js and include it in your HTML page. Prometheus.js depends on the Firebase JavaScript library.
 
 ```
-<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
 <script src="prometheus.js"></script>
 ```
 On each page that uses Prometheus.js, create a new instance of Prometheus.
 ```
 var prometheus = Prometheus({
-	url: 'https://APP_NAME.firebaseio.com/prometheus',
-	locator: true
+  apiKey: "apiKey",
+  authDomain: "projectId.firebaseapp.com",
+  databaseURL: "https://databaseName.firebaseio.com"
 });
 ```
-The configuration options are:
-+ `url`: the URL of the Firebase datastore where data should be saved (must include the '/prometheus' at the end).
-+ `locator`: boolean indicating whether or not to track geolocation data (defaults to false if not set).
+You can auto-generate the config above by following the instructions on [Firebase's web setup page](https://firebase.google.com/docs/web/setup#project_setup). The other configuration options are:
++ `locator`: boolean indicating whether or not to track geolocation data (defaults to true if not set).
 
 ## API
 To integrate Prometheus.js into your website, these three functions are most important:

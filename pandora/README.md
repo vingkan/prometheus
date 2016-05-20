@@ -17,7 +17,16 @@ Here is a sample of Pandora's Box: viewing data from the Prometheus landing page
 ![Pandora Demo: Exploring Visit Data](http://vingkan.github.io/prometheus/img/pandora-demo.gif)
 
 ## Setup
-Download [the latest version](https://github.com/vingkan/prometheus/tree/master/pandora) of the dashboard: save this whole subfolder to your local machine. Find the `config.js` file and change the `FIREBASE_KEY` value to the subdomain name of the Firebase datastore where data tracked from your website by Prometheus is sent to. Then, run the directory on your localhost. To do this in python, open a command prompt in the folder and run `python -m SimpleHTTPServer` and then navigate to `localhost:8000`. Your dashboard should now be loaded up!
+Download [the latest version](https://github.com/vingkan/prometheus/tree/master/pandora) of the dashboard: save this whole subfolder to your local machine. Find the `config.js` file and change values to the keys to the Firebase datastore where data tracked from your website by Prometheus is sent to.
+```
+window.CONFIG =  {
+	apiKey: "apiKey",
+	authDomain: "projectId.firebaseapp.com",
+	databaseURL: "https://databaseName.firebaseio.com"
+	storageBucket: "databaseName.appspot.com"
+};
+```
+You can auto-generate the config above by following the instructions on [Firebase's web setup page](https://firebase.google.com/docs/web/setup#project_setup).Then, run the directory on your localhost. To do this in python, open a command prompt in the folder and run `python -m SimpleHTTPServer` and then navigate to `localhost:8000`. Your dashboard should now be loaded up!
 
 ## About Us
 Prometheus.js and PandorasBox.js were created by the development team at [Omnipointment](https://www.omnipointment.com/): the omnipotent appointment scheduling tool.
