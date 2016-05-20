@@ -2,8 +2,8 @@ window.map = null;
 
 window.renderMapModule = function(){
 
-	var fb_url = 'http://' + window.CONFIG.FIREBASE_KEY + '.firebaseio.com/prometheus/users';
-	var fb = new Firebase(fb_url);
+	var fb_url = 'prometheus/users';
+	var fb = firebase.database().ref(fb_url);
 	toggleLoading(true);
 	fb.once('value', function(snapshot){
 		var pointsList = [];

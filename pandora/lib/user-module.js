@@ -82,8 +82,8 @@ window.UserViewModule = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users/' + this.state.uid;
-		this.firebaseRef =  new Firebase(fb_url);
+		var fb_url = 'prometheus/users/' + this.state.uid;
+		this.firebaseRef = firebase.database().ref(fb_url);
 		var _this = this;
 		this.firebaseRef.on('value', function(snapshot){
 			var data = snapshot.val();
@@ -190,8 +190,8 @@ window.UserModule = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users';
-		this.firebaseRef =  new Firebase(fb_url);
+		var fb_url = 'prometheus/users';
+		this.firebaseRef = firebase.database().ref(fb_url);
 		var _this = this;
 		var bank = lunr(function(){
 			this.field('name', {boost: 10});

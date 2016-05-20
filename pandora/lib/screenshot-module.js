@@ -8,8 +8,8 @@ window.ScreenshotModule = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users/';
-		this.firebaseRef =  new Firebase(fb_url);
+		var fb_url = 'prometheus/users/';
+		this.firebaseRef = firebase.database().ref(fb_url);
 		var _this = this;
 		this.firebaseRef.on('value', function(snapshot){
 			var data = snapshot.val();

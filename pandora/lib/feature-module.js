@@ -15,8 +15,8 @@ window.PersonBox = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users/' + this.state.uid + '/';
-		this.firebaseRef =  new Firebase(fb_url);
+		var fb_url = 'prometheus/users/' + this.state.uid + '/';
+		this.firebaseRef = firebase.database().ref(fb_url);
 		var _this = this;
 		this.firebaseRef.on('value', function(snapshot){
 			var user = snapshot.val();
@@ -66,8 +66,8 @@ window.PersonBox = React.createClass({
 });
 
 window.deliverFeatureAccess = function(fid, uid){
-	var fb_url = 'http://' + window.CONFIG.FIREBASE_KEY + '.firebaseio.com/prometheus/features/' + fid + '/access/';
-	var ref = new Firebase(fb_url);
+	var fb_url = 'prometheus/features/' + fid + '/access/';
+	var ref = firebase.database().ref(fb_url);
 	ref.push(uid);
 }
 
@@ -112,8 +112,8 @@ window.StaticUserSearch = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/users';
-		this.firebaseRef =  new Firebase(fb_url);
+		var fb_url = 'prometheus/users';
+		this.firebaseRef =  firebase.database().ref(fb_url);
 		var _this = this;
 		var bank = lunr(function(){
 			this.field('name', {boost: 10});
@@ -239,8 +239,8 @@ window.FeatureModule = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/features/';
-		this.firebaseRef =  new Firebase(fb_url);
+		var fb_url = 'prometheus/features/';
+		this.firebaseRef =  firebase.database().ref(fb_url);
 		var _this = this;
 		this.firebaseRef.on('value', function(snapshot){
 			var data = snapshot.val();
@@ -274,16 +274,13 @@ window.FeatureModule = React.createClass({
 		this.state.fid = e.target.value;
 	},
 	addFeature: function(e){
-		var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/features/' + this.state.fid;
-		var ref =  new Firebase(fb_url);
+		var fb_url = 'prometheus/features/' + this.state.fid;
+		var ref = firebase.database().ref(fb_url);
 		ref.set({
 			info: {
 				name: this.state.name
 			}
 		});
-		/*var fb_url = 'http://' + this.state.fb_key + '.firebaseio.com/prometheus/features/' + this.state.fid + '/access/';
-		var ref =  new Firebase(fb_url);
-		ref.push('NONE');*/
 		this.state.name = null;
 		this.state.fid = null;
 	},
