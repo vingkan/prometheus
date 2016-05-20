@@ -20,24 +20,26 @@ window.PersonBox = React.createClass({
 		var _this = this;
 		this.firebaseRef.on('value', function(snapshot){
 			var user = snapshot.val();
-			user.key = snapshot.key;
-			var visitList = [];
-			for(var i in user.visits){
-				visitList.push(user.visits[i]);
-			}
-			user.visits = visitList;
-			if(user.key !== 'ANONYMOUS_USER'){
-				var userData = {
-					key: user.key,
-					img: user.profile.img || user.profile.picture,
-					name: user.profile.name,
-					visits: user.visits.length,
-					lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
-					visitList: visitList
+			if(user){
+				user['key'] = snapshot.key;
+				var visitList = [];
+				for(var i in user.visits){
+					visitList.push(user.visits[i]);
 				}
-				_this.setState({
-					data: userData
-				});
+				user.visits = visitList;
+				if(user.key !== 'ANONYMOUS_USER'){
+					var userData = {
+						key: user.key,
+						img: user.profile.img || user.profile.picture,
+						name: user.profile.name,
+						visits: user.visits.length,
+						lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
+						visitList: visitList
+					}
+					_this.setState({
+						data: userData
+					});
+				}
 			}
 		}).bind(this);
 	},

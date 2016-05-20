@@ -11,7 +11,7 @@ var ANONS; //TO-DO: add boolean to config to toggle tracking anonymous users
 var Prometheus = function(config){
 
 	// Initialize Firebase with 3.0 API
-	FirebaseApp = firebase.initializeApp(config);
+	firebase.initializeApp(config);
 
 	//TO-DO: write check to see if '/prometheus' is at the end of url
 	URL = config.url || config || "NO_URL_EXCEPTION";
@@ -165,7 +165,7 @@ function createRoute(endpoint){
 	var route;
 	if(URL && URL !== "NO_URL_EXCEPTION"){
 		//TO-DO: check that endpoint has leading slash
-		route = FirebaseApp.database().ref('prometheus' + endpoint);
+		route = firebase.database().ref('prometheus' + endpoint);
 		//route = new Firebase(URL + endpoint);
 	}
 	else{

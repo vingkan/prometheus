@@ -31,7 +31,7 @@ function googleLogin(){
 	auth.signInWithPopup(provider).then(function(authData){
 		console.log(authData);
 		authObject = authData;
-		checkUserInDatabase(authData);
+		//checkUserInDatabase(authData);
 	}).catch(function(error){
 		console.log("An error occured during login.");
 		console.log(error);
