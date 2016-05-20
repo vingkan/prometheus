@@ -20,7 +20,7 @@ window.PersonBox = React.createClass({
 		var _this = this;
 		this.firebaseRef.on('value', function(snapshot){
 			var user = snapshot.val();
-			user.key = snapshot.key();
+			user.key = snapshot.key;
 			var visitList = [];
 			for(var i in user.visits){
 				visitList.push(user.visits[i]);
@@ -124,7 +124,7 @@ window.StaticUserSearch = React.createClass({
 			var userMap = snapshot.val();
 			snapshot.forEach(function(childSnap){
 				var user = childSnap.val();
-				user.key = childSnap.key();
+				user.key = childSnap.key;
 				var visitList = [];
 				for(var i in user.visits){
 					visitList.push(user.visits[i]);

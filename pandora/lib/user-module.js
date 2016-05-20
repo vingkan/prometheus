@@ -202,7 +202,7 @@ window.UserModule = React.createClass({
 			var userMap = snapshot.val();
 			snapshot.forEach(function(childSnap){
 				var user = childSnap.val();
-				user.key = childSnap.key();
+				user.key = childSnap.key;
 				var visitList = [];
 				for(var i in user.visits){
 					visitList.push(user.visits[i]);
