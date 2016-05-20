@@ -8,7 +8,7 @@
 		<!-- IMPORTED SCRIPTS -->
 		<link href='https://fonts.googleapis.com/css?family=Graduate|Gafata' rel='stylesheet' type='text/css'>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+		<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
 		<script src="prometheus.js"></script>
 		<style>
 
@@ -39,7 +39,12 @@
 
 		<script type="text/javascript">
 		
-		var prometheus = Prometheus('https://prometheusjs.firebaseio.com/prometheus');
+		var prometheus = Prometheus({
+			apiKey: "AIzaSyAEv8mrdbxqO3efPHLrYW4B1LYrb-SDItQ",
+			authDomain: "prometheusjs-1240.firebaseapp.com",
+			databaseURL: "https://prometheusjs-1240.firebaseio.com",
+			storageBucket: "prometheusjs-1240.appspot.com",
+		});
 
 		function PersonDivFactory(person){
 			var html = '';

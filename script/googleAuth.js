@@ -3,18 +3,18 @@ var userID;
 var authObject;
 
 function checkUserInDatabase(authData){
-	userID = authData.google.id;
+	userID = authData.user.uid;
 	var userData = {
 		uid: userID,
-		name: authData.google.displayName,
-		email: authData.google.email,
-		img: authData.google.profileImageURL
+		name: authData.user.displayName,
+		email: authData.user.email,
+		img: authData.user.photoURL
 	}
-	var path = BASE_URL + "/users/" + userID;
-	var userRef = new Firebase(path);
+	var path = "prometheus/users/" + userID;
+	var userRef = firebase.database().ref(path);
 	userRef.once('value', function(snapshot){
 		if(!snapshot.exists()){
-			var userDataRoute = new Firebase(path + "/auth");
+			var userDataRoute = firebase.database().ref(path + "/auth");
 			userDataRoute.set(userData);
 		}
 		else{
@@ -26,18 +26,14 @@ function checkUserInDatabase(authData){
 }
 
 function googleLogin(){
-	var ref = new Firebase(BASE_URL);
-	ref.authWithOAuthPopup('google', function(error, authData){
-		if(error){
-			console.log(error);
-		}
-		else{
-			console.log(authData);
-			authObject = authData;
-			checkUserInDatabase(authData);
-		}
-	},
-	{
-		scope: "email"
+	var auth = firebase.auth();
+	var provider = new firebase.auth.GoogleAuthProvider();
+	auth.signInWithPopup(provider).then(function(authData){
+		console.log(authData);
+		authObject = authData;
+		checkUserInDatabase(authData);
+	}).catch(function(error){
+		console.log("An error occured during login.");
+		console.log(error);
 	});
 }
