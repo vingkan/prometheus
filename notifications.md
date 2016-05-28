@@ -11,6 +11,7 @@ This visitor was selected as a small group of users to get a sneak preview of ne
 ![Prometheus Demo: Notifications to Custom Users](http://g.recordit.co/19KT68G0NX.gif)
 
 ## Usage
+This feature is built on top of Prometheus' `.deliver()` method. Assign notification IDs and add users under them in the Pandora Dashboard to specify which users should receive the prepared notification.
 
 ### prometheus.notify(noteID, note, callback)
 Send popups to specific users via web notifications.
@@ -56,6 +57,7 @@ If neither icon is specified, the icon used will be the Prometheus logo. ;)
 These are potential extensions of this feature that come to mind, not necessarily beneficial use cases.
 + Add a UI for sending notifications to Pandora Dashboard, potentially stocking up an 'inbox' of notifications for users (if there will be many notifications, will need a less annoying delivery method than web notifications).
 + Allow client to send data back through `.notify()` callback that gets recorded with the `NOTIFICATION_CLICKED` event saved by Prometheus.
++ Allow for other conditions or user information to trigger the notification even if the user is not assigned to the notification ID in the Dashboard.
 
 ## About Us
 Prometheus.js and PandorasBox.js were created by the development team at [Omnipointment](https://www.omnipointment.com/): the omnipotent appointment scheduling tool.
