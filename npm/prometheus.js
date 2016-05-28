@@ -133,6 +133,25 @@ var Prometheus = function(config){
 			});
 		},
 
+		notify: function(featureID, note, callback){
+			var _this = this;
+			this.deliver(featureID, function(){
+				notify({
+					message: note.title,
+					body: note.message,
+					clickFn: function(){
+						_this.save({
+							type: "NOTIFICATION_CLICKED",
+							noteid: featureID
+						});
+						if(callback){
+							callback();
+						}
+					}
+				});
+			});
+		},
+
 		toString: function(){
 			console.log(config);
 			return 'Bringing Firebase to humanity!';
@@ -320,13 +339,13 @@ function sendNotification(payload){
 	}
 }
 
-notify({
+/*notify({
 	message: "Prometheus",
 	body: "This is a web notification.",
 	clickFn: function(){
 		console.log("Callback to notification.");
 	}
-});
+});*/
 
 return Prometheus;
 

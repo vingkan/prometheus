@@ -63,6 +63,21 @@
 				});
 			});
 
+			prometheus.notify('features-note', {
+				title: "New Features",
+				message: "We're considering adding some new features. Click to reveal them."
+			}, function(){
+				var features = [
+					"Send web notifications to specific users from the dashboard.",
+					"Integrate with new Firebase 3.0 features."
+				];
+				var list = document.getElementById('feature-list');
+				list.innerHTML = '';
+				for(var i = 0; i < features.length; i++){
+					list.innerHTML += '<li>' + features[i] + '</li>';
+				}
+			});
+
 			$('#error-button').click(function(e){
 				declaration.feed(e);
 			});
