@@ -279,6 +279,55 @@ function getData(dataType){
 	return response;
 }
 
+/*--------------------------------------------*/
+/*---> NOTIFICATIONS <------------------------*/
+/*--------------------------------------------*/
+
+function notify(payload){
+	if(!("Notification" in window)){
+		console.warn("Notifications not supported.");
+	}
+	else if(Notification.permission === 'granted'){
+		sendNotification(payload);
+	}
+	else if(Notification.permission !== 'denied'){
+		Notification.requestPermission(function(permission){
+			if(permission === 'granted'){
+				sendNotification(payload);
+			}
+		});
+	}
+	else{
+		console.warn("Notification permissions rejected.");
+	}
+}
+
+function sendNotification(payload){
+	if(payload.message){
+		if(!payload.icon){
+			payload.icon = 'http://vingkan.github.io/prometheus/img/contrast-logo.png'
+		}
+		var n = new Notification(payload.message, payload);
+		if(payload.clickFn){
+			n.onclick = function(event){
+				event.preventDefault();
+				payload.clickFn();
+			}
+		}
+	}
+	else{
+		var n = new Notification(payload);
+	}
+}
+
+notify({
+	message: "Prometheus",
+	body: "This is a web notification.",
+	clickFn: function(){
+		console.log("Callback to notification.");
+	}
+});
+
 return Prometheus;
 
 }());
