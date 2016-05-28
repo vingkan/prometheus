@@ -139,7 +139,7 @@ var Prometheus = function(config){
 				notify({
 					message: note.title,
 					body: note.message,
-					icon: config.icon || null,
+					icon: note.icon || config.icon || null,
 					clickFn: function(){
 						_this.save({
 							type: "NOTIFICATION_CLICKED",
