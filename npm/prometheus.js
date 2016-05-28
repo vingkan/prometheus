@@ -139,6 +139,7 @@ var Prometheus = function(config){
 				notify({
 					message: note.title,
 					body: note.message,
+					icon: config.icon || null,
 					clickFn: function(){
 						_this.save({
 							type: "NOTIFICATION_CLICKED",
@@ -324,7 +325,7 @@ function notify(payload){
 function sendNotification(payload){
 	if(payload.message){
 		if(!payload.icon){
-			payload.icon = 'http://vingkan.github.io/prometheus/img/contrast-logo.png'
+			payload.icon = 'http://vingkan.github.io/prometheus/img/contrast-logo.png';
 		}
 		var n = new Notification(payload.message, payload);
 		if(payload.clickFn){
