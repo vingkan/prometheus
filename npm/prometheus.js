@@ -133,17 +133,17 @@ var Prometheus = function(config){
 			});
 		},
 
-		notify: function(featureID, note, callback){
+		notify: function(noteID, note, callback){
 			var _this = this;
-			this.deliver(featureID, function(){
+			this.deliver(noteID, function(){
 				notify({
-					message: note.title,
-					body: note.message,
+					message: note.title || 'Alert',
+					body: note.message || '',
 					icon: note.icon || config.icon || null,
 					clickFn: function(){
 						_this.save({
 							type: "NOTIFICATION_CLICKED",
-							noteid: featureID
+							noteid: noteID
 						});
 						if(callback){
 							callback();
