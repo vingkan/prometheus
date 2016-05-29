@@ -22,6 +22,17 @@ Send popups to specific users via web notifications.
 	+ icon (string, optional): notication icon.
 + callback (function, optional): code to run if a user clicks on the notification body
 
+### Notification Callback
+Notification callback functions include a Prometheus.Note object that has two methods for the developer to access.
+```javascript
+function(note){
+	note.seen(); // Saves a Prometheus "NOTIFICATION_CLICKED" event for the user.
+	note.terminate(); // Removes the users' ID from the notification: they will not receive this notification unless it is reassigned to them from the dashboard.
+}
+
+```
+If no callback function is provided, `Note.seen()` will be called, but not `Note.terminate()`.
+
 ## Example from Demo:
 This block of code is responsible for the notification shown in the demo gif.
 

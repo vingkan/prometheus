@@ -133,20 +133,53 @@ var Prometheus = function(config){
 			});
 		},
 
-		notify: function(noteID, note, callback){
+		Note: function(noteID){
+			var _this = this;
+			return {
+				
+				seen: function(dataObj){
+					var data = dataObj || {};
+						data['type'] = "NOTIFICATION_CLICKED";
+						data['noteid'] = noteID;
+					_this.save(data);
+				},
+
+				terminate: function(dataObj){
+					var uid = _this.getUID();
+					var noteRoute = createRoute('/features/' + noteID + '/access/');
+					noteRoute.once('value', function(snapshot){
+						var recipients = snapshot.val();
+						for(var r in recipients){
+							if(recipients[r] === uid){
+								var terminationRef = createRoute('/features/' + noteID + '/access/' + r);
+									terminationRef.remove();
+								var data = dataObj || {};
+									data['type'] = "NOTIFICATION_TERMINATED";
+									data['noteid'] = noteID;
+								_this.save(data);
+								break;
+							}
+						}
+					});
+				}
+
+			}
+		},
+
+		notify: function(noteID, content, callback){
 			var _this = this;
 			this.deliver(noteID, function(){
 				notify({
-					message: note.title || 'Alert',
-					body: note.message || '',
-					icon: note.icon || config.icon || null,
+					message: content.title || 'Alert',
+					body: content.message || '',
+					icon: content.icon || config.icon || null,
 					clickFn: function(){
-						_this.save({
-							type: "NOTIFICATION_CLICKED",
-							noteid: noteID
-						});
+						var note = _this.Note(noteID);
 						if(callback){
-							callback();
+							callback(note);
+						}
+						else{
+							note.seen();
 						}
 					}
 				});
@@ -339,14 +372,6 @@ function sendNotification(payload){
 		var n = new Notification(payload);
 	}
 }
-
-/*notify({
-	message: "Prometheus",
-	body: "This is a web notification.",
-	clickFn: function(){
-		console.log("Callback to notification.");
-	}
-});*/
 
 return Prometheus;
 
