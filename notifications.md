@@ -1,7 +1,7 @@
 ![Prometheus Long Logo](http://vingkan.github.io/prometheus/img/long-logo.png)
 
 # Prometheus: Notifications
-Send popups to specific users via web notifications. (Proposed Feature)
+Send popups to specific users via web notifications. (New Feature)
 
 [![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus) [![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
