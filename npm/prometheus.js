@@ -69,16 +69,22 @@ var Prometheus = function(config){
 		capture: function(dataObj){
 			var dataObj = dataObj || {type: 'SCREEN_CAPTURE'};
 			var _this = this;
-			html2canvas(window.parent.document.body, {
-				onrendered: function(canvas){
-					canvas.style.display = 'none';
-					document.body.appendChild(canvas);
-					var data = canvas.toDataURL('image/png');
-					//document.body.innerHTML += '<img src="' + data + '">';
-					dataObj.img = data;
-					_this.save(dataObj);
-				}
-			});
+			if(html2canvas){
+				html2canvas(window.parent.document.body, {
+					onrendered: function(canvas){
+						canvas.style.display = 'none';
+						document.body.appendChild(canvas);
+						var data = canvas.toDataURL('image/png');
+						//document.body.innerHTML += '<img src="' + data + '">';
+						dataObj.img = data;
+						_this.save(dataObj);
+					}
+				});
+			}
+			else{
+				dataObj.img = "NONE_TAKEN";
+				this.save(dataObj);
+			}
 		},
 
 		isTrackingUser: function(){
