@@ -2,7 +2,7 @@
   "name": "prometheusjs",
   "version": "1.2.7",
   "description": "Bringing Firebase-powered CRM and analytics to all of humanity.",
-  "main": "prometheus.js",
+  "main": "prometheus.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
