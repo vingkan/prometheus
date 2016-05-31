@@ -133,6 +133,59 @@ var Prometheus = function(config){
 			});
 		},
 
+		Note: function(noteID){
+			var _this = this;
+			return {
+				
+				seen: function(dataObj){
+					var data = dataObj || {};
+						data['type'] = "NOTIFICATION_CLICKED";
+						data['noteid'] = noteID;
+					_this.save(data);
+				},
+
+				terminate: function(dataObj){
+					var uid = _this.getUID();
+					var noteRoute = createRoute('/features/' + noteID + '/access/');
+					noteRoute.once('value', function(snapshot){
+						var recipients = snapshot.val();
+						for(var r in recipients){
+							if(recipients[r] === uid){
+								var terminationRef = createRoute('/features/' + noteID + '/access/' + r);
+									terminationRef.remove();
+								var data = dataObj || {};
+									data['type'] = "NOTIFICATION_TERMINATED";
+									data['noteid'] = noteID;
+								_this.save(data);
+								break;
+							}
+						}
+					});
+				}
+
+			}
+		},
+
+		notify: function(noteID, content, callback){
+			var _this = this;
+			this.deliver(noteID, function(){
+				notify({
+					message: content.title || 'Alert',
+					body: content.message || '',
+					icon: content.icon || config.icon || null,
+					clickFn: function(){
+						var note = _this.Note(noteID);
+						if(callback){
+							callback(note);
+						}
+						else{
+							note.seen();
+						}
+					}
+				});
+			});
+		},
+
 		toString: function(){
 			console.log(config);
 			return 'Bringing Firebase to humanity!';
@@ -277,6 +330,47 @@ function getData(dataType){
 			response = "BAD_REQUEST_EXCEPTION";
 	}
 	return response;
+}
+
+/*--------------------------------------------*/
+/*---> NOTIFICATIONS <------------------------*/
+/*--------------------------------------------*/
+
+function notify(payload){
+	if(!("Notification" in window)){
+		console.warn("Notifications not supported.");
+	}
+	else if(Notification.permission === 'granted'){
+		sendNotification(payload);
+	}
+	else if(Notification.permission !== 'denied'){
+		Notification.requestPermission(function(permission){
+			if(permission === 'granted'){
+				sendNotification(payload);
+			}
+		});
+	}
+	else{
+		console.warn("Notification permissions rejected.");
+	}
+}
+
+function sendNotification(payload){
+	if(payload.message){
+		if(!payload.icon){
+			payload.icon = 'http://vingkan.github.io/prometheus/img/contrast-logo.png';
+		}
+		var n = new Notification(payload.message, payload);
+		if(payload.clickFn){
+			n.onclick = function(event){
+				event.preventDefault();
+				payload.clickFn();
+			}
+		}
+	}
+	else{
+		var n = new Notification(payload);
+	}
 }
 
 return Prometheus;

@@ -48,6 +48,10 @@
 					type: 'SCREEN_CAPTURE',
 					caption: 'Filling out a contact form.'
 				});
+				prometheus.notify('email', {
+					title: "Email Sent",
+					message: message,
+				});
 			}
 
 			$('#contact-button').click(function(){
