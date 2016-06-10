@@ -127,6 +127,10 @@ window.UserViewModule = React.createClass({
 					<i className="fa fa-icon fa-eye"></i>
 					{visits.length} total visits
 				</p>
+				<p>
+					<i className="fa fa-icon fa-code-fork"></i>
+					UID: {this.state.uid}
+				</p>
 				<div className="user-view-img" style={{
 					backgroundImage: 'url(' + this.state.img + ')'
 				}}></div>
