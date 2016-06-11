@@ -140,7 +140,7 @@ var Prometheus = function(config){
 
 		has: function(featureID){
 			var response = false;
-			var storedFeatures = sessionStorage.getItem('prometheus_features');
+			var storedFeatures = sessionStorage.getItem('prometheus_features') || '';
 			var features = storedFeatures.split(',');
 			if(features.indexOf(featureID) > -1){
 				response = true;

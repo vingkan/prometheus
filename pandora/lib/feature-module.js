@@ -3,6 +3,7 @@ window.PersonBox = React.createClass({
 	getInitialState: function(){
 		return {
 			uid: this.props.uid,
+			fid: this.props.fid,
 			data: {
 				key: null,
 				img: null,
@@ -42,6 +43,21 @@ window.PersonBox = React.createClass({
 			}
 		}).bind(this);
 	},
+	removeFeatureAccess: function(){
+		var fb_url = 'prometheus/features/' + this.state.fid + '/access';
+		var ref = firebase.database().ref(fb_url);
+		var uid = this.state.uid;
+		ref.once('value', function(snapshot){
+			var granted = snapshot.val();
+			for(var i in granted){
+				if(granted[i]){
+					if(granted[i] === uid){
+						firebase.database().ref(fb_url + '/' + i).remove();
+					}
+				}
+			}
+		});
+	},
 	render: function(){
 		return (
 			<div className="user-list-div" onClick={this.giveFeatureAccess}>
@@ -60,6 +76,9 @@ window.PersonBox = React.createClass({
 					<span>
 						{moment(this.state.data.lastTime).fromNow()}
 					</span>
+					<div className="remove-button" onClick={this.removeFeatureAccess}>
+						<i className="fa fa-icon fa-trash"></i>
+					</div>
 				</div>
 			</div>
 		);
@@ -301,6 +320,7 @@ window.FeatureModule = React.createClass({
 							return (
 								<PersonBox
 									uid={allowed}
+									fid={feature.fid}
 									key={aidx}>
 								</PersonBox>
 							);
