@@ -158,6 +158,18 @@ window.UserListBox = React.createClass({
 		renderUserViewModule(this.props.uid);
 	},
 	render: function(){
+		var timeFormat = '';
+		var lastVisit = moment(this.props.lastTime);
+		var daySince = -1 * moment.duration(lastVisit.diff(Date.now())).asDays();
+		if(daySince < 1){
+			timeFormat = lastVisit.format('h:mm A');
+		}
+		else if(daySince < 7){
+			timeFormat = lastVisit.format('dd h:mm A');
+		}
+		else{
+			timeFormat = lastVisit.fromNow();
+		}
 		return (
 			<div className="user-list-div" onClick={this.loadUserView}>
 				<div className="user-list-img" style={{
@@ -173,7 +185,7 @@ window.UserListBox = React.createClass({
 					</span>
 					<i className="fa fa-icon fa-clock-o"></i>
 					<span>
-						{moment(this.props.lastTime).fromNow()}
+						{timeFormat}
 					</span>
 				</div>
 			</div>
