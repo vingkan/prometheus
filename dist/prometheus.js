@@ -23,7 +23,7 @@ var Prometheus = function(config){
 		getGeoIP(updateCoords);
 	}
 
-	if(config.localhost){
+	if(config['localhost'] && config.localhost === true){
 		LOCALSAVE = true;
 	}
 
