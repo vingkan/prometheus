@@ -9,7 +9,7 @@ window.MilestoneModule = React.createClass({
 	componentWillMount: function(){
 
 		function getMonthRef(date){
-			var r = new Date(date.getUTCFullYear(), date.getUTCMonth()-1).getTime() + '';
+			var r = new Date(date.getUTCFullYear(), date.getUTCMonth()).getTime() + '';
 			return r;
 		}
 

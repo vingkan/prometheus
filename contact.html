@@ -9,7 +9,7 @@
 		<link href='https://fonts.googleapis.com/css?family=Graduate|Gafata' rel='stylesheet' type='text/css'>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
-		<script src="npm/prometheus.js"></script>
+		<script src="dist/prometheus.js"></script>
 		<style>
 
 
@@ -28,14 +28,9 @@
 		<textarea id="message">Your message here.</textarea>
 		<button id="contact-button">Submit</button>
 
-		<script type="text/javascript">
+		<script src="script/config.js"></script>
 
-			var prometheus = Prometheus({
-				apiKey: "AIzaSyAEv8mrdbxqO3efPHLrYW4B1LYrb-SDItQ",
-				authDomain: "prometheusjs-1240.firebaseapp.com",
-				databaseURL: "https://prometheusjs-1240.firebaseio.com",
-				storageBucket: "prometheusjs-1240.appspot.com"
-			});
+		<script type="text/javascript">
 
 			prometheus.save({type: "CONTACT_PAGE"});
 
@@ -45,7 +40,6 @@
 				console.log(">>> " + message);
 				console.log("---");
 				prometheus.capture({
-					type: 'SCREEN_CAPTURE',
 					caption: 'Filling out a contact form.'
 				});
 				prometheus.notify('email', {

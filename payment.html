@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Prometheus</title>
+		<link rel="stylesheet" type="text/css" href="style/reset.css">
+		<link rel="stylesheet" type="text/css" href="style/main.css">
+		<!--<link rel="icon" type="img/png" href="style/favicon.png" style="width:30px;">-->
+		<!-- IMPORTED SCRIPTS -->
+		<link href='https://fonts.googleapis.com/css?family=Graduate|Gafata' rel='stylesheet' type='text/css'>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+		<script src="dist/prometheus.js"></script>
+		<style>
+
+
+
+		</style>
+	</head>
+
+	<body>
+
+		<h1>Payment</h1>
+		<p>This is where you pay us for things.</p>
+		<p id="pay-message"></p>
+
+		<a href="contact.html"><button>Contact Us</button></a>
+
+		<script src="script/config.js"></script>
+
+		<script type="text/javascript">
+
+			var message = 'You have not paid yet.'; 
+			if(prometheus.has('paid')){
+				message = 'You are a paid user!';
+			}
+			var out = document.getElementById('pay-message');
+			out.innerText = message;
+			
+
+		</script>
+		
+	</body>
+</html>

@@ -347,6 +347,17 @@ div.user-list-div{
 		span{
 			margin: auto (0.75 * @vh);
 		}
+
+		div.remove-button{
+			width: 3 * @vh;
+			height: 3 * @vh;
+			line-height: 3 * @vh;
+			text-align: center;
+			display: inline-block;
+			vertical-align: middle;
+			background: @FireOrange;
+			color: white;
+		}
 	
 	}
 
@@ -357,7 +368,7 @@ div.user-view{
 	display: inline-block;
 	width: 102%;
 	padding-top: 4 * @vh;
-	height: 31 * @vh;
+	height: 38 * @vh;
 	margin: -1.25%;
 	background-color: @AnalyticalPurple;
 	background-image: url('img/charcoal-trans-hex.png');
@@ -381,9 +392,16 @@ div.user-view{
 	}
 
 	div.visits-field{
+
 		margin-top: 2 * @vh;
 		background: transparent;
 		width: 100%;
+
+		p{
+			color: @Charcoal;
+			font-weight: bold;
+		}
+
 	}
 
 }

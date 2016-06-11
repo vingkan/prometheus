@@ -14,13 +14,27 @@ window.VisitView = React.createClass({
 	},
 	displayProperty: function(name, data, icon, key){
 		var imgData = this.handleImageData(name, data);
-		return (
-			<div className="prop-info" key={key}>
-				<i className={'fa fa-icon fa-' + icon}></i>
-				<span className="meta-prop-label">{name}: </span>
-				{imgData || data}
-			</div>
-		);
+		if(name === 'Page'){
+			return (
+				<div className="prop-info" key={key}>
+					<i className={'fa fa-icon fa-' + icon}></i>
+					<span className="meta-prop-label">{name}:</span>
+					<a href={data.url} target="_blank" key={key}>
+						{data.title}
+						<i className={'fa fa-icon fa-external-link'}></i>
+					</a>
+				</div>
+			);
+		}
+		else{
+			return (
+				<div className="prop-info" key={key}>
+					<i className={'fa fa-icon fa-' + icon}></i>
+					<span className="meta-prop-label">{name}: </span>
+					{imgData || data}
+				</div>
+			);
+		}
 	},
 	render: function(){
 		var _this = this;
@@ -45,11 +59,15 @@ window.VisitView = React.createClass({
 		}
 		var meta = this.props.meta;
 		propertyList.push.apply(propertyList, [
-			{name: 'URL', data: meta.page.url, icon: 'file-text-o'},
+			{name: 'Page', data: {title: meta.page.title || 'No Title', url: meta.page.url}, icon: 'file-text-o'},
+			{name: 'URL', data: meta.page.url, icon: 'link'},
+			{name: 'Device', data: meta.browser.device || 'Unknown', icon: 'tablet'},
 			{name: 'Browser', data: meta.browser.name + ' ' +  meta.browser.version, icon: 'desktop'},
+			{name: 'Width', data: (meta.browser.width || '?') + ' px', icon: 'arrows-h'},
+			{name: 'Height', data: (meta.browser.height || '?') + ' px', icon: 'arrows-v'},
 			{name: 'Date', data: moment(meta.datetime.timestamp).format('M/D/YYYY'), icon: 'calendar'},
 			{name: 'Time', data: moment(meta.datetime.timestamp).format('h:mm A'), icon: 'clock-o'},
-			{name: 'City', data: meta.location.city + ', ' + meta.location.country, icon: 'globe'}
+			{name: 'City', data: (meta.location.city || 'Unknown') + ', ' + meta.location.country, icon: 'globe'}
 		]);
 		if(endNode){
 			propertyList.push(endNode);
@@ -77,7 +95,8 @@ window.UserViewModule = React.createClass({
 		window.toggleLoading(true);
 		return {
 			name: '',
-			uid: this.props.uid
+			uid: this.props.uid,
+			limit: 10
 		}
 	},
 	componentWillMount: function(){
@@ -105,9 +124,16 @@ window.UserViewModule = React.createClass({
 	componentWillUnmount: function(){
 		this.firebaseRef.off();
 	},
+	loadMore: function(){
+		this.setState(function(prev, curr){
+			return {limit: prev.limit + 10};
+		});
+	},
 	render: function(){
-		var visits = this.state.visits;
-		var visitNodes = this.state.visits.map(function(visit, index){
+		var visits = _.clone(this.state.visits);
+		visits.reverse();
+		var visitList = visits.slice(0, this.state.limit);
+		var visitNodes = visitList.map(function(visit, index){
 			return (
 				<VisitView
 					meta={visit.meta} 
@@ -115,26 +141,64 @@ window.UserViewModule = React.createClass({
 					key={index}>
 				</VisitView>
 			);
-		}).reverse();
-		return (
-			<div className="UserViewModule user-view">
-				<h1>{this.state.name}</h1>
-				<p>
-					<i className="fa fa-icon fa-clock-o"></i>
-					Last visited {moment(visits[visits.length-1].meta.datetime.timestamp).fromNow()}
-				</p>
-				<p>
-					<i className="fa fa-icon fa-eye"></i>
-					{visits.length} total visits
-				</p>
-				<div className="user-view-img" style={{
-					backgroundImage: 'url(' + this.state.img + ')'
-				}}></div>
-				<div className="visits-field">
-					{visitNodes}
+		});
+		if(this.state.visits.length > this.state.limit){
+			return (
+				<div className="UserViewModule user-view">
+					<h1>{this.state.name}</h1>
+					<p>
+						<i className="fa fa-icon fa-clock-o"></i>
+						Last visited {moment(visits[visits.length-1].meta.datetime.timestamp).fromNow()}
+					</p>
+					<p>
+						<i className="fa fa-icon fa-eye"></i>
+						{visits.length} total visits
+					</p>
+					<p>
+						<i className="fa fa-icon fa-code-fork"></i>
+						UID: {this.state.uid}
+					</p>
+					<div className="user-view-img" style={{
+						backgroundImage: 'url(' + this.state.img + ')'
+					}}></div>
+					<div className="visits-field">
+						{visitNodes}
+						<p>
+							Showing {this.state.limit}/{this.state.visits.length}
+						</p>
+						<button class="load-more" onClick={this.loadMore}>
+							Load More Visits
+						</button>
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
+		else{
+			return (
+				<div className="UserViewModule user-view">
+					<h1>{this.state.name}</h1>
+					<p>
+						<i className="fa fa-icon fa-clock-o"></i>
+						Last visited {moment(visits[visits.length-1].meta.datetime.timestamp).fromNow()}
+					</p>
+					<p>
+						<i className="fa fa-icon fa-eye"></i>
+						{visits.length} total visits
+					</p>
+					<p>
+						<i className="fa fa-icon fa-code-fork"></i>
+						UID: {this.state.uid}
+					</p>
+					<div className="user-view-img" style={{
+						backgroundImage: 'url(' + this.state.img + ')'
+					}}></div>
+					<div className="visits-field">
+						{visitNodes}
+						<p>End of History</p>
+					</div>
+				</div>
+			);
+		}
 	}
 });
 
@@ -154,6 +218,18 @@ window.UserListBox = React.createClass({
 		renderUserViewModule(this.props.uid);
 	},
 	render: function(){
+		var timeFormat = '';
+		var lastVisit = moment(this.props.lastTime);
+		var daySince = -1 * moment.duration(lastVisit.diff(Date.now())).asDays();
+		if(daySince < 1){
+			timeFormat = lastVisit.format('h:mm A');
+		}
+		else if(daySince < 7){
+			timeFormat = lastVisit.format('dd h:mm A');
+		}
+		else{
+			timeFormat = lastVisit.fromNow();
+		}
 		return (
 			<div className="user-list-div" onClick={this.loadUserView}>
 				<div className="user-list-img" style={{
@@ -169,7 +245,7 @@ window.UserListBox = React.createClass({
 					</span>
 					<i className="fa fa-icon fa-clock-o"></i>
 					<span>
-						{moment(this.props.lastTime).fromNow()}
+						{timeFormat}
 					</span>
 				</div>
 			</div>
@@ -237,7 +313,7 @@ window.UserModule = React.createClass({
 		}).bind(this);
 	},
 	componentDidMount: function(){
-		
+
 	},
 	componentWillUnmount: function(){
 		this.firebaseRef.off();
@@ -280,7 +356,9 @@ window.UserModule = React.createClass({
 		}*/
 	},
 	render: function(){
-		var userNodes = this.state.users.map(function(user){
+		var users = this.state.users;
+		//var userList = users.slice(0, 5);
+		var userNodes = users.map(function(user){
 			return (
 				<UserListBox 
 					name={user.name} 
