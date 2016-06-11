@@ -396,6 +396,7 @@ function getBrowserData(){
 
 function getPageData(){
 	return {
+		title: document.title,
 		url: location.href
 	}
 }
