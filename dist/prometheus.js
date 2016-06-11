@@ -2,6 +2,7 @@ window.Prometheus = (function(){
 
 var SCREENSHOTS;
 var LOCATOR;
+var LOCALSAVE = false;
 var ANONS; //TO-DO: add boolean to config to toggle tracking anonymous users
 
 function loadHTML2Canvas(){
@@ -20,6 +21,10 @@ var Prometheus = function(config){
 
 	if(LOCATOR){
 		getGeoIP(updateCoords);
+	}
+
+	if(config.localhost){
+		LOCALSAVE = true;
 	}
 
 	if(config['noScreenshots'] && config.noScreenshots === true){
@@ -52,11 +57,17 @@ var Prometheus = function(config){
 			var uid = this.getUID();
 			var eventData = dataObj || {type: "SAVED_VISIT"};
 			var meta = metaProps || 'all';
-			var visitsRoute = createRoute('/users/' + uid + '/visits');
-			visitsRoute.push({
-				meta: this.get(meta),
-				visit: eventData
-			});
+			var metaData = this.get(meta);
+			if(LOCALSAVE === false && metaData.page.url.includes('localhost')){
+				//Don't save visit.
+			}
+			else{
+				var visitsRoute = createRoute('/users/' + uid + '/visits');
+				visitsRoute.push({
+					meta: metaData,
+					visit: eventData
+				});
+			}
 		},
 
 		error: function(errorInfo){
