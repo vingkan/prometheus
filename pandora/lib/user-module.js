@@ -46,7 +46,10 @@ window.VisitView = React.createClass({
 		var meta = this.props.meta;
 		propertyList.push.apply(propertyList, [
 			{name: 'URL', data: meta.page.url, icon: 'file-text-o'},
+			{name: 'Device', data: meta.browser.device, icon: 'tablet'},
 			{name: 'Browser', data: meta.browser.name + ' ' +  meta.browser.version, icon: 'desktop'},
+			{name: 'Width', data: meta.browser.width + ' px', icon: 'arrows-h'},
+			{name: 'Height', data: meta.browser.height + ' px', icon: 'arrows-v'},
 			{name: 'Date', data: moment(meta.datetime.timestamp).format('M/D/YYYY'), icon: 'calendar'},
 			{name: 'Time', data: moment(meta.datetime.timestamp).format('h:mm A'), icon: 'clock-o'},
 			{name: 'City', data: meta.location.city + ', ' + meta.location.country, icon: 'globe'}
