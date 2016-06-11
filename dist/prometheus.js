@@ -11,8 +11,6 @@ function loadHTML2Canvas(){
 	document.getElementsByTagName('head')[0].appendChild(fileRef);
 }
 
-console.log('LOADED DIST PROMETHEUS');
-
 var Prometheus = function(config){
 
 	// Initialize Firebase with 3.0 API
