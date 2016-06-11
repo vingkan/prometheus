@@ -78,6 +78,7 @@ var Prometheus = function(config){
 					var profileRoute = createRoute('/users/' + uid + '/profile');
 					profileRoute.set(userData);
 				}
+				this.loadFeatures();
 				this.save({type: "USER_LOGON"}, metaProps);
 			}
 		},
@@ -115,6 +116,38 @@ var Prometheus = function(config){
 			return response;
 		},
 
+		loadFeatures: function(){
+			var uid = this.getUID();
+			var featureRoute = createRoute('/features');
+			featureRoute.on('value', function(snapshot){
+				var featureBase = snapshot.val();
+				var features = [];
+				for(var i in featureBase){
+					if(featureBase[i]){
+						var feat = featureBase[i];
+						for(var j in feat.access){
+							if(feat.access[j]){
+								if(feat.access[j] === uid){
+									features.push(i);
+								}
+							}
+						}
+					}
+				}
+				sessionStorage.setItem('prometheus_features', features);
+			});
+		},
+
+		has: function(featureID){
+			var response = false;
+			var storedFeatures = sessionStorage.getItem('prometheus_features');
+			var features = storedFeatures.split(',');
+			if(features.indexOf(featureID) > -1){
+				response = true;
+			}
+			return response;
+		},
+
 		//TO-DO: function to change URL of firebase reference
 
 		get: function(request){
@@ -140,6 +173,7 @@ var Prometheus = function(config){
 		},
 
 		deliver: function(featureID, callback, fallback){
+			//Safer Asynchronous Method
 			var uid = this.getUID();
 			var featureRoute = createRoute('/features/' + featureID + '/access/');
 			featureRoute.once('value', function(snapshot){
@@ -227,6 +261,8 @@ var Prometheus = function(config){
 			line: line
 		});
 	}
+
+	prometheus.loadFeatures();
 
 	return prometheus;
 
