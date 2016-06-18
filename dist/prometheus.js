@@ -257,6 +257,46 @@ var Prometheus = function(config){
 			});
 		},
 
+		timers: {},
+
+		Timer: function(timerID){
+			var _this = this;
+			return {
+				id: timerID,
+				started: false,
+				start: function(){
+					if(this.started){
+						console.log('timer already started for ' + this.id)
+					}
+					else{
+						console.log('starting timer for: ' + this.id)
+						this.started = Date.now();
+					}
+				},
+				stop: function(){
+					if(this.started){
+						var end = Date.now();
+						_this.save({
+							type: 'TIMER',
+							timerID: this.id,
+							start: this.started,
+							end: end
+						});
+					}
+					else{
+						console.log('timer was never started for ' + this.id)
+					}
+				}
+			}
+		},
+
+		timer: function(timerID){
+			if(!this.timers[timerID]){
+				this.timers[timerID] = this.Timer(timerID)
+			}
+			return this.timers[timerID];
+		},
+
 		toString: function(){
 			console.log(config);
 			return 'Bringing Firebase to humanity!';
