@@ -83,7 +83,10 @@ var Prometheus = function(config){
 		logon: function(uid, userData, metaProps){
 			if(uid){
 				this.trackUser(uid);
-				if(userData){
+				if(LOCALSAVE === false && location.hostname.includes('localhost')){
+					//Don't update profile.
+				}
+				else if(userData){
 					var profileRoute = createRoute('/users/' + uid + '/profile');
 					profileRoute.set(userData);
 				}
