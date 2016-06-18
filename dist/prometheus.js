@@ -41,14 +41,14 @@ var Prometheus = function(config){
 
 		trackUser: function(uid){
 			if(uid){
-				sessionStorage.setItem('prometheus_user', uid);
+				localStorage.setItem('prometheus_user', uid);
 			}
 		},
 
 		getUID: function(){
 			var track = "ANONYMOUS_USER";
 			if(this.isTrackingUser()){
-				track = sessionStorage.getItem('prometheus_user');
+				track = localStorage.getItem('prometheus_user');
 			}
 			return track;
 		},
@@ -121,7 +121,7 @@ var Prometheus = function(config){
 
 		isTrackingUser: function(){
 			var response = false;
-			var trackedUID = sessionStorage.getItem('prometheus_user');
+			var trackedUID = localStorage.getItem('prometheus_user');
 			if(trackedUID){
 				response = true;
 			}
@@ -146,13 +146,13 @@ var Prometheus = function(config){
 						}
 					}
 				}
-				sessionStorage.setItem('prometheus_features', features);
+				localStorage.setItem('prometheus_features', features);
 			});
 		},
 
 		has: function(featureID){
 			var response = false;
-			var storedFeatures = sessionStorage.getItem('prometheus_features') || '';
+			var storedFeatures = localStorage.getItem('prometheus_features') || '';
 			var features = storedFeatures.split(',');
 			if(features.indexOf(featureID) > -1){
 				response = true;
