@@ -6,9 +6,9 @@ Track how long users take to complete specific actions on your site. (New Featur
 [![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus) [![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Demo
-The Prometheus team wanted to know how long users spend writing their contact messages, as well as if there was any wait time between arriving on the page and starting to write. Multiple timers allow tracking of both. This is the kind of information the dashboard receives:
+The Prometheus team wanted to know how long users spend writing their contact messages, as well as if there was any wait time between arriving on the page and starting to write. Multiple timers allow tracking of both. This is the kind of information the dashboard displays:
 
-![Prometheus Demo: Notifications to Custom Users](http://g.recordit.co/19KT68G0NX.gif)
+![Prometheus Dashboard: Sample Timer Entry](http://vingkan.github.io/prometheus/img/timer.PNG)
 
 ## Usage
 Calling `prometheus.timer(timerID)` returns the `Timer` object that corresponds to that id/activity.
