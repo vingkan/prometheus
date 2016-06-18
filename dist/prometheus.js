@@ -8,7 +8,7 @@ var ANONS; //TO-DO: add boolean to config to toggle tracking anonymous users
 function loadHTML2Canvas(){
 	var fileRef = document.createElement('script');
 	fileRef.setAttribute('type', 'text/javascript');
-	fileRef.setAttribute('src', 'http://vingkan.github.io/prometheus/script/html2canvas.min.js');
+	fileRef.setAttribute('src', 'https://vingkan.github.io/prometheus/script/html2canvas.min.js');
 	document.getElementsByTagName('head')[0].appendChild(fileRef);
 }
 
