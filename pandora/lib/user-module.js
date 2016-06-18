@@ -134,6 +134,18 @@ window.UserViewModule = React.createClass({
 		visits.reverse();
 		var visitList = visits.slice(0, this.state.limit);
 		var visitNodes = visitList.map(function(visit, index){
+			if(visit.visit.type === "TIMER"){
+				var timer = visit.visit;
+				var length = moment.duration(moment(timer.end).diff(timer.start));
+				var duration = '';
+				if(length.asMinutes() < 1){
+					duration = length.asSeconds() + ' seconds';
+				}
+				else{
+					duration = length.asMinutes() + ' minutes';
+				}
+				visit.visit.duration = duration;
+			}
 			return (
 				<VisitView
 					meta={visit.meta} 

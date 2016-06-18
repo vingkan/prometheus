@@ -8,7 +8,7 @@ var ANONS; //TO-DO: add boolean to config to toggle tracking anonymous users
 function loadHTML2Canvas(){
 	var fileRef = document.createElement('script');
 	fileRef.setAttribute('type', 'text/javascript');
-	fileRef.setAttribute('src', 'http://vingkan.github.io/prometheus/script/html2canvas.min.js');
+	fileRef.setAttribute('src', 'https://vingkan.github.io/prometheus/script/html2canvas.min.js');
 	document.getElementsByTagName('head')[0].appendChild(fileRef);
 }
 
@@ -83,7 +83,10 @@ var Prometheus = function(config){
 		logon: function(uid, userData, metaProps){
 			if(uid){
 				this.trackUser(uid);
-				if(userData){
+				if(LOCALSAVE === false && location.hostname.includes('localhost')){
+					//Don't update profile.
+				}
+				else if(userData){
 					var profileRoute = createRoute('/users/' + uid + '/profile');
 					profileRoute.set(userData);
 				}
@@ -252,6 +255,38 @@ var Prometheus = function(config){
 					}
 				});
 			});
+		},
+
+		timers: {},
+
+		Timer: function(timerID){
+			var _this = this;
+			return {
+				id: timerID,
+				started: false,
+				start: function(){
+					if(!this.started){
+						this.started = Date.now();
+					}
+				},
+				stop: function(){
+					if(this.started){
+						_this.save({
+							type: 'TIMER',
+							timerID: this.id,
+							start: this.started,
+							end: Date.now()
+						});
+					}
+				}
+			}
+		},
+
+		timer: function(timerID){
+			if(!this.timers[timerID]){
+				this.timers[timerID] = this.Timer(timerID)
+			}
+			return this.timers[timerID];
 		},
 
 		toString: function(){

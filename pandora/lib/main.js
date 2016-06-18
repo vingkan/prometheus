@@ -36,10 +36,10 @@ window.toggleSpace = function(spaceID){
   //TEST DATA
 }*/
 
-var ignoreId = ['57323a772f5a2b64d5ceafc2', '56a6aec213cf349b97b3e58e', '575aeda1922f189bdcb6f091', '568eb4e705d347a26a94ecc4'];
+/*var ignoreId = ['RKqN9KUHpaVRCiZ7t9fRtB0HWF12', '57323a772f5a2b64d5ceafc2', '56a6aec213cf349b97b3e58e', '575aeda1922f189bdcb6f091', '568eb4e705d347a26a94ecc4'];
 for(var i = 0; i < ignoreId.length; i++){
 	var ignoredUser = firebase.database().ref('prometheus/users/' + ignoreId[i]);
 	ignoredUser.on('value', function(snapshot){
 		ignoredUser.remove();
 	});
-}
+}*/
