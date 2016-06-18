@@ -265,26 +265,18 @@ var Prometheus = function(config){
 				id: timerID,
 				started: false,
 				start: function(){
-					if(this.started){
-						console.log('timer already started for ' + this.id)
-					}
-					else{
-						console.log('starting timer for: ' + this.id)
+					if(!this.started){
 						this.started = Date.now();
 					}
 				},
 				stop: function(){
 					if(this.started){
-						var end = Date.now();
 						_this.save({
 							type: 'TIMER',
 							timerID: this.id,
 							start: this.started,
-							end: end
+							end: Date.now()
 						});
-					}
-					else{
-						console.log('timer was never started for ' + this.id)
 					}
 				}
 			}
