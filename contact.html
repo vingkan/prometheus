@@ -38,11 +38,11 @@
 
 			var emailInput = document.getElementById('email');
 			emailInput.addEventListener('focus', function(){
-				prometheus.timer('contact_form_writing').start();
+				prometheus.timer('contact_form_writing').start({trigger: 'email input'});
 			});
 			var messageInput = document.getElementById('message');
 			messageInput.addEventListener('focus', function(){
-				prometheus.timer('contact_form_writing').start();
+				prometheus.timer('contact_form_writing').start({trigger: 'message input'});
 			});
 
 			function submitMessage(email, message){
@@ -57,8 +57,8 @@
 					title: "Email Sent",
 					message: message,
 				});
-				prometheus.timer('contact_form_writing').stop();
 				prometheus.timer('contact_form_total').stop();
+				prometheus.timer('contact_form_writing').stop({length: message.length + ' characters'});
 			}
 
 			$('#contact-button').click(function(){
