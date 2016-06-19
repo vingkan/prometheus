@@ -263,20 +263,35 @@ var Prometheus = function(config){
 			var _this = this;
 			return {
 				id: timerID,
+				data: {},
 				started: false,
-				start: function(){
+				start: function(data){
 					if(!this.started){
 						this.started = Date.now();
+						if(data){
+							this.data = data;
+						}
 					}
 				},
-				stop: function(){
+				stop: function(data){
 					if(this.started){
-						_this.save({
+						var info = {
 							type: 'TIMER',
 							timerID: this.id,
 							start: this.started,
 							end: Date.now()
-						});
+						}
+						for(var j in data){
+							if(data[j]){
+								this.data[j] = data[j];
+							}
+						}
+						for(var i in this.data){
+							if(this.data[i] && !info[i]){
+								info[i] = this.data[i];
+							}
+						}
+						_this.save(info);
 					}
 				}
 			}
