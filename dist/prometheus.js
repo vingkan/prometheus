@@ -292,6 +292,7 @@ var Prometheus = function(config){
 							}
 						}
 						_this.save(info);
+						this.started = false;
 					}
 				}
 			}
