@@ -133,6 +133,73 @@ var Prometheus = function(config){
 			});
 		},
 
+		// Looks up a user's freemium metadata and determines if they have access to a
+		// given freemium feature. Each freemium feature is responsible for defining a
+		// `validate` function that, given a `user` object, will return true if the 
+		// user has access to the feature, otherwise false.
+		//
+		// Sample `validate` function for a "create-meeting" freemium feature:
+		/*
+			if (userData.createCredits > 0) {
+				userData.createCredits--;
+				return {
+					allowed: true,
+					changed: true
+				};
+			} else {
+				return {
+					allowed: false
+				};
+			}
+		*/
+		freemium: function (featureId, callback, fallback) {
+			var uid = this.getUID();
+			var freemiumRoute = createRoute('/users/' + uid + '/freemium/');
+			freemiumRoute.once('value', function (snapshot) {
+				var userData = snapshot.val();
+				var featureRoute = createRoute('/freemiumFeatures/' + featureID + '/');
+				featureRoute.once('value', function (snapshot) {
+					var feature = snapshot.val();
+					// TODO: handle case where feature doesn't exist
+					var validateFn = new Function('userData', feature.validate);
+					// TODO: handle case where feature doesn't have validate function
+					var result = validateFn(userData);
+					if (result.changed) {
+						freemiumRoute.set(userData);
+					}
+					if (result.allowed) {
+						callback();
+					} else {
+						fallback();
+					}
+				});
+			});
+		},
+
+		// Looks up a given promo code and runs the promo code's redeem function
+		// on this user's freemium data.
+		//
+		// Sample `redeem` function for a create meeting credit promo code
+		/*
+			userData.createCredits += 5;
+			return userData;
+		*/
+		promo: function (code, callback) {
+			var uid = this.getUID();
+			var freemiumRoute = createRoute('/users/' + uid + '/freemium/');
+			freemiumRoute.once('value', function (snapshot) {
+				var userData = snapshot.val();
+				var promoRoute = createRoute('/promos/' + code + '/');
+				promoRoute.once('value', function (snashot) {
+					var promoCode = snapshot.val();
+					// TODO: handle case where code doesn't exist
+					var redeemFn = new Function('userData', promoCode.redeem);
+					freemiumRoute.set(redeemFn(userData));
+					callback();
+				});
+			});
+		},
+
 		toString: function(){
 			console.log(config);
 			return 'Bringing Firebase to humanity!';
