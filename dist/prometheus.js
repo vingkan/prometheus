@@ -187,19 +187,18 @@ var Prometheus = function(config){
 		deliver: function(featureID, callback, fallback){
 			//Safer Asynchronous Method
 			var uid = this.getUID();
-			var featureRoute = createRoute('/features/' + featureID + '/access/');
+			var featureRoute = createRoute('/users/' + uid + '/data/' + featureID + '/');
 			featureRoute.once('value', function(snapshot){
 				var allowed = snapshot.val();
-				var executed = false;
-				for(var i in allowed){
-					if(uid === allowed[i]){
+				if(allowed){
+					if(callback){
 						callback();
-						executed = true;
-						break;
 					}
 				}
-				if(!executed && fallback){
-					fallback();
+				else{
+					if(fallback){
+						fallback();
+					}
 				}
 			});
 		},
