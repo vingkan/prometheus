@@ -249,25 +249,38 @@ var Prometheus = function(config){
 
 		redeem: function (code, callback, fallback) {
 			var uid = this.getUID();
-			var featureRoute = createRoute('/users/' + uid + '/features/');
-			featureRoute.once('value', function (userSnap) {
+			var userDataRoute = createRoute('/users/' + uid + '/data/');
+			userDataRoute.once('value', function (userSnap) {
 				var userData = userSnap.val();
-				var promoRoute = createRoute('/promos/' + code + '/');
-				promoRoute.once('value', function (promoSnap) {
-					if(promoSnap.exists() && promoSnap.val().hasOwnProperty(redeem)){
-						var promoCode = promoSnap.val();
-						var redeemFn = new Function('userData', promoCode.redeem);
-						featureRoute.set(redeemFn(userData));
-						if(callback){
-							callback(promoCode.info);
+				var promos = []
+				if(userData.hasOwnProperty('promos')){
+					promos = userData.promos;
+				}
+				if(promos.indexOf(code) < 0){
+					var promoRoute = createRoute('/promos/' + code + '/');
+					promoRoute.once('value', function (promoSnap) {
+						if(promoSnap.exists() && promoSnap.val().hasOwnProperty('redeem')){
+							var promoCode = promoSnap.val();
+							var redeemFn = new Function('userData', promoCode.redeem);
+							promos.push(code);
+							userData.promos = promos;
+							userDataRoute.set(redeemFn(userData));
+							if(callback){
+								callback(promoCode.info);
+							}
 						}
-					}
-					else{
-						if(fallback){
-							fallback();
+						else{
+							if(fallback){
+								fallback("Promo code not found.");
+							}
 						}
+					});
+				}
+				else{
+					if(fallback){
+						fallback("Promo code already used.");
 					}
-				});
+				}
 			});
 		},
 
