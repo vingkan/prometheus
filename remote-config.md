@@ -8,13 +8,13 @@ Separate business logic from app logic by deciding how to distribute features to
 [![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus) [![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Usage
-Prometheus' `deliver()` method has been rebuilt to allow for more complex feature validation. This pre-release does not include dashboard updates that allow for manipulation of features, but it does bring a new `redeem()` function that allows users to receive access to features the webmaster has defined in the project Firebase.
+Prometheus' `deliver()` method has been rebuilt to allow for more complex feature validation. This pre-release does not include dashboard updates that allow for manipulation of features, but it does bring a new `redeem()` function that allows users to receive access to features the webmaster has defined in the project Firebase. See `payment.html` for a demo of the new deliver method with returned user data.
 
 ### prometheus.deliver(featureID, callback, fallback)
 Checks if a user has access to the given feature and runs the appropriate asychronous function.
 + featureID (string, required): ID of feature to look up.
-+ callback (function, required): function to run if user does have access to feature. No arguments.
-+ fallback (function, recommended): function to run if user does not have access to feature. No arguments.
++ callback (function, required): function to run if user does have access to feature. Receives any data passed back from the validation as an argument.
++ fallback (function, recommended): function to run if user does not have access to feature. Receives any data passed back from the validation as an argument.
 
 #### Validate Function
 Each feature entry must have a `validate` function that checks if the user can access the given feature, based on their data properties. The function definition can also choose what user data, if any, to pass back to the client.
@@ -28,14 +28,14 @@ if (userData.createCredits > 0) {
 		allowed: true,
 		changed: true,
 		data: {
-		    createCredits: createCredits
+		    createCredits: userData.createCredits
 		}
 	};
 } else {
 	return {
 		allowed: false,
 		data: {
-		    createCredits: createCredits
+		    createCredits: userData.createCredits
 		}
 	};
 }

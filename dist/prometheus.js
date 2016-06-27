@@ -196,6 +196,7 @@ var Prometheus = function(config){
 						var userData = userSnap.val();
 						var result = {allowed: false};
 						if(feature.validate){
+							console.log(feature.validate)
 							var validateFn = new Function('userData', feature.validate);
 							result = validateFn(userData);
 						}

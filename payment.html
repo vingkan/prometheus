@@ -30,12 +30,19 @@
 		<script type="text/javascript">
 
 			var message = 'You have not paid yet.'; 
-			if(prometheus.has('paid')){
+			/*if(prometheus.has('paid')){
 				message = 'You are a paid user!';
-			}
-			var out = document.getElementById('pay-message');
-			out.innerText = message;
-			
+			}*/
+			prometheus.deliver('paid', function(data){
+				message = 'You are a paid user!';
+				message += ' You have ' + data.credits + ' credits.';
+				var out = document.getElementById('pay-message');
+				out.innerText = message;
+			}, function(data){
+				//message += ' You have ' + data.credits + ' credits.';
+				var out = document.getElementById('pay-message');
+				out.innerText = message;
+			});
 
 		</script>
 		
