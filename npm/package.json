@@ -1,6 +1,6 @@
 {
   "name": "prometheusjs",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Bringing Firebase-powered CRM and analytics to all of humanity.",
   "main": "prometheus.min.js",
   "scripts": {
