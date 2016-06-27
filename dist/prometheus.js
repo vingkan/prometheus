@@ -265,11 +265,20 @@ var Prometheus = function(config){
 							promos.push(code);
 							userData.promos = promos;
 							userDataRoute.set(redeemFn(userData));
+							prometheus.save({
+								type: "PROMO_CODE_USED",
+								code: code
+							});
 							if(callback){
 								callback(promoCode.info);
 							}
 						}
 						else{
+							prometheus.save({
+								type: "PROMO_CODE_ERROR",
+								code: code,
+								error: "NOT_FOUND"
+							});
 							if(fallback){
 								fallback({
 									type: "NOT_FOUND",
@@ -280,6 +289,11 @@ var Prometheus = function(config){
 					});
 				}
 				else{
+					prometheus.save({
+						type: "PROMO_CODE_ERROR",
+								code: code,
+						error: "ALREADY_USED"
+					});
 					if(fallback){
 						fallback({
 							type: "ALREADY_USED",
