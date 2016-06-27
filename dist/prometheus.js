@@ -184,7 +184,7 @@ var Prometheus = function(config){
 			return response;
 		},
 
-		deliver: function(featureID, callback, fallback){
+		can: function(featureID, callback, fallback){
 			//Safer Asynchronous Method
 			var uid = this.getUID();
 			var featureRoute = createRoute('/features/' + featureID + '/');
@@ -197,7 +197,7 @@ var Prometheus = function(config){
 						if(userSnap.exists()){
 							userData = userSnap.val();
 						}
-						var result = {allowed: false};
+						var result = {};
 						if(feature.validate){
 							var validateFn = new Function('userData', feature.validate);
 							result = validateFn(userData);
@@ -213,6 +213,49 @@ var Prometheus = function(config){
 							}
 						}
 					});
+				}
+			});
+		},
+
+		deliver: function(featureID, callback, fallback){
+			//Safer Asynchronous Method
+			prometheus.can(featureID, function(data){
+				var uid = prometheus.getUID();
+				var featureRoute = createRoute('/features/' + featureID + '/');
+				featureRoute.once('value', function(featureSnap){
+					if(featureSnap.exists()){
+						var feature = featureSnap.val();
+						var userDataRoute = createRoute('/users/' + uid + '/data');
+						userDataRoute.once('value', function(userSnap){
+							var userData = {};
+							if(userSnap.exists()){
+								userData = userSnap.val();
+							}
+							var result = {};
+							if(feature.process){
+								var processFn = new Function('userData', feature.process);
+								result = processFn(userData);
+								userDataRoute.set(userData);
+							}
+							else{
+								result.data = data;
+							}
+							if(callback){
+								callback(result.data);
+							}
+						});
+					}
+					else{
+						if(fallback){
+							fallback({
+								message: "The feature you requested does not exist."
+							});
+						}
+					}
+				});
+			}, function(data){
+				if(fallback){
+					fallback(data);
 				}
 			});
 		},

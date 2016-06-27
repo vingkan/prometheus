@@ -25,6 +25,8 @@
 
 		<a href="contact.html"><button>Contact Us</button></a>
 
+		<div id="withdraw-field"></div>
+
 		<script src="script/config.js"></script>
 
 		<script type="text/javascript">
@@ -43,6 +45,51 @@
 				var out = document.getElementById('pay-message');
 				out.innerText = message;
 			});
+
+			function withdraw(){
+				prometheus.deliver('withdraw', function(data){
+					var out = document.getElementById('pay-message');
+					out.innerText = 'Now you have ' + data.credits + ' credits.';
+				}, function(){
+					alert("Sorry, you don't have enough credits to withdraw!");
+				});
+			}
+
+			var field = document.getElementById('withdraw-field');
+			prometheus.can('withdraw', function(){
+				field.innerHTML = '<button onclick="withdraw();">Withdraw</button>';
+			}, function(){
+				field.innerHTML = '<h3>You do not have enough credits to withdraw.</h3>';
+			});
+
+			// Feature: withdraw
+			/*
+
+				validate function
+				return {
+					allowed: userData.credits > 0,
+					data: {
+						credits: userData.credits
+					}
+				};
+
+				process function
+				if(userData.credits){
+					userData.credits--;
+				}
+				else{
+					userData.credits = 0;
+				}
+				return {
+					changed: true,
+					data: {
+						credits: userData.credits
+					}
+				};
+
+				
+
+			*/
 
 		</script>
 		
