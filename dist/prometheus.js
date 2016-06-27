@@ -271,14 +271,20 @@ var Prometheus = function(config){
 						}
 						else{
 							if(fallback){
-								fallback("Promo code not found.");
+								fallback({
+									type: "NOT_FOUND",
+									message: "Promo code not found."
+								});
 							}
 						}
 					});
 				}
 				else{
 					if(fallback){
-						fallback("Promo code already used.");
+						fallback({
+							type: "ALREADY_USED",
+							message: "Promo code already used."
+						});
 					}
 				}
 			});
