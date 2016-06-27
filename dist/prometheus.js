@@ -281,18 +281,18 @@ var Prometheus = function(config){
 							start: this.started,
 							end: Date.now()
 						}
-						for(var j in data){
-							if(data[j]){
-								this.data[j] = data[j];
-							}
-						}
 						for(var i in this.data){
-							if(this.data[i] && !info[i]){
+							if(this.data.hasOwnProperty(i)){
 								info[i] = this.data[i];
 							}
 						}
+						for(var j in data){
+							if(data.hasOwnProperty(j)){
+								info[j] = data[j];
+							}
+						}
 						_this.save(info);
-						this.started = false;
+						_this.timers[timerID] = null;
 					}
 				}
 			}
