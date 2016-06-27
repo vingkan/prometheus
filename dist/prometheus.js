@@ -214,49 +214,6 @@ var Prometheus = function(config){
 			});
 		},
 
-		// Looks up a user's freemium metadata and determines if they have access to a
-		// given freemium feature. Each freemium feature is responsible for defining a
-		// `validate` function that, given a `user` object, will return true if the 
-		// user has access to the feature, otherwise false.
-		//
-		// Sample `validate` function for a "create-meeting" freemium feature:
-		/*
-			if (userData.createCredits > 0) {
-				userData.createCredits--;
-				return {
-					allowed: true,
-					changed: true
-				};
-			} else {
-				return {
-					allowed: false
-				};
-			}
-		*/
-		freemium: function (featureId, callback, fallback) {
-			var uid = this.getUID();
-			var freemiumRoute = createRoute('/users/' + uid + '/freemium/');
-			freemiumRoute.once('value', function (snapshot) {
-				var userData = snapshot.val();
-				var featureRoute = createRoute('/freemiumFeatures/' + featureID + '/');
-				featureRoute.once('value', function (snapshot) {
-					var feature = snapshot.val();
-					// TODO: handle case where feature doesn't exist
-					var validateFn = new Function('userData', feature.validate);
-					// TODO: handle case where feature doesn't have validate function
-					var result = validateFn(userData);
-					if (result.changed) {
-						freemiumRoute.set(userData);
-					}
-					if (result.allowed) {
-						callback();
-					} else {
-						fallback();
-					}
-				});
-			});
-		},
-
 		redeem: function (code, callback, fallback) {
 			var uid = this.getUID();
 			var userDataRoute = createRoute('/users/' + uid + '/data/');

@@ -3,7 +3,7 @@
 # Prometheus: Remote Configuration
 _This is a pre-release._
 
-Customize your users' experiences by
+Separate business logic from app logic by deciding how to distribute features to your users inside your Firebase. Offer promo codes that let your users obtain access to features without waiting for you!
 
 [![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus) [![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -15,8 +15,10 @@ Checks if a user has access to the given feature and runs the appropriate asychr
 + featureID (string, required): ID of feature to look up.
 + callback (function, required): function to run if user does have access to feature. No arguments.
 + fallback (function, recommended): function to run if user does not have access to feature. No arguments.
+
 #### Validate Function
 Each feature entry must have a `validate` function that checks if the user can access the given feature, based on their data properties. The function definition can also choose what user data, if any, to pass back to the client.
+
 Sample `validate` function for a create meeting feature delivery request, store this in Firebase with feature data:
 ```javascript
 // TO-DO: Check if user has `createCredits` data property
@@ -38,7 +40,7 @@ if (userData.createCredits > 0) {
 	};
 }
 ```
-Where to store in Firebase:
+#### Where to store in Firebase:
 
 ![Sample Feature Validation Entry in Firebase](https://raw.githubusercontent.com/vingkan/prometheus/master/img/sample-feature-entry.PNG)
 
@@ -50,12 +52,13 @@ Looks up a given promo code and runs the promo code's redeem function on the use
 
 #### Redeem Function
 Each promo code entry must have a `redeem` function that updates the users' data according to the promotion.
+
 Sample `redeem` function for a create meeting credit promo code, store this in Firebase with promo data:
 ```javascript
 userData.createCredits += 5;
 return userData;
 ```
-Where to store in Firebase:
+#### Where to store in Firebase:
 
 ![Sample Promo Code Entry in Firebase](https://raw.githubusercontent.com/vingkan/prometheus/master/img/sample-promo-entry.PNG)
 
