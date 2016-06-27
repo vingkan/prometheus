@@ -193,10 +193,12 @@ var Prometheus = function(config){
 					var feature = featureSnap.val();
 					var userDataRoute = createRoute('/users/' + uid + '/data');
 					userDataRoute.once('value', function(userSnap){
-						var userData = userSnap.val();
+						var userData = {};
+						if(userSnap.exists()){
+							userData = userSnap.val();
+						}
 						var result = {allowed: false};
 						if(feature.validate){
-							console.log(feature.validate)
 							var validateFn = new Function('userData', feature.validate);
 							result = validateFn(userData);
 						}
@@ -219,7 +221,10 @@ var Prometheus = function(config){
 			var uid = this.getUID();
 			var userDataRoute = createRoute('/users/' + uid + '/data/');
 			userDataRoute.once('value', function (userSnap) {
-				var userData = userSnap.val();
+				var userData = {};
+				if(userSnap.exists()){
+					userData = userSnap.val();
+				}
 				var promos = []
 				if(userData.hasOwnProperty('promos')){
 					promos = userData.promos;
