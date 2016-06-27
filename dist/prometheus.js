@@ -187,18 +187,29 @@ var Prometheus = function(config){
 		deliver: function(featureID, callback, fallback){
 			//Safer Asynchronous Method
 			var uid = this.getUID();
-			var featureRoute = createRoute('/users/' + uid + '/data/' + featureID + '/');
-			featureRoute.once('value', function(snapshot){
-				var allowed = snapshot.val();
-				if(allowed){
-					if(callback){
-						callback();
-					}
-				}
-				else{
-					if(fallback){
-						fallback();
-					}
+			var featureRoute = createRoute('/features/' + featureID + '/');
+			featureRoute.once('value', function(featureSnap){
+				if(featureSnap.exists()){
+					var feature = featureSnap.val();
+					var userDataRoute = createRoute('/users/' + uid + '/data');
+					userDataRoute.once('value', function(userSnap){
+						var userData = userSnap.val();
+						var result = {allowed: false};
+						if(feature.validate){
+							var validateFn = new Function('userData', feature.validate);
+							result = validateFn(userData);
+						}
+						if(result.allowed){
+							if(callback){
+								callback(result.data);
+							}
+						}
+						else{
+							if(fallback){
+								fallback(result.data);
+							}
+						}
+					});
 				}
 			});
 		},

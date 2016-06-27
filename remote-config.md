@@ -1,74 +1,87 @@
 ![Prometheus Long Logo](http://vingkan.github.io/prometheus/img/long-logo.png)
 
-# Prometheus: Notifications
-Send popups to specific users via web notifications. (New Feature)
+# Prometheus: Remote Configuration
+_This is a pre-release._
+
+Customize your users' experiences by
 
 [![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus) [![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## Demo
-This visitor was selected as a small group of users to get a sneak preview of new features! When she clicked on the notification from Prometheus, she saw the information the web developers wanted her to. The team received record that they reached her, helpful, because even though we think this is a good way to reach users, we can't guarantee that every user will engage with the notifications developers set for them.
-
-![Prometheus Demo: Notifications to Custom Users](http://g.recordit.co/19KT68G0NX.gif)
-
 ## Usage
-This feature is built on top of Prometheus' `.deliver()` method. Assign notification IDs and add users under them in the Pandora Dashboard to specify which users should receive the prepared notification.
+Prometheus' `deliver()` method has been rebuilt to allow for more complex feature validation. This pre-release does not include dashboard updates that allow for manipulation of features, but it does bring a new `redeem()` function that allows users to receive access to features the webmaster has defined in the project Firebase.
 
-### prometheus.notify(noteID, note, callback)
-Send popups to specific users via web notifications.
-+ noteID (string, required): id used to group receiving users and notification return information
-+ note (object, required): 
-	+ title (string, optional): notification title.
-	+ message (string, optional): notification body.
-	+ icon (string, optional): notication icon.
-+ callback (function, optional): code to run if a user clicks on the notification body
-
-### Notification Callback
-Notification callback functions include a Prometheus.Note object that has two methods for the developer to access.
+### prometheus.deliver(featureID, callback, fallback)
+Checks if a user has access to the given feature and runs the appropriate asychronous function.
++ featureID (string, required): ID of feature to look up.
++ callback (function, required): function to run if user does have access to feature. No arguments.
++ fallback (function, recommended): function to run if user does not have access to feature. No arguments.
+#### Validate Function
+Each feature entry must have a `validate` function that checks if the user can access the given feature, based on their data properties. The function definition can also choose what user data, if any, to pass back to the client.
+Sample `validate` function for a create meeting feature delivery request, store this in Firebase with feature data:
 ```javascript
-function(note){
-	note.seen(); // Saves a Prometheus "NOTIFICATION_CLICKED" event for the user.
-	note.terminate(); // Removes the users' ID from the notification: they will not receive this notification unless it is reassigned to them from the dashboard.
+// TO-DO: Check if user has `createCredits` data property
+if (userData.createCredits > 0) {
+	userData.createCredits--;
+	return {
+		allowed: true,
+		changed: true,
+		data: {
+		    createCredits: createCredits
+		}
+	};
+} else {
+	return {
+		allowed: false,
+		data: {
+		    createCredits: createCredits
+		}
+	};
 }
-
 ```
-If no callback function is provided, `Note.seen()` will be called, but not `Note.terminate()`.
+Where to store in Firebase:
 
-## Example from Demo:
-This block of code is responsible for the notification shown in the demo gif.
+![Sample Feature Validation Entry in Firebase](https://raw.githubusercontent.com/vingkan/prometheus/master/img/sample-feature-entry.PNG)
 
+### prometheus.redeem(code, callback, fallback)
+Looks up a given promo code and runs the promo code's redeem function on the user's feature data.
++ code (string, required): promo code stored at `prometheus/promos/{code}`. Must have a redeem function.
++ callback (function, recommended): function to run if code is redeemed. Callback receives the information stored with the code in Firebase as its only argument, if any.
++ fallback (function, recommended): function to run if code is not found or is unredeemable. Fallback receives error type and error message.
+
+#### Redeem Function
+Each promo code entry must have a `redeem` function that updates the users' data according to the promotion.
+Sample `redeem` function for a create meeting credit promo code, store this in Firebase with promo data:
 ```javascript
-prometheus.notify('features-note', {
-	title: "New Features",
-	message: "We're considering adding some new features. Click to reveal them.",
-	icon: "http://i.imgur.com/mUIQRVy.jpg"
-}, function(){
-	var features = [
-		"Send web notifications to specific users from the dashboard.",
-		"Integrate with new Firebase 3.0 features."
-	];
-	var list = document.getElementById('feature-list');
-	list.innerHTML = '';
-	for(var i = 0; i < features.length; i++){
-		list.innerHTML += '<li>' + features[i] + '</li>';
-	}
-});
-
+userData.createCredits += 5;
+return userData;
 ```
-If an icon is not specified in the note argument or the developer wishes to use one icon for all notifications, they can reference its URL with the icon variable in the Prometheus configuration. Individual icon URLs passed into the `.notify()` function have precedence over the config icon.
+Where to store in Firebase:
+
+![Sample Promo Code Entry in Firebase](https://raw.githubusercontent.com/vingkan/prometheus/master/img/sample-promo-entry.PNG)
+
+## Migrating Features Data
+Run this script in the console of your app to migrate existing features data from the `prometheus/features` branch to each user's `data` branch. The script will generate validation functions for those features but leave behind the list of allowed user IDs to allow the Dashboard to continue displaying access.
 ```javascript
-var prometheus = Prometheus({
-	apiKey: "...",
-	...
-	icon: "https://v.cdn.vine.co/r/avatars/453D86296A1289362655722774528_4dd5b70336c.5.0.jpg"
+var db = firebase.database().ref('prometheus/features');
+db.once('value', function(snapshot){
+    var val = snapshot.val()
+    for(var feature in val){
+        if(val[feature]){
+            var users = val[feature].access;
+            for(var i in users){
+                console.log(feature, users[i]);
+                var uid = users[i];
+                var path = 'prometheus/users/' + uid + '/data/' + feature;
+                var ref = firebase.database().ref(path);
+                ref.set(true);
+            }
+            var validatePath = 'prometheus/features/' + feature + '/validate/';
+            var featureRef =     firebase.database().ref(validatePath);
+            var validateFn = "if(userData.hasOwnProperty('" + feature + "')){if(userData['" + feature + "']){return {allowed: true, changed: false}}else{return {allowed: false}}}else{return {allowed: false}}";
+            featureRef.set(validateFn);
+        }
+    }
 });
 ```
-If neither icon is specified, the icon used will be the Prometheus logo. ;)
-
-## Extensions
-These are potential extensions of this feature that come to mind, not necessarily beneficial use cases.
-+ Add a UI for sending notifications to Pandora Dashboard, potentially stocking up an 'inbox' of notifications for users (if there will be many notifications, will need a less annoying delivery method than web notifications).
-+ Allow client to send data back through `.notify()` callback that gets recorded with the `NOTIFICATION_CLICKED` event saved by Prometheus.
-+ Allow for other conditions or user information to trigger the notification even if the user is not assigned to the notification ID in the Dashboard.
-
 ## About Us
 Prometheus.js and PandorasBox.js were created by the development team at [Omnipointment](https://www.omnipointment.com/): the omnipotent appointment scheduling tool.
