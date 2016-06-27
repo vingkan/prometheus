@@ -187,19 +187,129 @@ var Prometheus = function(config){
 		deliver: function(featureID, callback, fallback){
 			//Safer Asynchronous Method
 			var uid = this.getUID();
-			var featureRoute = createRoute('/features/' + featureID + '/access/');
-			featureRoute.once('value', function(snapshot){
-				var allowed = snapshot.val();
-				var executed = false;
-				for(var i in allowed){
-					if(uid === allowed[i]){
-						callback();
-						executed = true;
-						break;
-					}
+			var featureRoute = createRoute('/features/' + featureID + '/');
+			featureRoute.once('value', function(featureSnap){
+				if(featureSnap.exists()){
+					var feature = featureSnap.val();
+					var userDataRoute = createRoute('/users/' + uid + '/data');
+					userDataRoute.once('value', function(userSnap){
+						var userData = userSnap.val();
+						var result = {allowed: false};
+						if(feature.validate){
+							var validateFn = new Function('userData', feature.validate);
+							result = validateFn(userData);
+						}
+						if(result.allowed){
+							if(callback){
+								callback(result.data);
+							}
+						}
+						else{
+							if(fallback){
+								fallback(result.data);
+							}
+						}
+					});
 				}
-				if(!executed && fallback){
-					fallback();
+			});
+		},
+
+		// Looks up a user's freemium metadata and determines if they have access to a
+		// given freemium feature. Each freemium feature is responsible for defining a
+		// `validate` function that, given a `user` object, will return true if the 
+		// user has access to the feature, otherwise false.
+		//
+		// Sample `validate` function for a "create-meeting" freemium feature:
+		/*
+			if (userData.createCredits > 0) {
+				userData.createCredits--;
+				return {
+					allowed: true,
+					changed: true
+				};
+			} else {
+				return {
+					allowed: false
+				};
+			}
+		*/
+		freemium: function (featureId, callback, fallback) {
+			var uid = this.getUID();
+			var freemiumRoute = createRoute('/users/' + uid + '/freemium/');
+			freemiumRoute.once('value', function (snapshot) {
+				var userData = snapshot.val();
+				var featureRoute = createRoute('/freemiumFeatures/' + featureID + '/');
+				featureRoute.once('value', function (snapshot) {
+					var feature = snapshot.val();
+					// TODO: handle case where feature doesn't exist
+					var validateFn = new Function('userData', feature.validate);
+					// TODO: handle case where feature doesn't have validate function
+					var result = validateFn(userData);
+					if (result.changed) {
+						freemiumRoute.set(userData);
+					}
+					if (result.allowed) {
+						callback();
+					} else {
+						fallback();
+					}
+				});
+			});
+		},
+
+		redeem: function (code, callback, fallback) {
+			var uid = this.getUID();
+			var userDataRoute = createRoute('/users/' + uid + '/data/');
+			userDataRoute.once('value', function (userSnap) {
+				var userData = userSnap.val();
+				var promos = []
+				if(userData.hasOwnProperty('promos')){
+					promos = userData.promos;
+				}
+				if(promos.indexOf(code) < 0){
+					var promoRoute = createRoute('/promos/' + code + '/');
+					promoRoute.once('value', function (promoSnap) {
+						if(promoSnap.exists() && promoSnap.val().hasOwnProperty('redeem')){
+							var promoCode = promoSnap.val();
+							var redeemFn = new Function('userData', promoCode.redeem);
+							promos.push(code);
+							userData.promos = promos;
+							userDataRoute.set(redeemFn(userData));
+							prometheus.save({
+								type: "PROMO_CODE_USED",
+								code: code
+							});
+							if(callback){
+								callback(promoCode.info);
+							}
+						}
+						else{
+							prometheus.save({
+								type: "PROMO_CODE_ERROR",
+								code: code,
+								error: "NOT_FOUND"
+							});
+							if(fallback){
+								fallback({
+									type: "NOT_FOUND",
+									message: "Promo code not found."
+								});
+							}
+						}
+					});
+				}
+				else{
+					prometheus.save({
+						type: "PROMO_CODE_ERROR",
+								code: code,
+						error: "ALREADY_USED"
+					});
+					if(fallback){
+						fallback({
+							type: "ALREADY_USED",
+							message: "Promo code already used."
+						});
+					}
 				}
 			});
 		},
@@ -281,18 +391,18 @@ var Prometheus = function(config){
 							start: this.started,
 							end: Date.now()
 						}
-						for(var j in data){
-							if(data[j]){
-								this.data[j] = data[j];
-							}
-						}
 						for(var i in this.data){
-							if(this.data[i] && !info[i]){
+							if(this.data.hasOwnProperty(i)){
 								info[i] = this.data[i];
 							}
 						}
+						for(var j in data){
+							if(data.hasOwnProperty(j)){
+								info[j] = data[j];
+							}
+						}
 						_this.save(info);
-						this.started = false;
+						_this.timers[timerID] = null;
 					}
 				}
 			}
