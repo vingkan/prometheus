@@ -202,6 +202,13 @@ var Prometheus = function(config){
 							var validateFn = new Function('userData', feature.validate);
 							result = validateFn(userData);
 						}
+						else{
+							if(fallback){
+								fallback({
+									message: "The feature could not be validated."
+								});
+							}
+						}
 						if(result.allowed){
 							if(callback){
 								callback(result.data);
@@ -213,6 +220,13 @@ var Prometheus = function(config){
 							}
 						}
 					});
+				}
+				else{
+					if(fallback){
+						fallback({
+							message: "The feature you requested does not exist."
+						});
+					}
 				}
 			});
 		},

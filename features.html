@@ -80,6 +80,20 @@
 				declaration.feed(e);
 			});
 
+			// Error: "The feature you requested does not exist."
+			prometheus.deliver('kek', function(data){
+				console.log(data);
+			}, function(data){
+				console.log(data);
+			});
+
+			// Error: "The feature could not be validated."
+			prometheus.deliver('lmao', function(data){
+				console.log(data);
+			}, function(data){
+				console.log(data);
+			});
+
 		</script>
 		
 	</body>
