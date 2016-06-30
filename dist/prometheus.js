@@ -205,7 +205,8 @@ var Prometheus = function(config){
 						else{
 							if(fallback){
 								fallback({
-									message: "The feature could not be validated."
+									message: "The feature could not be validated.",
+									featureID: featureID
 								});
 							}
 						}
@@ -224,7 +225,8 @@ var Prometheus = function(config){
 				else{
 					if(fallback){
 						fallback({
-							message: "The feature you requested does not exist."
+							message: "The feature you requested does not exist.",
+							featureID: featureID
 						});
 					}
 				}
@@ -262,7 +264,8 @@ var Prometheus = function(config){
 					else{
 						if(fallback){
 							fallback({
-								message: "The feature you requested does not exist."
+								message: "The feature you requested does not exist.",
+								featureID: featureID
 							});
 						}
 					}
@@ -349,19 +352,14 @@ var Prometheus = function(config){
 
 				terminate: function(dataObj){
 					var uid = _this.getUID();
-					var noteRoute = createRoute('/features/' + noteID + '/access/');
-					noteRoute.once('value', function(snapshot){
-						var recipients = snapshot.val();
-						for(var r in recipients){
-							if(recipients[r] === uid){
-								var terminationRef = createRoute('/features/' + noteID + '/access/' + r);
-									terminationRef.remove();
-								var data = dataObj || {};
-									data['type'] = "NOTIFICATION_TERMINATED";
-									data['noteid'] = noteID;
-								_this.save(data);
-								break;
-							}
+					var noteRoute = createRoute('/users/' + uid + '/data/' + noteID);
+					noteRoute.once('value', function(noteSnapshot){
+						if(noteSnapshot.exists()){
+							noteRoute.remove();
+							var data = dataObj || {};
+								data['type'] = "NOTIFICATION_TERMINATED";
+								data['noteid'] = noteID;
+							_this.save(data);
 						}
 					});
 				}
