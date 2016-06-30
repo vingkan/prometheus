@@ -11,12 +11,12 @@ Prometheus ships with Pandora's Box, an analytics dashboard that can release exp
 
 [![Stories in Ready](https://badge.waffle.io/vingkan/prometheus.png?label=ready&title=Ready)](https://waffle.io/vingkan/prometheus) [![Join the chat at https://gitter.im/vingkan/prometheus](https://badges.gitter.im/vingkan/prometheus.svg)](https://gitter.im/vingkan/prometheus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-## Demo
+# Demo
 This visitor filled out a contact form with an invalid email address. Normally, the website owner would not be able to get in touch with them. But, Prometheus lights the way by associating the form submission with the visiting user. Now the owner can find them!
 
 ![Prometheus Demo: Contact Form Mishap](http://vingkan.github.io/prometheus/img/demo.gif)
 
-## Setup
+# Setup
 Download [the latest version](https://github.com/vingkan/prometheus/tree/master/dist) of Prometheus.js (or `npm install prometheusjs`) and include it in your project. Prometheus.js depends on the Firebase JavaScript library.
 
 ```
@@ -36,7 +36,7 @@ You can auto-generate the config above by following the instructions on [Firebas
 + `noScreenshots` (boolean): whether or not to turn off screenshots (defaults to false).
 + `localhost` (boolean): whether or not to track events on localhost (defaults to true).
 
-## API
+# API
 + Tracking
     + [logon(uid, userData, metaProps)](#logon)
     + [save(dataObj, metaProps)](#save)
@@ -57,6 +57,7 @@ You can auto-generate the config above by following the instructions on [Firebas
     + notify(noteID, content, callback)
     + Note Object
 
+## Logon
 ### prometheus.logon(uid, userData, metaProps)
 Begins tracking a user. If user data (such as name, email, profile picture, etc.) are provided, it will update that information in Firebase. Call this function as close to the login auth in your website as possible. When `.logon()` is called, Prometheus.js will continue to track that user until the browser's `localStorage` is cleared.
 + uid (string): unique identifier of user to track.
@@ -66,6 +67,7 @@ Begins tracking a user. If user data (such as name, email, profile picture, etc.
 
 Saves an event of type `'LOGON'` with the user's visit list.
 
+## Save
 ### prometheus.save(dataObj, metaProps)
 Appends a new event to the list of the user's visits in Firebase. As long as `.logon()` or `.trackUser()` has been called, `.save()` will associate the visit event with the current user's data in Firebase. This is the most versatile tracking method because it stores custom data passed into the `dataObj` argument. The other tracking methods are built on top of `save()` and also allow custom data to be passed in.
 + dataObj (object, optional): customizable information to record with event.
@@ -73,12 +75,14 @@ Appends a new event to the list of the user's visits in Firebase. As long as `.l
 
 Specify what type the saved event should be by setting `type` in the `dataObj` argument. Examples: `{type: "CONTACT_FORM_SUBMISSION"}` or `{type: "SETTINGS_PAGE"}`. Choose descriptive event type names that will help you analyze the data tracked by Prometheus effectively.
 
+## Capture
 ### prometheus.capture(dataObj)
 Takes a "snapshot" of the user's screen using the [html2canvas](https://html2canvas.hertzen.com/) library. For more information about what the screenshot represents, consult that libraries' documentation. Only saves images if `noScreenshots` is false in the config. Otherwise, the saved event will have a property `img_note` that has the value `"NONE_TAKEN"`.
 + dataObj (object, optional): customizable information to record with event.
 
 Saves an event of type `'SCREEN_CAPTURE'` with the user's visit list with a property `img` whose value is the screenshot data.
 
+## Error
 ### prometheus.error(errorObj)
 Records errors experienced by the user. Triggered automatically by `window.onerror` events, but can also be called explicitly.
 + errorObj (object): data about error, should include:
@@ -88,12 +92,14 @@ Records errors experienced by the user. Triggered automatically by `window.onerr
 
 Saves an event of type `'ERROR'` with the user's visit list.
 
+## Timer
 ### prometheus.timer(timerID)
 Retrieves timer object of the given id.
 + timerID (string): id of timer/action being timed
 
 See Timer object methods below.
 
+## Timer Object
 ### Object: prometheus.Timer
 Timer objects track how long users take to complete certain actions. Each action, behavior, or section of your website/app that will be tracked should have a unique, well-named ID. Prometheus can track timer durations by referencing that ID with its `timer()` method. The timer returned by that method has two public methods:
 #### Methods
