@@ -57,7 +57,7 @@ You can auto-generate the config above by following the instructions on [Firebas
     + notify(noteID, content, callback)
     + Note Object
 
-### prometheus.logon(uid, userData, metaProps) <a id="logon></a>
+### prometheus.logon(uid, userData, metaProps)
 Begins tracking a user. If user data (such as name, email, profile picture, etc.) are provided, it will update that information in Firebase. Call this function as close to the login auth in your website as possible. When `.logon()` is called, Prometheus.js will continue to track that user until the browser's `localStorage` is cleared.
 + uid (string): unique identifier of user to track.
     + Note: If no unique user identification is available, for whatever reason, Prometheus.js will save data at the Firebase endpoint `/ANONYMOUS_USER`.
