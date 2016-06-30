@@ -224,7 +224,6 @@ This screenshot shows where to store the `redeem` function in Firebase.
 ![Sample Promo Code Entry in Firebase](https://raw.githubusercontent.com/vingkan/prometheus/master/img/sample-promo-entry.PNG)
 
 ## Notify
-Warning: upgrades to the `.deliver()` method and structure may cause unexpected behavior with notifications. Please open an issue if this happens to you.
 ### prometheus.notify(noteID, note, callback)
 Sends popups to specific users via web notifications.
 + `noteID` (string, required): id used to group receiving users and notification return information, stored at `prometheus/features/{noteID}`. Must have a validate function to determine if user should recieve notification.
@@ -238,10 +237,10 @@ See Note object methods below.
 
 ## Note Object
 ### prometheus.Note
-Callback functions for `notify()` include a Note object that has two methods for the developer to access.
+Callback functions for `notify()` include a Note object that has two methods for the developer to access. Keep in mind that the notifications functionality is built on top of `deliver()`, so each notification should be defined at `prometheus/features/{noteID}` and have at least a `validate` function.
 #### Methods
 + `seen():` saves a Prometheus `"NOTIFICATION_CLICKED"` event for the user
-+ `terminate():` removes the users' ID from the notification: they will not receive this notification unless it is reassigned to them from the dashboard
++ `terminate():` removes the notification ID from the user's data: they will not receive this notification unless it is reassigned to them
 
 ## Pandora's Box Dashboard
 Explore the data saved by Prometheus.js with a customizable, local dashboard! Instructions to use the analytics dashboard with your Prometheus-tracked data are [here](https://github.com/vingkan/prometheus/blob/master/pandora/README.md).
