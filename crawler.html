@@ -101,6 +101,8 @@
 		function crawlAs(key){
 			var person = people[key];
 			prometheus.logon(person.uid, person);
+			//Example of using a promo code to give users default data/feature access
+			prometheus.redeem('NEWUSER', null, null, {silent: true});
 			document.getElementById('name').innerText = person.name;
 			button.style.display = 'block';
 		}

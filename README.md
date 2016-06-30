@@ -53,7 +53,7 @@ You can auto-generate the config above by following the instructions on [Firebas
     + [has(featureID)](#has)
     + [can(featureID, callback, fallback)](#can)
     + [deliver(featureID, callback, fallback)](#deliver)
-    + [redeem(promoCode, callback, fallback)](#redeem)
+    + [redeem(promoCode, callback, fallback, settings)](#redeem)
     + [notify(noteID, content, callback)](#notify)
     + [Note Object](#note-object)
 
@@ -206,11 +206,13 @@ if (userData.createCredits > 0) {
 See the screenshot from the [`.can()` section](#can) to see where to store the `process` function in Firebase. It must be saved with the key `process`.
 
 ## Redeem
-### prometheus.redeem(promoCode, callback, fallback)
+### prometheus.redeem(promoCode, callback, fallback, settings)
 Looks up a given promo code and runs the promo code's redeem function on the user's feature data.
 + `promoCode` (string, required): promo code stored at `prometheus/promos/{promoCode}`. Must have a `redeem` function.
 + `callback` (function, recommended): function to run if code is redeemed. Callback receives the information stored with the code in Firebase as its only argument, if any.
 + `fallback` (function, recommended): function to run if code is not found or is unredeemable. Fallback receives error type and error message.
++ `settings` (object, optional): extra settings for redeeming promo codes, currently only one setting:
+    + `silent` (boolean, optional): whether or not to record when users attempt to re-use codes (defaults to false)
 
 #### Redeem Function
 Each promo code entry must have a `redeem` function that updates the users' data according to the promotion. Here is a sample `redeem` function for a create meeting credit promo code:

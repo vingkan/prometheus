@@ -274,7 +274,7 @@ var Prometheus = function(config){
 			});
 		},
 
-		redeem: function (code, callback, fallback) {
+		redeem: function (code, callback, fallback, settings) {
 			var uid = this.getUID();
 			var userDataRoute = createRoute('/users/' + uid + '/data/');
 			userDataRoute.once('value', function (userSnap) {
@@ -319,11 +319,13 @@ var Prometheus = function(config){
 					});
 				}
 				else{
-					prometheus.save({
-						type: "PROMO_CODE_ERROR",
-								code: code,
-						error: "ALREADY_USED"
-					});
+					if(!settings.silent){
+						prometheus.save({
+							type: "PROMO_CODE_ERROR",
+							code: code,
+							error: "ALREADY_USED"
+						});
+					}
 					if(fallback){
 						fallback({
 							type: "ALREADY_USED",
