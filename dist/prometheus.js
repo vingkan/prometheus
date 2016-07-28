@@ -339,6 +339,48 @@ var Prometheus = function(config){
 			});
 		},
 
+        badge: function(badgeID, callback) {
+            var uid = this.getUID();
+            var userDataRoute = createRoute('/users/' + uid + '/data/badges/');
+            var userBadgeRoute = createRoute('/users/' + uid + '/data/badges/' + badgeID + '/');
+            var badgeRoute = createRoute('/badges/' + badgeID + '/');
+
+            //updating progress
+            userBadgeRoute.once('value', function(userSnap) {
+                if (!userSnap.val()) {
+                    userBadgeRoute.set({
+                        badgeID: badgeID,
+                        progress: 0
+                    });
+                    this.badge(badgeID, callback);
+                    return;
+                }
+                var currentProgress = userSnap.val().progress;
+                if(!currentProgress) {
+                    userBadgeRoute.set({
+                        badgeID: badgeID,
+                        progress: 1
+                    });
+                } else {
+                    userBadgeRoute.set({
+                        badgeID: badgeID,
+                        progress: currentProgress + 1
+                    });
+                }
+
+                var userBadgeData = userSnap.val();
+                //checking progress
+                badgeRoute.once('value', function(badgeSnap) {
+                    badgeData = badgeSnap.val();
+                    if (userBadgeData.progress + 1 >= badgeData.progressReq) {
+                        callback(null, { badgeAchieved: true });
+                    } else {
+                        callback(null, { badgeAchieved: false, progress: userBadgeData.progress / badgeData.progressReq});
+                    }
+                })
+            }.bind(this));
+        },
+
 		Note: function(noteID){
 			var _this = this;
 			return {
