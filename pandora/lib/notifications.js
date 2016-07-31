@@ -35,10 +35,10 @@ function sendNotification(payload){
 	}
 }
 
-notify({
+/*notify({
 	message: "Connection Established",
 	body: "You are now tracking your website analytics in real time.",
 	clickFn: function(){
 		renderErrorModule();
 	}
-});
+});*/

@@ -1,0 +1,532 @@
+/*--------------------------------------------*/
+/*---> COLORS <-------------------------------*/
+/*--------------------------------------------*/
+@FireOrange: #FF3B2A;
+@MischiefBlue: #0D47A1;
+@AnalyticalPurple: #4A148C;
+@RetentionGold: #FFCA28;
+@AcceleratorGreen: #CDDC39;
+@MetricsPink: #FC8F8C;
+
+@Charcoal: #1a1a1a;
+@LightGray: #DDDDDD;
+
+@MainColor: @FireOrange;
+@MainLight: @MainColor + #222222;
+@MainDark: @MainColor - #222222;
+
+/*--------------------------------------------*/
+/*---> FONTS <--------------------------------*/
+/*--------------------------------------------*/
+
+@vh: 5.5px;
+
+@textSize: 3.5 * @vh;
+@tx: @textSize;
+
+.HeadFont(){
+	font-family: 'Titillium Web', sans-serif;
+}
+
+.BodyFont(){
+	font-family: 'Gafata', sans-serif;
+}
+
+/*--------------------------------------------*/
+/*---> TEXT <---------------------------------*/
+/*--------------------------------------------*/
+
+p, h1, h2, h3, ul, li{
+	.BodyFont();
+	margin: (0.5 * @textSize) auto;
+}
+
+h1, h2, h3, h4{
+	.HeadFont();
+	font-weight: bold;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+h1{
+	font-size: 1.5 * @textSize;
+	line-height: 1.75 * @textSize;
+}
+
+h2{
+	font-size: 1.25 * @textSize;
+	line-height: 1.5 * @textSize;
+}
+
+h3{
+	font-size: 1.1 * @textSize;
+	line-height: 1.35 * @textSize;
+}
+
+h4{
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	text-align: left;
+}
+
+p{
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	text-align: center;
+}
+
+ol, ul{
+	width: 80%;
+	margin: auto 10%;
+}
+
+li{
+	font-size: 1.0 * @textSize;
+	line-height: 1.25 * @textSize;
+	list-style: disc;
+	margin: (0.15 * @textSize) auto;
+}
+
+a{
+
+	text-decoration: none;
+	font-weight: bold;
+	color: @MainColor;
+
+	&:hover{
+		color: lighten(@MainColor, 25%)
+	}
+
+	.AnimateAll();
+
+}
+
+.StandardText(@scale: 0.75){
+	.BodyFont();
+	font-size: @scale * 1.0 * @textSize;
+	line-height: @scale * 1.25 * @textSize;
+	text-align: left;
+}
+
+.WrapWords(){
+	white-space: -moz-pre-wrap !important;  /* Mozilla, since 1999 */
+	white-space: -webkit-pre-wrap; /*Chrome & Safari */ 
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	white-space: pre-wrap;       /* css-3 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	word-break: break-all;
+	white-space: normal;
+}
+
+/*--------------------------------------------*/
+/*---> BODY <---------------------------------*/
+/*--------------------------------------------*/
+
+html{
+	background: white;
+	//Default Text Styles
+	.BodyFont();
+	font-size: @textSize;
+	color: @Charcoal;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+body{
+	margin: 0;
+	width: 100vw;
+	margin: 0 auto;
+}
+
+.AnimateAll(@time: 0.5s){
+	transition: all @time ease;
+	-webkit-transition: all @time ease;
+}
+
+/*--------------------------------------------*/
+/*---> STRUCTURE <----------------------------*/
+/*--------------------------------------------*/
+
+html{
+	background: @Charcoal;
+	font-size: 0;
+}
+
+.LeftBorderStripe(@StripeColor: white){
+	border-left: @vh solid @StripeColor;
+	&:hover{
+		border-left: @vh solid @MischiefBlue;
+	}
+}
+
+div.space{
+	display: inline-block;
+	height: 100vh;
+	vertical-align: top;
+	overflow: hidden;
+}
+
+div.space{
+	width: 100%;
+	/*background: @LightGray;
+	background-image: url('img/white-trans-hex.png');
+	background-size: 37.5%;
+*/
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#00b2b2+0,e8e599+100 */
+background: #00b2b2; /* Old browsers */
+background: -moz-linear-gradient(-45deg,  #00b2b2 0%, #e8e599 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(-45deg,  #00b2b2 0%,#e8e599 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(135deg,  #00b2b2 0%,#e8e599 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00b2b2', endColorstr='#e8e599',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+}
+
+div.column{
+	
+	display: inline-block;
+	vertical-align: top;
+
+	&.half{
+		width: 49.25%;
+		padding: 0.5%;
+		padding-bottom: 1%;
+		&:nth-child(1){
+			padding-right: 0.25%;
+		}
+		&:nth-child(2){
+			padding-left: 0.25%;
+		}
+	}
+
+	&.full{
+		width: 99%;
+		padding: 0.5%;
+		padding-bottom: 1%;
+	}
+
+	&.scrollable{
+		max-height: 100vh;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+
+}
+
+div.module{
+	display: inline-block;
+	width: 96%;
+	height: 98vw;
+	padding: 0;
+	margin: 2% 2% 0 2%;
+	background: rgba(255, 255, 255, 1.0);
+	font-size: @tx;
+	max-height: 95vh;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+div.user-list-div{
+
+	@ListDivHeight: 5 * @vh;
+	.StandardText();
+
+	display: inline-block;
+	width: 100%;
+	padding: 0.5 * @vh;
+	color: @Charcoal;
+	height: @ListDivHeight;
+	line-height: @ListDivHeight;
+	overflow: hidden;
+
+	&:hover{
+		background: lighten(@MischiefBlue, 50%);
+		cursor: pointer;
+	}
+
+	&:nth-child(1){
+		margin-top: 2.0 * @vh;
+	}
+
+	div{
+		overflow: hidden;
+		display: inline-block;
+		height: @ListDivHeight;
+		line-height: @ListDivHeight;
+	}
+
+	div.user-list-img{
+		/*width: 0.7 * @ListDivHeight;
+		height: 0.7 * @ListDivHeight;*/
+		width: @ListDivHeight;
+		border-radius: 50%;
+		background-size: 100%;
+		margin: 0 (2.0 * @vh);
+	}
+
+	div.user-list-name{
+		width: 45%;
+	}
+
+	div.user-list-info{
+		
+		width: 40%;
+		.StandardText(0.6);
+		line-height: @ListDivHeight;
+		text-align: left;
+		color: @Charcoal;
+
+		span{
+			display: inline-block;
+			width: 50%;
+		}
+	
+	}
+
+}
+
+div.user-view{
+
+	display: inline-block;
+	width: 102%;
+	padding-top: 4 * @vh;
+	height: 44 * @vh;
+	margin: -1.25%;
+	
+	//border-bottom: (2 * @vh) solid @LightGray;
+
+	/*background-color: @AnalyticalPurple;
+	background-image: url('img/charcoal-trans-hex.png');
+	background-size: 75%;*/
+
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ef0027+0,e8e599+100 */
+background: #ef0027; /* Old browsers */
+background: -moz-linear-gradient(-45deg,  #ef0027 0%, #e8e599 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(-45deg,  #ef0027 0%,#e8e599 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(135deg,  #ef0027 0%,#e8e599 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ef0027', endColorstr='#e8e599',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+
+	
+
+	h1, p{
+		color: white;
+	}
+
+	div.user-view-img{
+		display: block;
+		margin: 0 auto;
+		width: 20 * @vh;
+		height: 20 * @vh;
+		background-size: 100%;
+		border-radius: 50%;
+	}
+
+	i{
+		margin-right: @vh;
+	}
+
+	div.visits-field{
+
+		margin-top: 2 * @vh;
+		background: transparent;
+		width: 100%;
+
+		p{
+			color: @Charcoal;
+			font-weight: bold;
+		}
+
+	}
+
+}
+
+div.user-visit-view{
+	
+	width: 94%;
+	margin: 4% 2%;
+	padding: 2%;
+	border-left: 0.75 * @vh solid @AnalyticalPurple;
+	.StandardText();
+
+	&.error{
+		border-left: 0.75 * @vh solid @FireOrange;
+	}
+
+	&.user_logon{
+		border-left: 0.75 * @vh solid @MischiefBlue;
+	}
+
+	h4{
+		margin-bottom: @vh;
+	}
+
+	div.visit-meta-fields{
+
+		.StandardText();
+		
+		div.prop-info{
+
+			i{
+				display: inline-block;
+				width: 7.5%;
+				text-align: center;
+			}
+
+			span.meta-prop-label{
+				display: inline-block;
+				width: 22.5%;
+			}
+
+			span{
+				.WrapWords();
+			}
+
+			img.panel-view-screenshot{
+				width: 100%;
+				display: block;
+				margin: (2 * @vh) auto;
+			}
+
+		}
+
+	}
+
+}
+
+/*--------------------------------------------*/
+/*---> HEADER & FOOTER <----------------------*/
+/*--------------------------------------------*/
+
+/*--------------------------------------------*/
+/*---> IMAGES <-------------------------------*/
+/*--------------------------------------------*/
+
+img.showcase{
+	width: 90%;
+	display: block;
+	margin: (3 * @vh) auto;
+}
+
+/*--------------------------------------------*/
+/*---> FORM <---------------------------------*/
+/*--------------------------------------------*/
+
+
+/*--------------------------------------------*/
+/*---> LOADING <------------------------------*/
+/*--------------------------------------------*/
+
+.CircularRotation(@time: 2s, @degrees: 360deg){
+	@-webkit-keyframes circularRotation{
+		from{
+			transform: rotate(0deg);
+			-webkit-transform: rotate(0deg);
+		}
+		to{
+			transform: rotate(@degrees);
+			-webkit-transform: rotate(@degrees);
+		}
+	}
+	animation: circularRotation @time linear infinite;
+}
+
+body.loading{
+
+	div.space{
+		opacity: 0.25;
+	}
+	
+	div.cover{
+		z-index: 30;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5)
+	}
+
+	div.loading{
+		
+		z-index: 40;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		width: 30 * @vh;
+		height: 30 * @vh;
+		transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+
+		div.wheel{
+			opacity: 0.75;
+			position: absolute;
+			border-radius: 50%;
+			background: transparent;
+			&:nth-child(1){
+				margin: 0;
+				width: 28 * @vh;
+				height: 28 * @vh;
+				border: @vh dashed @MischiefBlue;
+				.CircularRotation(6s, 360deg);
+			}
+			&:nth-child(2){
+				margin: 5 * @vh;
+				width: 18 * @vh;
+				height: 18 * @vh;
+				border: @vh dashed white;
+				.CircularRotation(3s, -360deg);
+			}
+			&:nth-child(3){
+				margin: 10 * @vh;
+				width: 8 * @vh;
+				height: 8 * @vh;
+				border: @vh dashed @MischiefBlue;
+				.CircularRotation();
+			}
+		}
+
+	}
+
+}
+
+/*--------------------------------------------*/
+/*---> SCROLLBAR <----------------------------*/
+/*--------------------------------------------*/
+
+/*@scrollBar: @Charcoal;
+@scrollBarBack: @LightGray;
+
+::-webkit-scrollbar{
+	width: 10px;
+	height: 10px;
+	background: @scrollBarBack;
+	z-index: 50;
+}
+
+::-webkit-scrollbar-button{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-track{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-track-piece{
+	background: @scrollBarBack;
+}
+
+::-webkit-scrollbar-thumb{
+	background: @scrollBar;
+	//border-radius: 5px;
+	position: absolute;
+	margin-left: -10px;
+}
+
+::-webkit-scrollbar-corner{
+	width: 10px;
+	height: 10px;
+	background: @scrollBarBack;
+}
+
+::-webkit-resizer{
+	background: @scrollBarBack;
+}*/
