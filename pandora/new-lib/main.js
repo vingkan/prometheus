@@ -20,3 +20,4 @@ window.toggleSpace = function(spaceID){
 }
 
 renderUserModule();
+renderSearchModule();

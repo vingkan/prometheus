@@ -264,9 +264,9 @@ div.user-list-div{
 		cursor: pointer;
 	}
 
-	&:nth-child(1){
+	/*&:nth-child(1){
 		margin-top: 2.0 * @vh;
-	}
+	}*/
 
 	div{
 		overflow: hidden;
@@ -428,6 +428,66 @@ img.showcase{
 /*--------------------------------------------*/
 
 
+@formItemHeight: 6 * @vh;
+
+input, button, select, textarea{
+	outline: none;
+	border: none;
+	box-sizing: border-box;
+	display: block;
+	//SIZE
+	margin: (3 * @vh) auto;
+	width: 98%;
+	padding: 1%;
+	height: @formItemHeight;
+	//STYLE
+	background: darken(white, 25%);
+	//TEXT
+	line-height: @formItemHeight;
+	.BodyFont();
+	font-size: 1.0 * @textSize;
+}
+
+button{
+
+	background: @TemptingTurquoise;
+	color: white;
+	padding: 0;
+	height: 1.5 * @formItemHeight;
+	line-height: 1.5 * @formItemHeight;
+	width: 200px;
+
+	&:hover{
+		background: @Charcoal;
+		cursor: pointer;
+	}
+
+	.HeadFont();
+	.AnimateAll();
+
+}
+
+input{
+	width: 96%;
+	margin: 2%;
+	background: transparent;
+	border: (0.5 * @vh) solid @TemptingTurquoise;
+	color: @TemptingTurquoise;
+	
+	&:hover{
+		background: @TemptingTurquoise;
+		color: white;
+		font-weight: bold;
+	}
+
+	.AnimateAll();
+
+}
+
+textarea{
+	height: 4 * @formItemHeight;
+}
+
 /*--------------------------------------------*/
 /*---> LOADING <------------------------------*/
 /*--------------------------------------------*/
@@ -544,4 +604,9 @@ body.loading{
 
 ::-webkit-resizer{
 	background: @scrollBarBack;
+}*/
+
+/*::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
 }*/

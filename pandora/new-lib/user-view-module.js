@@ -64,7 +64,7 @@ window.UserViewModule = React.createClass({
 					<h1>{this.state.name || 'No Name Listed'}</h1>
 					<p>
 						<i className="fa fa-icon fa-clock-o"></i>
-						Last visited {moment(visits[visits.length-1].meta.datetime.timestamp).fromNow()}
+						User since {moment(visits[visits.length-1].meta.datetime.timestamp).format('M/D/YYYY')}
 					</p>
 					<p>
 						<i className="fa fa-icon fa-eye"></i>
@@ -84,7 +84,7 @@ window.UserViewModule = React.createClass({
 					<div className="visits-field">
 						{visitNodes}
 						<p>
-							Showing {this.state.limit}/{this.state.visits.length}
+							Showing {this.state.limit}/{this.state.visits.length} visits.
 						</p>
 						<button class="load-more" onClick={this.loadMore}>
 							Load More Visits
@@ -99,7 +99,7 @@ window.UserViewModule = React.createClass({
 					<h1>{this.state.name}</h1>
 					<p>
 						<i className="fa fa-icon fa-clock-o"></i>
-						Last visited {moment(visits[visits.length-1].meta.datetime.timestamp).fromNow()}
+						User since {moment(visits[visits.length-1].meta.datetime.timestamp).format('M/D/YYYY')}
 					</p>
 					<p>
 						<i className="fa fa-icon fa-eye"></i>
