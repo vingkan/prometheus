@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Dashboard</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style/reset.css">
+		<link rel="stylesheet/less" type="text/css" href="style/simple.less">
+		<!--<link rel="icon" type="img/png" href="style/favicon.png" style="width:30px;">-->
+		<!-- IMPORTED SCRIPTS -->
+		<link href='https://fonts.googleapis.com/css?family=Gafata|Titillium+Web:400,700' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://fb.me/react-15.0.1.js"></script>
+		<script src="https://fb.me/react-dom-15.0.1.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+		<script src="https://cdn.firebase.com/libs/reactfire/0.7.0/reactfire.min.js"></script>
+		<script src="https://npmcdn.com/throw-in-the-towel@2"></script>
+		<script src="js-search.js"></script>
+		<script type="text/javascript" src="moment.min.js"></script>
+		<script type="text/javascript" src="less.min.js"></script>
+		
+		<script type="text/babel" src="config.js"></script>
+		<script type="text/javascript" src="notifications.js"></script>
+		<script type="text/javascript" src="underscore.js"></script>
+		<script type="text/babel" src="new-lib/user-module.js"></script>
+		<script type="text/babel" src="new-lib/user-view-module.js"></script>
+		<script type="text/babel" src="new-lib/visit-view-module.js"></script>
+		<script type="text/babel" src="new-lib/user-search-module.js"></script>
+		<script type="text/babel" src="new-lib/main.js"></script>
+		
+	</head>
+
+	<body spellcheck="false">
+
+		<div class="cover"></div>
+		<div class="loading">
+			<div class="wheel"></div>
+			<div class="wheel"></div>
+			<div class="wheel"></div>
+		</div>
+
+		<div class="space" id="users">
+			<div class="column half">
+				<div class="module">
+					<div id="search-box"></div>
+					<div id="user-list"></div>
+					<div id="search-list"></div>
+				</div>
+			</div>
+
+			<div class="column half">
+				<div class="module">
+					<div id="user-info"></div>
+				</div>
+			</div>
+		</div>
+		
+	</body>
+</html>
