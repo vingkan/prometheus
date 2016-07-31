@@ -15,6 +15,26 @@
 @MainLight: @MainColor + #222222;
 @MainDark: @MainColor - #222222;
 
+@TemptingTurquoise: #55C5A9;
+
+.RedGradient(){
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ef0027+0,e8e599+100 */
+	background: #ef0027; /* Old browsers */
+	background: -moz-linear-gradient(-45deg,  #ef0027 0%, #e8e599 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(-45deg,  #ef0027 0%,#e8e599 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(135deg,  #ef0027 0%,#e8e599 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ef0027', endColorstr='#e8e599',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.PurpleGradient(){
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4a148c+0,af92dd+100 */
+	background: #4a148c; /* Old browsers */
+	background: -moz-linear-gradient(-45deg,  #4a148c 0%, #af92dd 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(-45deg,  #4a148c 0%,#af92dd 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(135deg,  #4a148c 0%,#af92dd 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4a148c', endColorstr='#af92dd',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
 /*--------------------------------------------*/
 /*---> FONTS <--------------------------------*/
 /*--------------------------------------------*/
@@ -214,11 +234,11 @@ div.column{
 }
 
 div.module{
-	display: inline-block;
+	display: block;
 	width: 96%;
-	height: 98vw;
+	height: 98vh;
 	padding: 0;
-	margin: 2% 2% 0 2%;
+	margin: 2vh auto;
 	background: rgba(255, 255, 255, 1.0);
 	font-size: @tx;
 	max-height: 95vh;
@@ -240,7 +260,7 @@ div.user-list-div{
 	overflow: hidden;
 
 	&:hover{
-		background: lighten(@MischiefBlue, 50%);
+		background: lighten(@TemptingTurquoise, 20%);
 		cursor: pointer;
 	}
 
@@ -299,12 +319,7 @@ div.user-view{
 	background-image: url('img/charcoal-trans-hex.png');
 	background-size: 75%;*/
 
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ef0027+0,e8e599+100 */
-background: #ef0027; /* Old browsers */
-background: -moz-linear-gradient(-45deg,  #ef0027 0%, #e8e599 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(-45deg,  #ef0027 0%,#e8e599 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(135deg,  #ef0027 0%,#e8e599 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ef0027', endColorstr='#e8e599',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	.RedGradient();
 
 
 	
@@ -465,7 +480,7 @@ body.loading{
 				margin: 0;
 				width: 28 * @vh;
 				height: 28 * @vh;
-				border: @vh dashed @MischiefBlue;
+				border: @vh dashed @TemptingTurquoise;
 				.CircularRotation(6s, 360deg);
 			}
 			&:nth-child(2){
@@ -479,7 +494,7 @@ body.loading{
 				margin: 10 * @vh;
 				width: 8 * @vh;
 				height: 8 * @vh;
-				border: @vh dashed @MischiefBlue;
+				border: @vh dashed @TemptingTurquoise;
 				.CircularRotation();
 			}
 		}
