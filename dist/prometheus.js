@@ -344,8 +344,9 @@ var Prometheus = function(config){
             var userDataRoute = createRoute('/users/' + uid + '/data/badges/');
             var userBadgeRoute = createRoute('/users/' + uid + '/data/badges/' + badgeID + '/');
             var badgeRoute = createRoute('/badges/' + badgeID + '/');
+            var badgeProgressRoute = createRoute('/users/' + uid + '/data/badges/' + badgeID + '/progress/');
 
-            //updating progress
+            // updating progress
             userBadgeRoute.once('value', function(userSnap) {
                 if (!userSnap.val()) {
                     userBadgeRoute.set({
@@ -355,30 +356,82 @@ var Prometheus = function(config){
                     this.badge(badgeID, callback);
                     return;
                 }
-                var currentProgress = userSnap.val().progress;
-                if(!currentProgress) {
-                    userBadgeRoute.set({
-                        badgeID: badgeID,
-                        progress: 1
-                    });
-                } else {
-                    userBadgeRoute.set({
-                        badgeID: badgeID,
-                        progress: currentProgress + 1
-                    });
-                }
-
                 var userBadgeData = userSnap.val();
-                //checking progress
+                // checking progress
                 badgeRoute.once('value', function(badgeSnap) {
                     badgeData = badgeSnap.val();
-                    if (userBadgeData.progress + 1 >= badgeData.progressReq) {
+                    if (userBadgeData.progress + 1 === badgeData.progressReq) {
+                    	var dateObj = new Date(Date.now());
+
+						var newdate = dateObj.toDateString();
+
+                        userBadgeRoute.set({
+                            badgeID: badgeID,
+                            badgeName: badgeData.badgeName,
+                            icon: badgeData.icon,
+                            progress: userBadgeData.progress + 1,
+                            progressReq: badgeData.progressReq,
+                            description: badgeData.description,
+                            obtained: true,
+                            dateObtained: newdate,
+                        });
                         callback(null, { badgeAchieved: true });
+                    } else if (userBadgeData.progress + 1 > badgeData.progressReq) {
+                    	badgeProgressRoute.set(userBadgeData.progress + 1);
+                    	var badgeObtainedRoute = createRoute('/users/' + uid + '/data/badges/' + badgeID + '/obtained/');
+                    	badgeObtainedRoute.set(true);
+                    	callback(null, {badgeAchieved: false });
+                    } else if (userBadgeData.progress + 1 < badgeData.progressReq) {
+                    	userBadgeRoute.set({
+                            badgeID: badgeID,
+                            badgeName: badgeData.badgeName,
+                            icon: badgeData.icon,
+                            progress: userBadgeData.progress + 1,
+                            progressReq: badgeData.progressReq,
+                            description: badgeData.description,
+                            obtained: false,
+                        });
+                    	callback(null, { badgeAchieved: false });
                     } else {
                         callback(null, { badgeAchieved: false, progress: userBadgeData.progress / badgeData.progressReq});
                     }
                 })
             }.bind(this));
+        },
+
+        getBadgeList: function(callback) {
+            var badgeRoute = createRoute('/badges/');
+            badgeRoute.once('value', function(badgeSnap) {
+                var badges = badgeSnap.val();
+                if(!badges) {
+                    badgeRoute.set({}, this.getBadgeList.bind(this, callback));
+                    
+                }
+                var result = {};
+                for(badgeId in badges) {
+                    result[badgeId] = badges[badgeId];
+                }
+
+                callback(result);
+            }.bind(this));
+
+        },
+
+         getUserBadges: function(callback) {
+        	var uid = this.getUID();
+        	var userBadgeRoute = createRoute('/users/' + uid + '/data/badges/');
+        	userBadgeRoute.once('value', function(userSnap) {
+        		var badges = userSnap.val();
+        		if (!badges) {
+        			userBadgeRoute.set({}, this.getUserBadges.bind(this, callback));
+        		}
+        		var result = {};
+        		for(badgeId in badges) {
+        			result[badgeId] = badges[badgeId];
+        		}
+
+        		callback(result);
+        	}.bind(this));
         },
 
 		Note: function(noteID){
