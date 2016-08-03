@@ -339,14 +339,30 @@ var Prometheus = function(config){
 			});
 		},
 
-        badge: function(badgeID, callback) {
+        /**
+		When adding a badge to prometheus/firebase, it should have these properties.
+		in /prometheus/badges/
+		 -badgeID" this should be the same as the object key /prometheus/badges/badgeID/
+		 -badgeName: the badge name to be displayed
+		 -icon: fontawesome icon
+		 -progerssReq: number of times badge has to be called to obtain it
+		 -description: 'a description of the requirements'
+		 -progress: 0
+		 -hidden: boolean (optional + untested) to not return the badge in the getBadgeList function, so you can hide it on the display
+
+		 TODO: badge rewards system, possibly earning free meeting credits for obtaining badges or other user rewards
+		 In the future, the progress checking could be rewritten. The badge in /prometheus/badges/ could contain a function which checks progress, 
+		 and a function which counts progress, which would have to get copied over to /users/uid/data/badges/badgeID.
+		 - Franklin
+		**/
+		badge: function(badgeID, callback) {
             var uid = this.getUID();
             var userDataRoute = createRoute('/users/' + uid + '/data/badges/');
             var userBadgeRoute = createRoute('/users/' + uid + '/data/badges/' + badgeID + '/');
             var badgeRoute = createRoute('/badges/' + badgeID + '/');
             var badgeProgressRoute = createRoute('/users/' + uid + '/data/badges/' + badgeID + '/progress/');
 
-            // updating progress
+            // if the badge data does not exist, we create the bare minimum and call the function again
             userBadgeRoute.once('value', function(userSnap) {
                 if (!userSnap.val()) {
                     userBadgeRoute.set({
@@ -356,32 +372,37 @@ var Prometheus = function(config){
                     this.badge(badgeID, callback);
                     return;
                 }
+
                 var userBadgeData = userSnap.val();
-                // checking progress
                 badgeRoute.once('value', function(badgeSnap) {
                     badgeData = badgeSnap.val();
+                    var data = {};
+
+                    // if the new progress will be enough to obtain the badge
                     if (userBadgeData.progress + 1 === badgeData.progressReq) {
                     	var dateObj = new Date(Date.now());
-
 						var newdate = dateObj.toDateString();
-
                         userBadgeRoute.set({
                             badgeID: badgeID,
                             badgeName: badgeData.badgeName,
                             icon: badgeData.icon,
-                            progress: userBadgeData.progress + 1,
+                            progress: userBadgeData.progress + 1, // adding one to the progress
                             progressReq: badgeData.progressReq,
                             description: badgeData.description,
                             obtained: true,
                             dateObtained: newdate,
                         });
-                        callback(null, { badgeAchieved: true });
+                        
+                        // signaling that the badge has been achieved
+                        data = { badgeAchieved: true };
                     } else if (userBadgeData.progress + 1 > badgeData.progressReq) {
+                    	// keep counting up progress even though the badge has been achieved
                     	badgeProgressRoute.set(userBadgeData.progress + 1);
                     	var badgeObtainedRoute = createRoute('/users/' + uid + '/data/badges/' + badgeID + '/obtained/');
                     	badgeObtainedRoute.set(true);
-                    	callback(null, {badgeAchieved: false });
+                    	data = { badgeAchieved: false };
                     } else if (userBadgeData.progress + 1 < badgeData.progressReq) {
+                    	// count up the progress but keep obtained set to false
                     	userBadgeRoute.set({
                             badgeID: badgeID,
                             badgeName: badgeData.badgeName,
@@ -391,10 +412,15 @@ var Prometheus = function(config){
                             description: badgeData.description,
                             obtained: false,
                         });
-                    	callback(null, { badgeAchieved: false });
-                    } else {
-                        callback(null, { badgeAchieved: false, progress: userBadgeData.progress / badgeData.progressReq});
+                    	data = { badgeAchieved: false }
                     }
+
+                    // hidden badge added to user data
+                    if (badgeData.hidden) {
+                    	var hiddenRoute = createRoute('/users/' + uid + '/data/badges/' + badgeID + '/hidden/');
+                    	hiddenRoute.set(true);
+                    }
+                    callback(null, data, badgeData.badgeName);
                 })
             }.bind(this));
         },
@@ -409,7 +435,12 @@ var Prometheus = function(config){
                 }
                 var result = {};
                 for(badgeId in badges) {
-                    result[badgeId] = badges[badgeId];
+                	// optional hidden property so that it is not in the list of badges to be rendered
+                	// warning: hidden badge functionality not tested
+                	// TODO: add check to see if all the necessary properties exist
+                	if(!badges[badgeId].hidden) {
+                    	result[badgeId] = badges[badgeId];
+                	}
                 }
 
                 callback(result);
@@ -417,7 +448,8 @@ var Prometheus = function(config){
 
         },
 
-         getUserBadges: function(callback) {
+        // gets an object with all the badges in the user data.
+        getUserBadges: function(callback) {
         	var uid = this.getUID();
         	var userBadgeRoute = createRoute('/users/' + uid + '/data/badges/');
         	userBadgeRoute.once('value', function(userSnap) {
@@ -426,6 +458,7 @@ var Prometheus = function(config){
         			userBadgeRoute.set({}, this.getUserBadges.bind(this, callback));
         		}
         		var result = {};
+        		// all the necessary properties should exist since the user data is created in the badge function
         		for(badgeId in badges) {
         			result[badgeId] = badges[badgeId];
         		}
