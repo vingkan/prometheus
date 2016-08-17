@@ -58,7 +58,7 @@ var Prometheus = function(config){
 			var eventData = dataObj || {type: "SAVED_VISIT"};
 			var meta = metaProps || 'all';
 			var metaData = this.get(meta);
-			if(LOCALSAVE === false && metaData.page.url.includes('localhost')){
+			if(LOCALSAVE === false && metaData.page.url.indexOf('localhost') > -1){
 				//Don't save visit.
 			}
 			else{
@@ -83,7 +83,7 @@ var Prometheus = function(config){
 		logon: function(uid, userData, metaProps){
 			if(uid){
 				this.trackUser(uid);
-				if(LOCALSAVE === false && location.hostname.includes('localhost')){
+				if(LOCALSAVE === false && location.hostname.indexOf('localhost') > -1){
 					//Don't update profile.
 				}
 				else if(userData){
@@ -165,7 +165,7 @@ var Prometheus = function(config){
 		get: function(request){
 			var response = {};
 			if(Array.isArray(request) && request.length > 0){
-				if(request.includes('all')){
+				if(request.indexOf('all') > -1){
 					response = getData('all');
 				}
 				else{
@@ -277,7 +277,8 @@ var Prometheus = function(config){
 			});
 		},
 
-		redeem: function (code, callback, fallback, settings) {
+		redeem: function (code, callback, fallback, options) {
+			var settings = options || {};
 			var uid = this.getUID();
 			var userDataRoute = createRoute('/users/' + uid + '/data/');
 			userDataRoute.once('value', function (userSnap) {
