@@ -50,46 +50,64 @@ window.UserModule = React.createClass({
 		}
 	},
 	componentWillMount: function(){
-		var fb_url = 'prometheus/users';
-		var ref = firebase.database().ref(fb_url);
-		var _this = this;
-		ref.on('value', function(snapshot){
-		//ref.limitToLast(this.state.limit).on('value', function(snapshot){
-			var users = [];
-			var userMap = snapshot.val();
-			snapshot.forEach(function(childSnap){
-				var user = childSnap.val();
-				user.key = childSnap.key;
+
+		var stateContainer = this;
+		var userList = [];
+		var visitsRef = firebase.database().ref('prometheus/visits');
+		visitsRef.on('value', function(visitsSnap){
+
+			var vs = visitsSnap.val();
+			var nodes = 0;
+			var counter = 0;
+			for(var c in vs){
+				if(c !== 'ANONYMOUS_USER' && vs[c]){
+					nodes++;
+				}
+			}
+			
+			visitsSnap.forEach(function(childSnap){
+				var visitsData = childSnap.val();
+				var uid = childSnap.key;
 				var visitList = [];
-				for(var i in user.visits){
-					visitList.push(user.visits[i]);
+				for(var v in visitsData){
+					visitList.push(visitsData[v]);
 				}
-				user.visits = visitList;
-				if(user.key !== 'ANONYMOUS_USER' && user.profile){
-					var userData = {
-						key: user.key,
-						img: user.profile.img || user.profile.picture,
-						name: user.profile.name,
-						email: user.profile.email || 'none listed',
-						visits: user.visits.length,
-						lastTime: user.visits[user.visits.length-1].meta.datetime.timestamp,
-						visitList: visitList
+				visitList.sort(function(a, b){
+					return b.meta.datetime.timestamp - a.meta.datetime.timestamp;
+				});
+				var userRef = firebase.database().ref('prometheus/users/' + uid);
+				userRef.on('value', function(userSnap){
+					var user = userSnap.val();
+					if(uid !== 'ANONYMOUS_USER' && user.profile){
+						var userData = {
+							key: uid,
+							img: user.profile.img || user.profile.picture,
+							name: user.profile.name,
+							email: user.profile.email || 'none listed',
+							visits: visitList.length,
+							lastTime: visitList[0].meta.datetime.timestamp,
+							firstTime: visitList[visitList.length-1].meta.datetime.timestamp,
+							visitList: visitList
+						}
+						userList.push(userData);
+						counter++;
+						if(counter === nodes){
+							var users = userList.sort(function(a, b){
+								return b.lastTime - a.lastTime;
+							});
+							stateContainer.setState({
+								users: users
+							});
+							userSearch.addDocuments(users);
+							userList = [];
+							window.toggleLoading(false);
+						}
 					}
-					users.push(userData);
-				}
+				}).bind(this);
 			});
-			users.sort(function(a, b){
-				function getLastVisit(d){
-					return d.visitList[d.visitList.length-1];
-				}
-				return getLastVisit(b).meta.datetime.timestamp - getLastVisit(a).meta.datetime.timestamp;
-			});
-			_this.setState({
-				users: users
-			});
-			userSearch.addDocuments(users);
-			window.toggleLoading(false);
-		}).bind(this);
+
+		}).bind(stateContainer);
+
 	},
 	loadMore: function(){
 		this.setState(function(prev, curr){

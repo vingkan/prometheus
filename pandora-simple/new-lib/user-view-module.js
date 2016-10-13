@@ -6,12 +6,15 @@ window.UserViewModule = React.createClass({
 			name: '',
 			uid: this.props.uid,
 			limit: 10,
-			visits: []
+			visits: [],
+			profileUpdated: false
 		}
 	},
 	componentWillMount: function(){
 		var stateContainer = this;
-		var visits_url = 'prometheus/visits/' + 'catherine';//this.state.uid;
+		var targetUid = this.state.uid;
+		var profileInfoUpdated = this.state.profileUpdated;
+		var visits_url = 'prometheus/visits/' + targetUid;
 		var visitsRef = firebase.database().ref(visits_url);
 		visitsRef.on('value', function(visitsSnap){
 			
@@ -21,19 +24,27 @@ window.UserViewModule = React.createClass({
 				visitList.push(visitsData[i]);
 			}
 
-			var fb_url = 'prometheus/users/' + 'catherine'//this.state.uid;
-			var ref = firebase.database().ref(fb_url);
-			ref.on('value', function(snapshot){
-				var data = snapshot.val();
-				var email = data.profile.email || 'not listed';
+			if(!profileInfoUpdated){
+				var fb_url = 'prometheus/users/' + targetUid;
+				var ref = firebase.database().ref(fb_url);
+				ref.on('value', function(snapshot){
+					var data = snapshot.val();
+					var email = data.profile.email || 'not listed';
+					stateContainer.setState({
+						name: data.profile.name,
+						img: data.profile.img || data.profile.picture,
+						email: email,
+						visits: visitList,
+						profileUpdated: true
+					});
+					window.toggleLoading(false);
+				}).bind(this);
+			}
+			else{
 				stateContainer.setState({
-					name: data.profile.name,
-					img: data.profile.img || data.profile.picture,
-					email: email,
 					visits: visitList
 				});
-				window.toggleLoading(false);
-			}).bind(this);
+			}
 
 		}).bind(stateContainer);
 	},
@@ -44,7 +55,9 @@ window.UserViewModule = React.createClass({
 	},
 	render: function(){
 		var visits = _.clone(this.state.visits);
-		visits.reverse();
+		visits.sort(function(a, b){
+			return b.meta.datetime.timestamp - a.meta.datetime.timestamp;
+		});
 		if(visits.length > 0){
 			var visitList = visits.slice(0, this.state.limit);
 			var visitNodes = visitList.map(function(visit, index){
@@ -74,7 +87,7 @@ window.UserViewModule = React.createClass({
 						<h1>{this.state.name || 'No Name Listed'}</h1>
 						<p>
 							<i className="fa fa-icon fa-clock-o"></i>
-							User since {moment(visits[visits.length-1].meta.datetime.timestamp).format('M/D/YYYY') || 'Unknown Date'}
+							User since {moment(visits[0].meta.datetime.timestamp).format('M/D/YYYY') || 'Unknown Date'}
 						</p>
 						<p>
 							<i className="fa fa-icon fa-eye"></i>
@@ -109,7 +122,7 @@ window.UserViewModule = React.createClass({
 						<h1>{this.state.name}</h1>
 						<p>
 							<i className="fa fa-icon fa-clock-o"></i>
-							User since {moment(visits[visits.length-1].meta.datetime.timestamp).format('M/D/YYYY') || 'Unknown Date'}
+							User since {moment(visits[0].meta.datetime.timestamp).format('M/D/YYYY') || 'Unknown Date'}
 						</p>
 						<p>
 							<i className="fa fa-icon fa-eye"></i>
