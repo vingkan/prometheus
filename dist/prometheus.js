@@ -62,7 +62,7 @@ var Prometheus = function(config){
 				//Don't save visit.
 			}
 			else{
-				var visitsRoute = createRoute('/users/' + uid + '/visits');
+				var visitsRoute = createRoute('/visits/' + uid);
 				visitsRoute.push({
 					meta: metaData,
 					visit: eventData
