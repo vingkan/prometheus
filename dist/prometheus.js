@@ -67,6 +67,14 @@ var Prometheus = function(config){
 					meta: metaData,
 					visit: eventData
 				});
+				//Update Last Visit Timestamp
+				var lastVisitRoute = createRoute('/users/' + uid + '/lastVisit');
+				lastVisitRoute.once('value', function(lastSnap){
+					var lastVisit = lastSnap.val();
+					if(metaData.datetime.timestamp > lastVisit){
+						lastVisitRoute.set(metaData.datetime.timestamp);
+					}
+				});
 			}
 		},
 

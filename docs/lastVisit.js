@@ -13,13 +13,23 @@ db.ref('prometheus/users').once('value', function(usersSnap){
 	var allUsers = usersSnap.val();
 	for(var u in allUsers){
 		if(allUsers[u]){
-			var visits = allUsers[u].visits;
-			for(var v in visits){
-				if(visits[v]){
-					console.log('Moved visit to: prometheus/visits/' + u);
-					db.ref('prometheus/visits/' + u).push(visits[v]);
+			var visitsRef = db.ref('prometheus/visits/' + u);
+			visitsRef.once('value', function(visitsSnap){
+				var visits = visitsSnap.val();
+				var uid = visitsSnap.key;
+				var latest = 0;
+				for(var v in visits){
+					if(visits[v]){
+						var time = visits[v].meta.datetime.timestamp;
+						if(time > latest){
+							latest = time;
+						}
+					}
 				}
-			}			
+				console.log('Updated last visit timestamp: prometheus/users/' + uid + '/lastVisit');
+				db.ref('prometheus/users/' + uid + '/lastVisit').set(latest);
+			});
+			
 		}
 	}
 });
