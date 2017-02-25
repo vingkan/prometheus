@@ -6,4 +6,4 @@ var prometheus = Prometheus({
     	messagingSenderId: "433905102741",
 	noScreenshots: true,
 	localhost: true
-}});
+});
