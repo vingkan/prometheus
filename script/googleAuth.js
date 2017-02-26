@@ -1,4 +1,3 @@
-var BASE_URL = "https://prometheusjs.firebaseio.com/";
 var userID;
 var authObject;
 
