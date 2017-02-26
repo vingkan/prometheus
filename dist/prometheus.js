@@ -4,6 +4,7 @@ var SCREENSHOTS;
 var LOCATOR;
 var LOCALSAVE = false;
 var ANONS; //TO-DO: add boolean to config to toggle tracking anonymous users
+var localKey;
 
 function loadHTML2Canvas(){
 	var fileRef = document.createElement('script');
@@ -16,6 +17,9 @@ var Prometheus = function(config){
 
 	// Initialize Firebase with 3.0 API
 	firebase.initializeApp(config);
+
+	var project_id = config.databaseURL.split('//')[1].split('.')[0];
+	localKey = 'prometheus_user_' + project_id;
 
 	LOCATOR = true;
 
@@ -41,14 +45,14 @@ var Prometheus = function(config){
 
 		trackUser: function(uid){
 			if(uid){
-				localStorage.setItem('prometheus_user', uid);
+				localStorage.setItem(localKey, uid);
 			}
 		},
 
 		getUID: function(){
 			var track = "ANONYMOUS_USER";
 			if(this.isTrackingUser()){
-				track = localStorage.getItem('prometheus_user');
+				track = localStorage.getItem(localKey);
 			}
 			return track;
 		},
@@ -129,7 +133,7 @@ var Prometheus = function(config){
 
 		isTrackingUser: function(){
 			var response = false;
-			var trackedUID = localStorage.getItem('prometheus_user');
+			var trackedUID = localStorage.getItem(localKey);
 			if(trackedUID){
 				response = true;
 			}
