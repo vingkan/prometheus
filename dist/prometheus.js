@@ -4,6 +4,7 @@ var SCREENSHOTS;
 var LOCATOR;
 var LOCALSAVE = false;
 var ANONS; //TO-DO: add boolean to config to toggle tracking anonymous users
+var localKey;
 
 function loadHTML2Canvas(){
 	var fileRef = document.createElement('script');
@@ -16,6 +17,9 @@ var Prometheus = function(config){
 
 	// Initialize Firebase with 3.0 API
 	firebase.initializeApp(config);
+
+	var project_id = config.databaseURL.split('//')[1].split('.')[0];
+	localKey = 'prometheus_user_' + project_id;
 
 	LOCATOR = true;
 
@@ -41,14 +45,14 @@ var Prometheus = function(config){
 
 		trackUser: function(uid){
 			if(uid){
-				sessionStorage.setItem('prometheus_user', uid);
+				localStorage.setItem(localKey, uid);
 			}
 		},
 
 		getUID: function(){
 			var track = "ANONYMOUS_USER";
 			if(this.isTrackingUser()){
-				track = sessionStorage.getItem('prometheus_user');
+				track = localStorage.getItem(localKey);
 			}
 			return track;
 		},
@@ -58,14 +62,22 @@ var Prometheus = function(config){
 			var eventData = dataObj || {type: "SAVED_VISIT"};
 			var meta = metaProps || 'all';
 			var metaData = this.get(meta);
-			if(LOCALSAVE === false && metaData.page.url.includes('localhost')){
+			if(LOCALSAVE === false && metaData.page.url.indexOf('localhost') > -1){
 				//Don't save visit.
 			}
 			else{
-				var visitsRoute = createRoute('/users/' + uid + '/visits');
+				var visitsRoute = createRoute('/visits/' + uid);
 				visitsRoute.push({
 					meta: metaData,
 					visit: eventData
+				});
+				//Update Last Visit Timestamp
+				var lastVisitRoute = createRoute('/users/' + uid + '/lastVisit');
+				lastVisitRoute.once('value', function(lastSnap){
+					var lastVisit = lastSnap.val();
+					if(metaData.datetime.timestamp > lastVisit){
+						lastVisitRoute.set(metaData.datetime.timestamp);
+					}
 				});
 			}
 		},
@@ -83,7 +95,7 @@ var Prometheus = function(config){
 		logon: function(uid, userData, metaProps){
 			if(uid){
 				this.trackUser(uid);
-				if(LOCALSAVE === false && location.hostname.includes('localhost')){
+				if(LOCALSAVE === false && location.hostname.indexOf('localhost') > -1){
 					//Don't update profile.
 				}
 				else if(userData){
@@ -121,7 +133,7 @@ var Prometheus = function(config){
 
 		isTrackingUser: function(){
 			var response = false;
-			var trackedUID = sessionStorage.getItem('prometheus_user');
+			var trackedUID = localStorage.getItem(localKey);
 			if(trackedUID){
 				response = true;
 			}
@@ -146,13 +158,13 @@ var Prometheus = function(config){
 						}
 					}
 				}
-				sessionStorage.setItem('prometheus_features', features);
+				localStorage.setItem('prometheus_features', features);
 			});
 		},
 
 		has: function(featureID){
 			var response = false;
-			var storedFeatures = sessionStorage.getItem('prometheus_features') || '';
+			var storedFeatures = localStorage.getItem('prometheus_features') || '';
 			var features = storedFeatures.split(',');
 			if(features.indexOf(featureID) > -1){
 				response = true;
@@ -165,7 +177,7 @@ var Prometheus = function(config){
 		get: function(request){
 			var response = {};
 			if(Array.isArray(request) && request.length > 0){
-				if(request.includes('all')){
+				if(request.indexOf('all') > -1){
 					response = getData('all');
 				}
 				else{
@@ -184,22 +196,158 @@ var Prometheus = function(config){
 			return response;
 		},
 
-		deliver: function(featureID, callback, fallback){
+		can: function(featureID, callback, fallback){
 			//Safer Asynchronous Method
 			var uid = this.getUID();
-			var featureRoute = createRoute('/features/' + featureID + '/access/');
-			featureRoute.once('value', function(snapshot){
-				var allowed = snapshot.val();
-				var executed = false;
-				for(var i in allowed){
-					if(uid === allowed[i]){
-						callback();
-						executed = true;
-						break;
+			var featureRoute = createRoute('/features/' + featureID + '/');
+			featureRoute.once('value', function(featureSnap){
+				if(featureSnap.exists()){
+					var feature = featureSnap.val();
+					var userDataRoute = createRoute('/users/' + uid + '/data');
+					userDataRoute.once('value', function(userSnap){
+						var userData = {};
+						if(userSnap.exists()){
+							userData = userSnap.val();
+						}
+						var result = {};
+						if(feature.validate){
+							var validateFn = new Function('userData', feature.validate);
+							result = validateFn(userData);
+						}
+						else{
+							if(fallback){
+								fallback({
+									message: "The feature could not be validated.",
+									featureID: featureID
+								});
+							}
+						}
+						if(result.allowed){
+							if(callback){
+								callback(result.data);
+							}
+						}
+						else{
+							if(fallback){
+								fallback(result.data);
+							}
+						}
+					});
+				}
+				else{
+					if(fallback){
+						fallback({
+							message: "The feature you requested does not exist.",
+							featureID: featureID
+						});
 					}
 				}
-				if(!executed && fallback){
-					fallback();
+			});
+		},
+
+		deliver: function(featureID, callback, fallback){
+			//Safer Asynchronous Method
+			prometheus.can(featureID, function(data){
+				var uid = prometheus.getUID();
+				var featureRoute = createRoute('/features/' + featureID + '/');
+				featureRoute.once('value', function(featureSnap){
+					if(featureSnap.exists()){
+						var feature = featureSnap.val();
+						var userDataRoute = createRoute('/users/' + uid + '/data');
+						userDataRoute.once('value', function(userSnap){
+							var userData = {};
+							if(userSnap.exists()){
+								userData = userSnap.val();
+							}
+							var result = {};
+							if(feature.process){
+								var processFn = new Function('userData', feature.process);
+								result = processFn(userData);
+								userDataRoute.set(userData);
+							}
+							else{
+								result.data = data;
+							}
+							if(callback){
+								callback(result.data);
+							}
+						});
+					}
+					else{
+						if(fallback){
+							fallback({
+								message: "The feature you requested does not exist.",
+								featureID: featureID
+							});
+						}
+					}
+				});
+			}, function(data){
+				if(fallback){
+					fallback(data);
+				}
+			});
+		},
+
+		redeem: function (code, callback, fallback, options) {
+			var settings = options || {};
+			var uid = this.getUID();
+			var userDataRoute = createRoute('/users/' + uid + '/data/');
+			userDataRoute.once('value', function (userSnap) {
+				var userData = {};
+				if(userSnap.exists()){
+					userData = userSnap.val();
+				}
+				var promos = []
+				if(userData.hasOwnProperty('promos')){
+					promos = userData.promos;
+				}
+				if(promos.indexOf(code) < 0){
+					var promoRoute = createRoute('/promos/' + code + '/');
+					promoRoute.once('value', function (promoSnap) {
+						if(promoSnap.exists() && promoSnap.val().hasOwnProperty('redeem')){
+							var promoCode = promoSnap.val();
+							var redeemFn = new Function('userData', promoCode.redeem);
+							promos.push(code);
+							userData.promos = promos;
+							userDataRoute.set(redeemFn(userData));
+							prometheus.save({
+								type: "PROMO_CODE_USED",
+								code: code
+							});
+							if(callback){
+								callback(promoCode.info);
+							}
+						}
+						else{
+							prometheus.save({
+								type: "PROMO_CODE_ERROR",
+								code: code,
+								error: "NOT_FOUND"
+							});
+							if(fallback){
+								fallback({
+									type: "NOT_FOUND",
+									message: "Promo code not found."
+								});
+							}
+						}
+					});
+				}
+				else{
+					if(!settings.silent){
+						prometheus.save({
+							type: "PROMO_CODE_ERROR",
+							code: code,
+							error: "ALREADY_USED"
+						});
+					}
+					if(fallback){
+						fallback({
+							type: "ALREADY_USED",
+							message: "Promo code already used."
+						});
+					}
 				}
 			});
 		},
@@ -217,19 +365,14 @@ var Prometheus = function(config){
 
 				terminate: function(dataObj){
 					var uid = _this.getUID();
-					var noteRoute = createRoute('/features/' + noteID + '/access/');
-					noteRoute.once('value', function(snapshot){
-						var recipients = snapshot.val();
-						for(var r in recipients){
-							if(recipients[r] === uid){
-								var terminationRef = createRoute('/features/' + noteID + '/access/' + r);
-									terminationRef.remove();
-								var data = dataObj || {};
-									data['type'] = "NOTIFICATION_TERMINATED";
-									data['noteid'] = noteID;
-								_this.save(data);
-								break;
-							}
+					var noteRoute = createRoute('/users/' + uid + '/data/' + noteID);
+					noteRoute.once('value', function(noteSnapshot){
+						if(noteSnapshot.exists()){
+							noteRoute.remove();
+							var data = dataObj || {};
+								data['type'] = "NOTIFICATION_TERMINATED";
+								data['noteid'] = noteID;
+							_this.save(data);
 						}
 					});
 				}
@@ -263,20 +406,36 @@ var Prometheus = function(config){
 			var _this = this;
 			return {
 				id: timerID,
+				data: {},
 				started: false,
-				start: function(){
+				start: function(data){
 					if(!this.started){
 						this.started = Date.now();
+						if(data){
+							this.data = data;
+						}
 					}
 				},
-				stop: function(){
+				stop: function(data){
 					if(this.started){
-						_this.save({
+						var info = {
 							type: 'TIMER',
 							timerID: this.id,
 							start: this.started,
 							end: Date.now()
-						});
+						}
+						for(var i in this.data){
+							if(this.data.hasOwnProperty(i)){
+								info[i] = this.data[i];
+							}
+						}
+						for(var j in data){
+							if(data.hasOwnProperty(j)){
+								info[j] = data[j];
+							}
+						}
+						_this.save(info);
+						_this.timers[timerID] = null;
 					}
 				}
 			}

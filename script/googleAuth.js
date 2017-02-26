@@ -1,14 +1,14 @@
-var BASE_URL = "https://prometheusjs.firebaseio.com/";
 var userID;
 var authObject;
 
-function checkUserInDatabase(authData){
-	userID = authData.user.uid;
+function checkUserInDatabase(inData){
+	var authData = inData.user.providerData[0];
+	userID = authData.uid;
 	var userData = {
 		uid: userID,
-		name: authData.user.displayName,
-		email: authData.user.email,
-		img: authData.user.photoURL
+		name: authData.displayName,
+		email: authData.email,
+		img: authData.photoURL
 	}
 	var path = "prometheus/users/" + userID;
 	var userRef = firebase.database().ref(path);

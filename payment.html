@@ -25,17 +25,63 @@
 
 		<a href="contact.html"><button>Contact Us</button></a>
 
+		<div id="withdraw-field"></div>
+
 		<script src="script/config.js"></script>
 
 		<script type="text/javascript">
 
-			var message = 'You have not paid yet.'; 
-			if(prometheus.has('paid')){
-				message = 'You are a paid user!';
+			function withdraw(){
+				prometheus.deliver('withdraw', function(data){
+					setField();
+				}, function(){
+					alert("Sorry, you don't have enough credits to withdraw!");
+				});
 			}
-			var out = document.getElementById('pay-message');
-			out.innerText = message;
-			
+
+			function setField(){
+				var field = document.getElementById('withdraw-field');
+				prometheus.can('withdraw', function(data){
+					displayCredits(data.credits);
+					field.innerHTML = '<button onclick="withdraw();">Withdraw</button>';
+				}, function(data){
+					displayCredits(data.credits);
+					field.innerHTML = '<h3>You do not have enough credits to withdraw.</h3>';
+				});
+			}
+
+			function displayCredits(credits){
+				var out = document.getElementById('pay-message');
+					out.innerText = 'You have ' + credits + ' credits.';
+			}
+
+			setField();
+
+			// Functions stored in Firebase (not used on this page), Feature: withdraw
+
+			function validate(){
+				return {
+					allowed: userData.credits > 0,
+					data: {
+						credits: userData.credits
+					}
+				};
+			}
+
+			function process(){
+				if(userData.credits){
+					userData.credits--;
+				}
+				else{
+					userData.credits = 0;
+				}
+				return {
+					changed: true,
+					data: {
+						credits: userData.credits
+					}
+				};
+			}
 
 		</script>
 		
